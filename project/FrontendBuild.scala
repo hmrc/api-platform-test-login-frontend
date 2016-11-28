@@ -25,6 +25,10 @@ private object AppDependencies {
   private val hmrcTestVersion = "2.2.0"
   private val scalaTestVersion = "2.2.6"
   private val pegdownVersion = "1.6.0"
+  private val scalaTestPlusVersion = "1.5.1"
+  private val wiremockVersion = "1.57"
+  private val hmrcPlayJsonUnionFormatterVersion = "1.0.0"
+  private val mockitoVersion = "1.9.5"
 
   val compile = Seq(
     ws,
@@ -32,6 +36,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
     "uk.gov.hmrc" %% "play-authorised-frontend" % playAuthorisedFrontendVersion,
     "uk.gov.hmrc" %% "play-config" % playConfigVersion,
+    "uk.gov.hmrc" %% "play-json-union-formatter" % hmrcPlayJsonUnionFormatterVersion,
     "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
     "uk.gov.hmrc" %% "govuk-template" % govukTemplateVersion,
     "uk.gov.hmrc" %% "play-health" % playHealthVersion,
@@ -48,9 +53,12 @@ private object AppDependencies {
       override lazy val test = Seq(
         "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
         "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
+        "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
         "org.jsoup" % "jsoup" % "1.8.1" % scope,
-        "com.typesafe.play" %% "play-test" % PlayVersion.current % scope
+        "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
+        "org.mockito" % "mockito-core" % mockitoVersion % scope,
+        "com.github.tomakehurst" % "wiremock" % wiremockVersion % scope
       )
     }.test
   }

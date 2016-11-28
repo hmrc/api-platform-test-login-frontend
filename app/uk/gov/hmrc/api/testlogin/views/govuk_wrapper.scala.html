@@ -1,4 +1,4 @@
-@import uk.gov.hmrc.api.testlogin.AppConfig
+@import uk.gov.hmrc.api.testlogin.config.AppConfig
 @(appConfig: AppConfig,
   title: String,
   mainClass: Option[String] = None,
@@ -21,17 +21,12 @@
     <meta name="format-detection" content="telephone=no" />
 }
 
-@headerNavLinks = {
-  <li><a id="homeNavHref" href="http://www.google.com"
-         data-journey-click="primary-navigation:Click:Home">Home</a></li>
-}
-
 @insideHeader = {
     @uiLayouts.header_nav(
-      navTitle = Some("api-platform-test-login-frontend"),
+      navTitle = None,
       navTitleLink = None,
       showBetaLink = false,
-      navLinks = Some(headerNavLinks))
+      navLinks = None)
 }
 
 @afterHeader = {}
@@ -52,7 +47,7 @@
     @uiLayouts.serviceInfo(
       betaBanner = HtmlFormat.empty,
       includeGridWrapper = false,
-      serviceInfoContent = Some(serviceInfoContent))
+      serviceInfoContent = None)
 }
 
 @mainContentHeader = {

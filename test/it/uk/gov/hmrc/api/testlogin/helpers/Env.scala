@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package unit.uk.gov.hmrc.testlogin
+package it.uk.gov.hmrc.api.testlogin.helpers
 
-import play.api.http.Status
-import play.api.test.FakeRequest
-import uk.gov.hmrc.api.testlogin.controllers.HelloWorld
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxProfile}
+import org.openqa.selenium.{HasCapabilities, WebDriver}
 
+import scala.util.Try
 
-class HelloWorldControllerSpec extends UnitSpec with WithFakeApplication{
+trait Env {
 
-  val fakeRequest = FakeRequest("GET", "/")
-
-
-  "GET /" should {
-    "return 200" in {
-      val result = HelloWorld.helloWorld(fakeRequest)
-      status(result) shouldBe Status.OK
-    }
+  val driver: WebDriver with HasCapabilities = {
+    val profile = new FirefoxProfile
+    profile.setAcceptUntrustedCertificates(true)
+    new FirefoxDriver(profile)
   }
 
-
+  sys addShutdownHook {
+    Try(driver.quit())
+  }
 }
+
+object Env extends Env

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.testlogin
+package uk.gov.hmrc.api.testlogin.config
 
 import java.io.File
 

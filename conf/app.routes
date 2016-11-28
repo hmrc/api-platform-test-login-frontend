@@ -1,3 +1,5 @@
 # microservice specific routes
 
-GET        /hello-world        uk.gov.hmrc.api.testlogin.controllers.HelloWorld.helloWorld
+GET        /           @uk.gov.hmrc.api.testlogin.controllers.LoginControllerImpl.showLoginPage(continue)
+
+POST       /           @uk.gov.hmrc.api.testlogin.controllers.LoginControllerImpl.login()

@@ -14,26 +14,13 @@
  * limitations under the License.
  */
 
-package it.uk.gov.hmrc.api.testlogin
+package it.uk.gov.hmrc.api.testlogin.stubs
 
-import play.api.http.Status
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import uk.gov.hmrc.api.testlogin.controllers.HelloWorld
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import it.uk.gov.hmrc.api.testlogin.MockHost
 
+object ApiPlatformTestUserStub extends MockHost(11111) {
 
-class HelloWorldControllerSpec extends UnitSpec with WithFakeApplication{
+  def test() = {
 
-  val fakeRequest = FakeRequest("GET", "/")
-
-
-  "GET /" should {
-    "return 200" in {
-      val result = HelloWorld.helloWorld(fakeRequest)
-      status(result) shouldBe Status.OK
-    }
   }
-
-
 }

@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.testlogin.controllers
+package uk.gov.hmrc.api.testlogin.models
 
-import uk.gov.hmrc.api.testlogin.views.html.helloworld.hello_world
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import play.api.mvc._
-import scala.concurrent.Future
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
+import uk.gov.hmrc.domain._
 
+sealed trait TestUser {
+  val username: String
+}
 
-object HelloWorld extends HelloWorld
+case class TestIndividual(override val username: String, saUtr: SaUtr, nino: Nino) extends TestUser
 
-trait HelloWorld extends FrontendController {
-  val helloWorld = Action.async { implicit request =>
-		Future.successful(Ok(hello_world()))
-  }
+case class TestOrganisation(override val username: String, saUtr: SaUtr, empRef: EmpRef, ctUtr: CtUtr, vrn: Vrn) extends TestUser
+
+object UserType extends Enumeration {
+  type UserType = Value
+  val INDIVIDUAL = Value("INDIVIDUAL")
+  val ORGANISATION = Value("ORGANISATION")
 }

@@ -1,0 +1,35 @@
+@(continue: String, errorMessage: Option[String] = None)(implicit request: Request[_], messages: Messages)
+
+@mainContent = {
+    <div class="content__body">
+        <h1>Sign in</h1>
+        <p>Enter your Test User credentials to sign in.</p>
+
+        @helper.form(action = uk.gov.hmrc.api.testlogin.controllers.routes.LoginControllerImpl.login()) {
+
+            <div class="form-field-group @if(errorMessage.isDefined) {error}">
+                @errorMessage.map{ error =>
+                    <span class="error-notification password">@Messages(error)</span>
+                }
+                @helper.CSRF.formField
+                <input type="hidden" name="continue" id="continue" value="@{continue}">
+
+                <div class="form-field">
+                    <label class="label--inline" for="userId">User ID</label>
+                    <input type="text" id="userId" name="userId" required="">
+                </div>
+                <div class="form-field">
+                    <label class="label--inline" for="password">Password</label>
+                    <input type="password" id="password" name="password" required="">
+                </div>
+                <div class="form-field">
+                    <button id="submit" class="button button--spaced button--padded" type="submit">Sign in</button>
+                </div>
+            </div>
+        }
+        <h2>Problems signing in</h2>
+        <p><a href="/api-test-user">Don't have Test User credentials</a></p>
+    </div>
+}
+
+@govuk_wrapper(appConfig = uk.gov.hmrc.api.testlogin.config.FrontendAppConfig, title = "Create test user", mainContent = mainContent)
