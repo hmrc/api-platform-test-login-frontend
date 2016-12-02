@@ -23,7 +23,7 @@ import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
 import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest, TestOrganisation, TestIndividual}
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
 import uk.gov.hmrc.domain._
-import uk.gov.hmrc.play.http.{UnauthorizedException, HeaderCarrier, HttpPost}
+import uk.gov.hmrc.play.http.{Upstream5xxResponse, UnauthorizedException, HeaderCarrier, HttpPost}
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 
 class ApiPlatformTestUserConnectorSpec extends UnitSpec with WiremockSugar with WithFakeApplication {
@@ -104,7 +104,7 @@ class ApiPlatformTestUserConnectorSpec extends UnitSpec with WiremockSugar with 
         .withRequestBody(equalToJson(toJson(invalidLoginRequest).toString()))
         .willReturn(aResponse().withStatus(500)))
 
-      intercept[RuntimeException]{await(underTest.authenticate(invalidLoginRequest))}
+      intercept[Upstream5xxResponse]{await(underTest.authenticate(invalidLoginRequest))}
     }
 
   }

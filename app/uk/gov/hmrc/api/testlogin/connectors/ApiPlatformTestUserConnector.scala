@@ -32,7 +32,6 @@ trait ApiPlatformTestUserConnector {
   def authenticate(loginRequest: LoginRequest)(implicit hc:HeaderCarrier): Future[TestUser] = {
     http.POST[LoginRequest, TestUser](s"$serviceUrl/authenticate", loginRequest) recover {
       case e: Upstream4xxResponse if e.upstreamResponseCode == 401 => throw new LoginFailed(loginRequest.username)
-      case e: Throwable => throw new RuntimeException(s"An unexpected error occurred while authenticating ${loginRequest.username}", e)
     }
   }
 }
