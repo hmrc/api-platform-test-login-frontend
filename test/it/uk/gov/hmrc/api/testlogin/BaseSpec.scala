@@ -20,7 +20,7 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import it.uk.gov.hmrc.api.testlogin.helpers.{Env, NavigationSugar}
-import it.uk.gov.hmrc.api.testlogin.stubs.ApiPlatformTestUserStub
+import it.uk.gov.hmrc.api.testlogin.stubs.{ContinuePageStub, AuthLoginStub, ApiPlatformTestUserStub}
 import org.openqa.selenium.WebDriver
 import org.scalatest._
 import org.scalatestplus.play.OneServerPerSuite
@@ -35,20 +35,24 @@ with GivenWhenThen with NavigationSugar {
     .configure(
       "auditing.enabled" -> false,
       "auditing.traceRequests" -> false,
-      "microservice.services.api-platform-test-user.port" -> ApiPlatformTestUserStub.port)
+      "microservice.services.api-platform-test-user.port" -> ApiPlatformTestUserStub.port,
+      "microservice.services.auth-login-stub.port" -> AuthLoginStub.port
+    )
     .build()
 
+  val mocks = Seq(ApiPlatformTestUserStub, AuthLoginStub, ContinuePageStub)
+
   override protected def beforeEach(): Unit = {
-    if (!ApiPlatformTestUserStub.server.isRunning) ApiPlatformTestUserStub.server.start()
+    mocks.foreach(m => if (!m.server.isRunning) m.server.start())
   }
 
   override protected def afterEach(): Unit = {
     webDriver.manage().deleteAllCookies()
-    ApiPlatformTestUserStub.mock.resetMappings()
+    mocks.foreach(_.mock.resetMappings())
   }
 
   override protected def afterAll(): Unit = {
-    ApiPlatformTestUserStub.server.stop()
+    mocks.foreach(_.server.stop())
   }
 
 }

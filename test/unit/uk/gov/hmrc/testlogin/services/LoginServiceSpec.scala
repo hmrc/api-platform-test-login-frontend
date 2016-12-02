@@ -19,7 +19,7 @@ package unit.uk.gov.hmrc.testlogin.services
 
 import org.mockito.BDDMockito.given
 import org.scalatest.mock.MockitoSugar
-import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
+import uk.gov.hmrc.api.testlogin.connectors.{AuthLoginStubConnector, ApiPlatformTestUserConnector}
 import uk.gov.hmrc.api.testlogin.models.{LoginFailed, TestIndividual, LoginRequest}
 import uk.gov.hmrc.api.testlogin.services.LoginService
 import uk.gov.hmrc.domain.{Nino, SaUtr}
@@ -36,26 +36,29 @@ class LoginServiceSpec extends UnitSpec with MockitoSugar {
     implicit val hc = HeaderCarrier()
     val underTest = new LoginService {
       override val apiPlatformTestUserConnector: ApiPlatformTestUserConnector = mock[ApiPlatformTestUserConnector]
+      override val authLoginStubConnector: AuthLoginStubConnector = mock[AuthLoginStubConnector]
     }
   }
 
   "login" should {
-    "return the user when the authentication is successful" in new Setup {
+    "return the session when the authentication is successful" in new Setup {
 
       val loginRequest = LoginRequest("user", "password")
 
-      given(underTest.authenticate(loginRequest)).willReturn(user)
+      given(underTest.apiPlatformTestUserConnector.authenticate(loginRequest)).willReturn(user)
+      val userSession = "mdtp=session"
+      given(underTest.authLoginStubConnector.createSession(user)).willReturn(userSession)
 
       val result = await(underTest.authenticate(loginRequest))
 
-      result shouldBe user
+      result shouldBe userSession
     }
 
-    "propagate LoginFailed exception" in new Setup {
+    "propagate LoginFailed exception when authentication fails" in new Setup {
 
       val loginRequest = LoginRequest("user", "password")
 
-      given(underTest.authenticate(loginRequest)).willReturn(failed(new LoginFailed("user")))
+      given(underTest.apiPlatformTestUserConnector.authenticate(loginRequest)).willReturn(failed(new LoginFailed("user")))
 
       intercept[LoginFailed]{await(underTest.authenticate(loginRequest))}
     }

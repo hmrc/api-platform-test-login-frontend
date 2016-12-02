@@ -18,25 +18,15 @@ package it.uk.gov.hmrc.api.testlogin.stubs
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import it.uk.gov.hmrc.api.testlogin.MockHost
+import it.uk.gov.hmrc.api.testlogin.pages.ContinuePage
 import org.apache.http.HttpStatus._
-import play.api.libs.json.Json
-import uk.gov.hmrc.api.testlogin.models.{LoginRequest, TestIndividual}
-import uk.gov.hmrc.api.testlogin.models.JsonFormatters.formatLoginRequest
-import uk.gov.hmrc.api.testlogin.models.JsonFormatters.formatTestUser
 
-object ApiPlatformTestUserStub extends MockHost(11111) {
+object ContinuePageStub extends MockHost(11113) {
 
-  def givenIndividualHasPassword(individual: TestIndividual, password: String) = {
-    mock.register(post(urlPathEqualTo("/authenticate"))
-      .willReturn(aResponse()
-        .withStatus(SC_UNAUTHORIZED)
-        .withHeader("Content-Type", "application/json")))
-
-    mock.register(post(urlPathEqualTo("/authenticate"))
-      .withRequestBody(equalToJson(Json.toJson(LoginRequest(individual.username, password)).toString()))
+  def givenContinuePageIsUp() = {
+    mock.register(get(urlPathEqualTo(ContinuePage.path))
       .willReturn(aResponse()
         .withStatus(SC_OK)
-        .withHeader("Content-Type", "application/json")
-        .withBody(Json.toJson(individual).toString())))
+        .withBody("<html><head><title>Continue Page</title></head><body><h1>Continue Page</h1></body></html>")))
   }
 }

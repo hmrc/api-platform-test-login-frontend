@@ -18,16 +18,24 @@ package uk.gov.hmrc.api.testlogin.services
 
 import javax.inject.Inject
 
-import uk.gov.hmrc.api.testlogin.connectors.{ApiPlatformTestUserConnectorImpl, ApiPlatformTestUserConnector}
-import uk.gov.hmrc.api.testlogin.models.{TestUser, LoginRequest}
+import uk.gov.hmrc.api.testlogin.connectors.{AuthLoginStubConnectorImpl, AuthLoginStubConnector, ApiPlatformTestUserConnectorImpl, ApiPlatformTestUserConnector}
+import uk.gov.hmrc.api.testlogin.models.LoginRequest
 import uk.gov.hmrc.play.http.HeaderCarrier
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
 
 trait LoginService {
   val apiPlatformTestUserConnector: ApiPlatformTestUserConnector
+  val authLoginStubConnector: AuthLoginStubConnector
 
-  def authenticate(loginRequest: LoginRequest)(implicit hc: HeaderCarrier): Future[TestUser] = apiPlatformTestUserConnector.authenticate(loginRequest)
+  def authenticate(loginRequest: LoginRequest)(implicit hc: HeaderCarrier): Future[String] = {
+    for {
+      user <- apiPlatformTestUserConnector.authenticate(loginRequest)
+      session <- authLoginStubConnector.createSession(user)
+    } yield session
+  }
 }
 
-class LoginServiceImpl @Inject()(override val apiPlatformTestUserConnector: ApiPlatformTestUserConnectorImpl) extends LoginService
+class LoginServiceImpl @Inject()(override val apiPlatformTestUserConnector: ApiPlatformTestUserConnectorImpl,
+                                 override val authLoginStubConnector: AuthLoginStubConnectorImpl) extends LoginService

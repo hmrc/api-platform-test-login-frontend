@@ -16,8 +16,7 @@
 
 package it.uk.gov.hmrc.api.testlogin.helpers
 
-import org.openqa.selenium.support.ui.{ExpectedCondition, WebDriverWait}
-import org.openqa.selenium.{By, WebDriver, WebElement}
+import org.openqa.selenium.{By, WebDriver}
 import org.scalatest.concurrent.Eventually
 import org.scalatest.selenium.WebBrowser
 import org.scalatest.selenium.WebBrowser.{go => goo}
@@ -43,7 +42,7 @@ trait NavigationSugar extends WebBrowser with Eventually with Assertions with Ma
   }
 
   def verifyText(selectorId: String, expected: String)(implicit webDriver: WebDriver) = {
-    webDriver.findElement(By.cssSelector(s"[$selectorId]")).getText shouldBe expected
+    webDriver.findElement(By.className(selectorId)).getText shouldBe expected
   }
 
   def on(page: WebPage)(implicit webDriver: WebDriver) = {

@@ -17,12 +17,12 @@
 package unit.uk.gov.hmrc.testlogin.controllers
 
 
+
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import org.mockito.Matchers.{any, refEq}
 import org.mockito.BDDMockito.given
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.OneAppPerTest
 import play.api.i18n.MessagesApi
 import play.api.mvc.{AnyContent, Action}
 import play.api.test.FakeRequest
@@ -31,21 +31,21 @@ import uk.gov.hmrc.api.testlogin.models.{TestIndividual, LoginFailed, LoginReque
 import uk.gov.hmrc.api.testlogin.services.LoginService
 import uk.gov.hmrc.domain.{Nino, SaUtr}
 import uk.gov.hmrc.play.http.HeaderCarrier
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 
 import scala.concurrent.Future.failed
 
-class LoginControllerSpec extends UnitSpec with MockitoSugar with OneAppPerTest {
+class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 
 
   trait Setup {
     implicit val materializer = ActorMaterializer.create(ActorSystem.create())
-    private val csrfAddToken = app.injector.instanceOf[play.filters.csrf.CSRFAddToken]
+    private val csrfAddToken = fakeApplication.injector.instanceOf[play.filters.csrf.CSRFAddToken]
 
     val underTest = new LoginController {
       override val loginService: LoginService = mock[LoginService]
 
-      override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+      override def messagesApi: MessagesApi = fakeApplication.injector.instanceOf[MessagesApi]
     }
 
     def execute[T <: play.api.mvc.AnyContent](action: Action[AnyContent], request: FakeRequest[T] = FakeRequest()) = await(csrfAddToken(action)(request))
@@ -76,16 +76,17 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with OneAppPerTest 
       bodyOf(result) should include ("Invalid user ID or password. Try again.")
     }
 
-    "redirect to the continueUrl when the credentials are valid" in new Setup {
+    "redirect to the continueUrl with the session when the credentials are valid" in new Setup {
       val testUser = TestIndividual("543212311772", SaUtr("1097172564"), Nino("AA100010B"))
+      val cookieValue = "key1=value1"
 
-      given(underTest.loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier]())).willReturn(testUser)
+      given(underTest.loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier]())).willReturn(s"mdtp=$cookieValue")
 
-      val result = execute(underTest.login(), request = request)
+      val result = await(underTest.login()(request))
 
       status(result) shouldBe 303
       result.header.headers("Location") shouldEqual continueUrl
+      result.header.headers("Set-Cookie") should include (s"mdtp=$cookieValue")
     }
-
   }
 }
