@@ -14,26 +14,19 @@
  * limitations under the License.
  */
 
-package it.uk.gov.hmrc.api.testlogin
+package it.uk.gov.hmrc.api.testlogin.stubs
 
-import play.api.http.Status
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import uk.gov.hmrc.api.testlogin.controllers.HelloWorld
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import com.github.tomakehurst.wiremock.client.WireMock._
+import it.uk.gov.hmrc.api.testlogin.MockHost
+import it.uk.gov.hmrc.api.testlogin.pages.ContinuePage
+import org.apache.http.HttpStatus._
 
+object ContinuePageStub extends MockHost(11113) {
 
-class HelloWorldControllerSpec extends UnitSpec with WithFakeApplication{
-
-  val fakeRequest = FakeRequest("GET", "/")
-
-
-  "GET /" should {
-    "return 200" in {
-      val result = HelloWorld.helloWorld(fakeRequest)
-      status(result) shouldBe Status.OK
-    }
+  def givenContinuePageIsUp() = {
+    mock.register(get(urlPathEqualTo(ContinuePage.path))
+      .willReturn(aResponse()
+        .withStatus(SC_OK)
+        .withBody("<html><head><title>Continue Page</title></head><body><h1>Continue Page</h1></body></html>")))
   }
-
-
 }

@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.testlogin.controllers
+package it.uk.gov.hmrc.api.testlogin.pages
 
-import uk.gov.hmrc.api.testlogin.views.html.helloworld.hello_world
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import play.api.mvc._
-import scala.concurrent.Future
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
+import it.uk.gov.hmrc.api.testlogin.helpers.WebPage
 
+object LoginPage extends WebPage {
 
-object HelloWorld extends HelloWorld
+  override val url: String = s"http://localhost:9000/api-test-login/sign-in?continue=${ContinuePage.url}"
 
-trait HelloWorld extends FrontendController {
-  val helloWorld = Action.async { implicit request =>
-		Future.successful(Ok(hello_world()))
-  }
+  override def isCurrentPage: Boolean = find(cssSelector("h1")).fold(false)(_.text == "Sign in")
 }

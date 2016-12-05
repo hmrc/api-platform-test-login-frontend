@@ -14,25 +14,20 @@
  * limitations under the License.
  */
 
-package unit.uk.gov.hmrc.testlogin
+package uk.gov.hmrc.api.testlogin.models
 
-import play.api.http.Status
-import play.api.test.FakeRequest
-import uk.gov.hmrc.api.testlogin.controllers.HelloWorld
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.domain._
 
+sealed trait TestUser {
+  val username: String
+}
 
-class HelloWorldControllerSpec extends UnitSpec with WithFakeApplication{
+case class TestIndividual(override val username: String, saUtr: SaUtr, nino: Nino) extends TestUser
 
-  val fakeRequest = FakeRequest("GET", "/")
+case class TestOrganisation(override val username: String, saUtr: SaUtr, empRef: EmpRef, ctUtr: CtUtr, vrn: Vrn) extends TestUser
 
-
-  "GET /" should {
-    "return 200" in {
-      val result = HelloWorld.helloWorld(fakeRequest)
-      status(result) shouldBe Status.OK
-    }
-  }
-
-
+object UserType extends Enumeration {
+  type UserType = Value
+  val INDIVIDUAL = Value("INDIVIDUAL")
+  val ORGANISATION = Value("ORGANISATION")
 }
