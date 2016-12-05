@@ -20,9 +20,8 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import it.uk.gov.hmrc.api.testlogin.MockHost
 import org.apache.http.HttpStatus._
 import play.api.libs.json.Json
+import uk.gov.hmrc.api.testlogin.models.JsonFormatters.{formatLoginRequest, formatTestUser}
 import uk.gov.hmrc.api.testlogin.models.{LoginRequest, TestIndividual}
-import uk.gov.hmrc.api.testlogin.models.JsonFormatters.formatLoginRequest
-import uk.gov.hmrc.api.testlogin.models.JsonFormatters.formatTestUser
 
 object ApiPlatformTestUserStub extends MockHost(11111) {
 

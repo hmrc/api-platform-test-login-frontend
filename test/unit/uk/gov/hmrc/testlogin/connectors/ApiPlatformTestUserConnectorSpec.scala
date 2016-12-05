@@ -20,11 +20,11 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import play.api.libs.json.Json._
 import uk.gov.hmrc.api.testlogin.config.WSHttp
 import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
-import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest, TestOrganisation, TestIndividual}
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
+import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest, TestIndividual, TestOrganisation}
 import uk.gov.hmrc.domain._
-import uk.gov.hmrc.play.http.{Upstream5xxResponse, UnauthorizedException, HeaderCarrier, HttpPost}
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpPost, Upstream5xxResponse}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class ApiPlatformTestUserConnectorSpec extends UnitSpec with WiremockSugar with WithFakeApplication {
 

@@ -20,18 +20,18 @@ package unit.uk.gov.hmrc.testlogin.controllers
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import org.mockito.Matchers.{any, refEq}
 import org.mockito.BDDMockito.given
+import org.mockito.Matchers.{any, refEq}
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.MessagesApi
-import play.api.mvc.{AnyContent, Action}
+import play.api.mvc.{Action, AnyContent}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.api.testlogin.controllers.LoginController
-import uk.gov.hmrc.api.testlogin.models.{TestIndividual, LoginFailed, LoginRequest}
+import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest, TestIndividual}
 import uk.gov.hmrc.api.testlogin.services.LoginService
 import uk.gov.hmrc.domain.{Nino, SaUtr}
 import uk.gov.hmrc.play.http.HeaderCarrier
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future.failed
 

@@ -20,7 +20,7 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import it.uk.gov.hmrc.api.testlogin.helpers.{Env, NavigationSugar}
-import it.uk.gov.hmrc.api.testlogin.stubs.{ContinuePageStub, AuthLoginStub, ApiPlatformTestUserStub}
+import it.uk.gov.hmrc.api.testlogin.stubs.{ApiPlatformTestUserStub, AuthLoginStub, ContinuePageStub}
 import org.openqa.selenium.WebDriver
 import org.scalatest._
 import org.scalatestplus.play.OneServerPerSuite

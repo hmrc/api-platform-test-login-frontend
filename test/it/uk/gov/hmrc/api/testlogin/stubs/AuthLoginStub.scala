@@ -19,7 +19,7 @@ package it.uk.gov.hmrc.api.testlogin.stubs
 import com.github.tomakehurst.wiremock.client.WireMock._
 import it.uk.gov.hmrc.api.testlogin.MockHost
 import org.apache.http.HttpStatus._
-import uk.gov.hmrc.crypto.{PlainText, ApplicationCrypto}
+import uk.gov.hmrc.crypto.{ApplicationCrypto, PlainText}
 
 object AuthLoginStub extends MockHost(11112) {
 

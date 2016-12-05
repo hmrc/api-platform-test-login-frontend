@@ -18,11 +18,11 @@ package uk.gov.hmrc.api.testlogin.services
 
 import javax.inject.Inject
 
-import uk.gov.hmrc.api.testlogin.connectors.{AuthLoginStubConnectorImpl, AuthLoginStubConnector, ApiPlatformTestUserConnectorImpl, ApiPlatformTestUserConnector}
+import uk.gov.hmrc.api.testlogin.connectors.{ApiPlatformTestUserConnector, ApiPlatformTestUserConnectorImpl, AuthLoginStubConnector, AuthLoginStubConnectorImpl}
 import uk.gov.hmrc.api.testlogin.models.LoginRequest
 import uk.gov.hmrc.play.http.HeaderCarrier
-import scala.concurrent.ExecutionContext.Implicits.global
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 trait LoginService {

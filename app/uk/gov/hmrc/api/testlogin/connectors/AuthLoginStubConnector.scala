@@ -18,14 +18,16 @@ package uk.gov.hmrc.api.testlogin.connectors
 
 import javax.inject.Inject
 
+import org.apache.http.HttpStatus.SC_SEE_OTHER
 import play.api.libs.ws.WSClient
 import play.api.mvc.Session.COOKIE_NAME
-import uk.gov.hmrc.api.testlogin.models.{TestOrganisation, TestIndividual, TestUser}
+import uk.gov.hmrc.api.testlogin.models.{TestIndividual, TestOrganisation, TestUser}
 import uk.gov.hmrc.crypto.ApplicationCrypto.SessionCookieCrypto
 import uk.gov.hmrc.crypto.Crypted
-import uk.gov.hmrc.domain.{EmpRef, SaUtr}
+import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -38,7 +40,7 @@ trait AuthLoginStubConnector {
 
     wsClient.url(s"$serviceUrl/auth-login-stub/gg-sign-in").withFollowRedirects(false).post(form.toMap) map { response =>
       response.status match {
-        case 303 =>
+        case SC_SEE_OTHER =>
           val encryptedCookie = response.cookie(COOKIE_NAME).flatMap(_.value)
             .getOrElse(throw new RuntimeException(s"Cookie not present in response from auth-login-stub userId=${testUser.username}"))
           decrypt(COOKIE_NAME, encryptedCookie)

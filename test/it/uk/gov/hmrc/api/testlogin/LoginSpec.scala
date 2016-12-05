@@ -17,13 +17,14 @@
 package it.uk.gov.hmrc.api.testlogin
 
 import it.uk.gov.hmrc.api.testlogin.pages.{ContinuePage, LoginPage}
-import it.uk.gov.hmrc.api.testlogin.stubs.AuthLoginStub.givenNextAuthSessionReturnedForUserIs
 import it.uk.gov.hmrc.api.testlogin.stubs.ApiPlatformTestUserStub.givenIndividualHasPassword
+import it.uk.gov.hmrc.api.testlogin.stubs.AuthLoginStub.givenNextAuthSessionReturnedForUserIs
 import it.uk.gov.hmrc.api.testlogin.stubs.ContinuePageStub
 import uk.gov.hmrc.api.testlogin.models.TestIndividual
 import uk.gov.hmrc.crypto.ApplicationCrypto.SessionCookieCrypto
 import uk.gov.hmrc.crypto.Crypted
 import uk.gov.hmrc.domain._
+
 import scala.collection.JavaConversions._
 
 

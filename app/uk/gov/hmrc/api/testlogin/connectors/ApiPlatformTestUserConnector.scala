@@ -17,12 +17,13 @@
 package uk.gov.hmrc.api.testlogin.connectors
 
 import uk.gov.hmrc.api.testlogin.config.WSHttp
-import uk.gov.hmrc.api.testlogin.models.{LoginFailed, TestUser, LoginRequest}
-import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http.{UnauthorizedException, Upstream4xxResponse, HeaderCarrier, HttpPost}
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
-import scala.concurrent.Future
+import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest, TestUser}
+import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpPost, Upstream4xxResponse}
+
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 trait ApiPlatformTestUserConnector {
 
@@ -31,7 +32,7 @@ trait ApiPlatformTestUserConnector {
 
   def authenticate(loginRequest: LoginRequest)(implicit hc:HeaderCarrier): Future[TestUser] = {
     http.POST[LoginRequest, TestUser](s"$serviceUrl/authenticate", loginRequest) recover {
-      case e: Upstream4xxResponse if e.upstreamResponseCode == 401 => throw new LoginFailed(loginRequest.username)
+      case e: Upstream4xxResponse if e.upstreamResponseCode == 401 => throw LoginFailed(loginRequest.username)
     }
   }
 }

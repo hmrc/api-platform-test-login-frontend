@@ -20,10 +20,10 @@ import javax.inject.Inject
 
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.{MessagesApi, I18nSupport}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Action
 import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest}
-import uk.gov.hmrc.api.testlogin.services.{LoginServiceImpl, LoginService}
+import uk.gov.hmrc.api.testlogin.services.{LoginService, LoginServiceImpl}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 import scala.concurrent.Future.successful

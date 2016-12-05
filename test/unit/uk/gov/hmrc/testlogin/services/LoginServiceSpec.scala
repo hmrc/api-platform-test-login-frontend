@@ -19,8 +19,8 @@ package unit.uk.gov.hmrc.testlogin.services
 
 import org.mockito.BDDMockito.given
 import org.scalatest.mock.MockitoSugar
-import uk.gov.hmrc.api.testlogin.connectors.{AuthLoginStubConnector, ApiPlatformTestUserConnector}
-import uk.gov.hmrc.api.testlogin.models.{LoginFailed, TestIndividual, LoginRequest}
+import uk.gov.hmrc.api.testlogin.connectors.{ApiPlatformTestUserConnector, AuthLoginStubConnector}
+import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest, TestIndividual}
 import uk.gov.hmrc.api.testlogin.services.LoginService
 import uk.gov.hmrc.domain.{Nino, SaUtr}
 import uk.gov.hmrc.play.http.HeaderCarrier

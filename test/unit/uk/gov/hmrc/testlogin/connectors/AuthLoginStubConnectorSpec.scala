@@ -19,9 +19,9 @@ package unit.uk.gov.hmrc.testlogin.connectors
 import com.github.tomakehurst.wiremock.client.WireMock._
 import play.api.libs.ws.WSClient
 import uk.gov.hmrc.api.testlogin.connectors.AuthLoginStubConnector
-import uk.gov.hmrc.api.testlogin.models.{TestOrganisation, TestIndividual}
+import uk.gov.hmrc.api.testlogin.models.{TestIndividual, TestOrganisation}
 import uk.gov.hmrc.domain._
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class AuthLoginStubConnectorSpec extends UnitSpec with WiremockSugar with WithFakeApplication {
 
