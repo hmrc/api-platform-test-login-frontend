@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,11 +52,19 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
   }
 
   "showLoginPage" should {
+
     "display the login page" in new Setup {
 
       val result = execute(underTest.showLoginPage("/continueUrl"))
 
       bodyOf(result) should include ("Sign in")
+    }
+
+    "display the Create Test User link which opens a new browser-tab" in new Setup {
+
+      val result = execute(underTest.showLoginPage("/continueUrl"))
+
+      bodyOf(result) should include ("<a href=\"/api-test-user\" target=\"_blank\">Don't have Test User credentials</a>")
     }
   }
 
@@ -69,7 +77,7 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
 
     "display invalid userId or password when the credentials are invalid" in new Setup {
 
-      given(underTest.loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier]())).willReturn(failed(new LoginFailed("")))
+      given(underTest.loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier]())).willReturn(failed(LoginFailed("")))
 
       val result = execute(underTest.login(), request = request)
 
