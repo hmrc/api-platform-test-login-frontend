@@ -64,7 +64,7 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
 
       val result = execute(underTest.showLoginPage("/continueUrl"))
 
-      bodyOf(result) should include ("<a href=\"/api-test-user\" target=\"_blank\">Don't have Test User credentials</a>")
+      bodyOf(result) should include ("<a href=\"/api-test-user\" target=\"_blank\" rel=\"external\">Don't have Test User credentials</a>")
     }
   }
 
