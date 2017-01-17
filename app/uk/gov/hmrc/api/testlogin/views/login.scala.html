@@ -1,17 +1,17 @@
 @import uk.gov.hmrc.api.testlogin.config.FrontendAppConfig
+@import uk.gov.hmrc.api.testlogin.controllers.routes.LoginControllerImpl
+
 @(continue: String, errorMessage: Option[String] = None)(implicit request: Request[_], messages: Messages)
 
-<!-- TODO: move CSS import in the <HEAD> otherwise it is loaded twice... -->
 @mainContent = {
-    <link href='@routes.Assets.at("sandbox.css")' media='screen' rel='stylesheet' type='text/css' />
     <div class="content__body">
         <h1>Sign in</h1>
         <p>Enter your Test User credentials to sign in.</p>
 
-        @helper.form(action = uk.gov.hmrc.api.testlogin.controllers.routes.LoginControllerImpl.login()) {
+        @helper.form(action = LoginControllerImpl.login()) {
 
             <div class="form-field-group @if(errorMessage.isDefined) {error}">
-                @errorMessage.map{ error =>
+                @errorMessage.map { error =>
                     <span class="error-notification password">@Messages(error)</span>
                 }
                 @helper.CSRF.formField
