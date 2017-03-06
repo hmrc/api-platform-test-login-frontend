@@ -16,26 +16,35 @@
 
 package uk.gov.hmrc.api.testlogin.services
 
-import javax.inject.Inject
+import java.util.UUID
+import javax.inject.{Singleton, Inject}
 
-import uk.gov.hmrc.api.testlogin.connectors.{ApiPlatformTestUserConnector, ApiPlatformTestUserConnectorImpl, AuthLoginStubConnector, AuthLoginStubConnectorImpl}
-import uk.gov.hmrc.api.testlogin.models.LoginRequest
+import org.joda.time.DateTime
+import play.api.mvc.Session
+import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
+import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginRequest}
 import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.play.http.logging.SessionId
+import uk.gov.hmrc.play.http.SessionKeys._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-trait LoginService {
-  val apiPlatformTestUserConnector: ApiPlatformTestUserConnector
-  val authLoginStubConnector: AuthLoginStubConnector
+@Singleton
+class LoginService @Inject()(apiPlatformTestUserConnector: ApiPlatformTestUserConnector) {
 
-  def authenticate(loginRequest: LoginRequest)(implicit hc: HeaderCarrier): Future[String] = {
-    for {
-      user <- apiPlatformTestUserConnector.authenticate(loginRequest)
-      session <- authLoginStubConnector.createSession(user)
-    } yield session
+  def authenticate(loginRequest: LoginRequest)(implicit hc: HeaderCarrier): Future[Session] = {
+    apiPlatformTestUserConnector.authenticate(loginRequest) map (buildSession(_, loginRequest))
   }
-}
 
-class LoginServiceImpl @Inject()(override val apiPlatformTestUserConnector: ApiPlatformTestUserConnectorImpl,
-                                 override val authLoginStubConnector: AuthLoginStubConnectorImpl) extends LoginService
+  private def buildSession(authSession: AuthenticatedSession, loginRequest: LoginRequest): Session = Session(Map(
+    sessionId -> SessionId(s"session-${UUID.randomUUID}").value,
+    userId -> authSession.authorityURI,
+    authToken -> authSession.authBearerToken,
+    lastRequestTimestamp -> DateTime.now.getMillis.toString,
+    name -> loginRequest.username,
+    authProvider -> "GGW",
+    token -> authSession.gatewayToken,
+    affinityGroup -> authSession.affinityGroup)
+  )
+}

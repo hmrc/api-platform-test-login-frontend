@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package it.uk.gov.hmrc.api.testlogin
+package it.uk.gov.hmrc.api.testlogin.helpers
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
-import it.uk.gov.hmrc.api.testlogin.helpers.{Env, NavigationSugar}
-import it.uk.gov.hmrc.api.testlogin.stubs.{ApiPlatformTestUserStub, AuthLoginStub, ContinuePageStub}
+import it.uk.gov.hmrc.api.testlogin.stubs.{ApiPlatformTestUserStub, ContinuePageStub}
 import org.openqa.selenium.WebDriver
 import org.scalatest._
 import org.scalatestplus.play.OneServerPerSuite
+import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 
 trait BaseSpec extends FeatureSpec with BeforeAndAfterAll with BeforeAndAfterEach with Matchers with OneServerPerSuite
@@ -31,16 +31,15 @@ with GivenWhenThen with NavigationSugar {
 
   override lazy val port = 9000
   implicit val webDriver: WebDriver = Env.driver
-  implicit override lazy val app = GuiceApplicationBuilder()
+  implicit override lazy val app: Application = GuiceApplicationBuilder()
     .configure(
       "auditing.enabled" -> false,
       "auditing.traceRequests" -> false,
-      "microservice.services.api-platform-test-user.port" -> ApiPlatformTestUserStub.port,
-      "microservice.services.auth-login-stub.port" -> AuthLoginStub.port
+      "microservice.services.api-platform-test-user.port" -> ApiPlatformTestUserStub.port
     )
     .build()
 
-  val mocks = Seq(ApiPlatformTestUserStub, AuthLoginStub, ContinuePageStub)
+  val mocks = Seq(ApiPlatformTestUserStub, ContinuePageStub)
 
   override protected def beforeEach(): Unit = {
     mocks.foreach(m => if (!m.server.isRunning) m.server.start())

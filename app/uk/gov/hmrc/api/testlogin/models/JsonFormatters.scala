@@ -29,4 +29,5 @@ object JsonFormatters {
     .format
 
   implicit val formatLoginRequest = Json.format[LoginRequest]
+  implicit val formatAuthenticationResponse = Json.format[AuthenticationResponse]
 }

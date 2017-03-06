@@ -17,7 +17,7 @@
 package it.uk.gov.hmrc.api.testlogin.stubs
 
 import com.github.tomakehurst.wiremock.client.WireMock._
-import it.uk.gov.hmrc.api.testlogin.MockHost
+import it.uk.gov.hmrc.api.testlogin.helpers.MockHost
 import it.uk.gov.hmrc.api.testlogin.pages.ContinuePage
 import org.apache.http.HttpStatus._
 

@@ -17,25 +17,29 @@
 package it.uk.gov.hmrc.api.testlogin.stubs
 
 import com.github.tomakehurst.wiremock.client.WireMock._
-import it.uk.gov.hmrc.api.testlogin.MockHost
-import org.apache.http.HttpStatus._
-import play.api.libs.json.Json
-import uk.gov.hmrc.api.testlogin.models.JsonFormatters.{formatLoginRequest, formatTestUser}
-import uk.gov.hmrc.api.testlogin.models.{LoginRequest, TestIndividual}
+import it.uk.gov.hmrc.api.testlogin.helpers.MockHost
+import play.api.http.HeaderNames
+import play.api.http.Status.{CREATED, UNAUTHORIZED}
+import play.api.libs.json.Json.{stringify, toJson}
+import uk.gov.hmrc.api.testlogin.models.{LoginRequest, AuthenticationResponse, AuthenticatedSession}
+import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
 
 object ApiPlatformTestUserStub extends MockHost(11111) {
 
-  def givenIndividualHasPassword(individual: TestIndividual, password: String) = {
-    mock.register(post(urlPathEqualTo("/authenticate"))
+  def willSucceedAuthenticationWith(loginRequest: LoginRequest, authenticatedSession: AuthenticatedSession) = {
+    mock.register(post(urlPathEqualTo("/session"))
+      .withRequestBody(equalToJson(stringify(toJson(loginRequest))))
       .willReturn(aResponse()
-        .withStatus(SC_UNAUTHORIZED)
-        .withHeader("Content-Type", "application/json")))
+        .withStatus(CREATED)
+        .withBody(stringify(toJson(AuthenticationResponse(authenticatedSession.gatewayToken, authenticatedSession.affinityGroup))))
+        .withHeader(HeaderNames.AUTHORIZATION, authenticatedSession.authBearerToken)
+        .withHeader(HeaderNames.LOCATION, authenticatedSession.authorityURI))
+    )
+  }
 
-    mock.register(post(urlPathEqualTo("/authenticate"))
-      .withRequestBody(equalToJson(Json.toJson(LoginRequest(individual.username, password)).toString()))
+  def willFailAuthenticationByDefault() = {
+    mock.register(post(urlPathEqualTo("/session"))
       .willReturn(aResponse()
-        .withStatus(SC_OK)
-        .withHeader("Content-Type", "application/json")
-        .withBody(Json.toJson(individual).toString())))
+      .withStatus(UNAUTHORIZED)))
   }
 }

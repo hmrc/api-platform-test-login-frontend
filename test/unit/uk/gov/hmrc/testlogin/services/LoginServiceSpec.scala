@@ -17,48 +17,66 @@
 package unit.uk.gov.hmrc.testlogin.services
 
 
+import org.joda.time.DateTimeUtils.{setCurrentMillisSystem, setCurrentMillisFixed}
 import org.mockito.BDDMockito.given
+import org.scalatest.BeforeAndAfterAll
 import org.scalatest.mock.MockitoSugar
-import uk.gov.hmrc.api.testlogin.connectors.{ApiPlatformTestUserConnector, AuthLoginStubConnector}
-import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest, TestIndividual}
+import play.api.mvc.Session
+import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
+import uk.gov.hmrc.api.testlogin.models._
 import uk.gov.hmrc.api.testlogin.services.LoginService
 import uk.gov.hmrc.domain.{Nino, SaUtr}
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.play.http.SessionKeys.{token, sessionId}
+import uk.gov.hmrc.play.http.{SessionKeys, HeaderCarrier}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future.failed
 
-class LoginServiceSpec extends UnitSpec with MockitoSugar {
+class LoginServiceSpec extends UnitSpec with MockitoSugar with BeforeAndAfterAll {
 
   val user = TestIndividual("543212311772", SaUtr("1097172564"), Nino("AA100010B"))
 
   trait Setup {
     implicit val hc = HeaderCarrier()
-    val underTest = new LoginService {
-      override val apiPlatformTestUserConnector: ApiPlatformTestUserConnector = mock[ApiPlatformTestUserConnector]
-      override val authLoginStubConnector: AuthLoginStubConnector = mock[AuthLoginStubConnector]
-    }
+    val apiPlatformTestUserConnector = mock[ApiPlatformTestUserConnector]
+    val underTest = new LoginService(apiPlatformTestUserConnector)
+  }
+
+  override def beforeAll() {
+    setCurrentMillisFixed(10000)
+  }
+
+  override def afterAll() {
+    setCurrentMillisSystem()
   }
 
   "login" should {
     "return the session when the authentication is successful" in new Setup {
 
       val loginRequest = LoginRequest("user", "password")
+      val authSession = AuthenticatedSession("Bearer AUTH_TOKEN", "/auth/oid/12345", "GG_TOKEN", "Individual")
 
-      given(underTest.apiPlatformTestUserConnector.authenticate(loginRequest)).willReturn(user)
-      val userSession = "mdtp=session"
-      given(underTest.authLoginStubConnector.createSession(user)).willReturn(userSession)
+      given(apiPlatformTestUserConnector.authenticate(loginRequest)).willReturn(authSession)
 
       val result = await(underTest.authenticate(loginRequest))
 
-      result shouldBe userSession
+      result shouldBe Session(Map(
+        SessionKeys.affinityGroup -> "Individual",
+        SessionKeys.name -> loginRequest.username,
+        SessionKeys.authToken -> authSession.authBearerToken,
+        SessionKeys.lastRequestTimestamp -> "10000",
+        SessionKeys.authProvider -> "GGW",
+        token -> authSession.gatewayToken,
+        sessionId -> result.data(sessionId),
+        SessionKeys.userId -> authSession.authorityURI)
+      )
     }
 
     "propagate LoginFailed exception when authentication fails" in new Setup {
 
       val loginRequest = LoginRequest("user", "password")
 
-      given(underTest.apiPlatformTestUserConnector.authenticate(loginRequest)).willReturn(failed(new LoginFailed("user")))
+      given(apiPlatformTestUserConnector.authenticate(loginRequest)).willReturn(failed(new LoginFailed("user")))
 
       intercept[LoginFailed]{await(underTest.authenticate(loginRequest))}
     }
