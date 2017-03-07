@@ -17,19 +17,17 @@
 package unit.uk.gov.hmrc.testlogin.controllers
 
 
-
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import org.mockito.BDDMockito.given
 import org.mockito.Matchers.{any, refEq}
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Session, Action, AnyContent}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.api.testlogin.controllers.LoginController
-import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest, TestIndividual}
+import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest}
 import uk.gov.hmrc.api.testlogin.services.LoginService
-import uk.gov.hmrc.domain.{Nino, SaUtr}
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
@@ -42,11 +40,10 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
     implicit val materializer = ActorMaterializer.create(ActorSystem.create())
     private val csrfAddToken = fakeApplication.injector.instanceOf[play.filters.csrf.CSRFAddToken]
 
-    val underTest = new LoginController {
-      override val loginService: LoginService = mock[LoginService]
+    val messagesApi: MessagesApi = fakeApplication.injector.instanceOf[MessagesApi]
+    val loginService: LoginService = mock[LoginService]
 
-      override def messagesApi: MessagesApi = fakeApplication.injector.instanceOf[MessagesApi]
-    }
+    val underTest = new LoginController(messagesApi, loginService)
 
     def execute[T <: play.api.mvc.AnyContent](action: Action[AnyContent], request: FakeRequest[T] = FakeRequest()) = await(csrfAddToken(action)(request))
   }
@@ -77,7 +74,7 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
 
     "display invalid userId or password when the credentials are invalid" in new Setup {
 
-      given(underTest.loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier]())).willReturn(failed(LoginFailed("")))
+      given(loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier]())).willReturn(failed(LoginFailed("")))
 
       val result = execute(underTest.login(), request = request)
 
@@ -85,16 +82,15 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
     }
 
     "redirect to the continueUrl with the session when the credentials are valid" in new Setup {
-      val testUser = TestIndividual("543212311772", SaUtr("1097172564"), Nino("AA100010B"))
-      val cookieValue = "key1=value1"
 
-      given(underTest.loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier]())).willReturn(s"mdtp=$cookieValue")
+      val session = Session(Map("authBearerToken" -> "Bearer AUTH_TOKEN"))
+      given(loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier]())).willReturn(session)
 
       val result = await(underTest.login()(request))
 
       status(result) shouldBe 303
       result.header.headers("Location") shouldEqual continueUrl
-      result.header.headers("Set-Cookie") should include (s"mdtp=$cookieValue")
+      result.header.headers("Set-Cookie") should include (s"authBearerToken=Bearer+AUTH_TOKEN")
     }
   }
 }

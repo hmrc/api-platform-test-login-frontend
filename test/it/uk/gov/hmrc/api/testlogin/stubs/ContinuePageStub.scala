@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package it.uk.gov.hmrc.api.testlogin.stubs
 
 import com.github.tomakehurst.wiremock.client.WireMock._
-import it.uk.gov.hmrc.api.testlogin.MockHost
+import it.uk.gov.hmrc.api.testlogin.helpers.MockHost
 import it.uk.gov.hmrc.api.testlogin.pages.ContinuePage
 import org.apache.http.HttpStatus._
 

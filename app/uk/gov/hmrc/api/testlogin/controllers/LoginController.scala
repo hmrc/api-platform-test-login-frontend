@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,20 @@
 
 package uk.gov.hmrc.api.testlogin.controllers
 
-import javax.inject.Inject
+import javax.inject.{Singleton, Inject}
 
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Action
 import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest}
-import uk.gov.hmrc.api.testlogin.services.{LoginService, LoginServiceImpl}
+import uk.gov.hmrc.api.testlogin.services.LoginService
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 import scala.concurrent.Future.successful
 
-trait LoginController extends FrontendController with I18nSupport {
-
-  val loginService: LoginService
+@Singleton
+class LoginController @Inject()(override val messagesApi: MessagesApi, loginService: LoginService) extends FrontendController with I18nSupport {
 
   case class LoginForm(userId: String, password: String, continue: String)
 
@@ -50,8 +49,8 @@ trait LoginController extends FrontendController with I18nSupport {
     loginForm.bindFromRequest.fold(
       formWithErrors => successful(BadRequest(uk.gov.hmrc.api.testlogin.views.html.error_template("", "", "Invalid Parameters"))),
       loginForm => {
-        loginService.authenticate(LoginRequest(loginForm.userId, loginForm.password)) map { cookie =>
-          Redirect(loginForm.continue).withHeaders("Set-Cookie" -> cookie)
+        loginService.authenticate(LoginRequest(loginForm.userId, loginForm.password)) map { session =>
+          Redirect(loginForm.continue).withSession(session)
         } recover {
           case e : LoginFailed =>
             Unauthorized(uk.gov.hmrc.api.testlogin.views.html.login(loginForm.continue, Some("Invalid user ID or password. Try again.")))
@@ -60,5 +59,3 @@ trait LoginController extends FrontendController with I18nSupport {
     )
   }
 }
-
-class LoginControllerImpl @Inject()(override val messagesApi: MessagesApi, override val loginService: LoginServiceImpl) extends LoginController

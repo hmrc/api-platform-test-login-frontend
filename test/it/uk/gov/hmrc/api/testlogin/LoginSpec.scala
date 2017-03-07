@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,33 +16,28 @@
 
 package it.uk.gov.hmrc.api.testlogin
 
+import it.uk.gov.hmrc.api.testlogin.helpers.BaseSpec
 import it.uk.gov.hmrc.api.testlogin.pages.{ContinuePage, LoginPage}
-import it.uk.gov.hmrc.api.testlogin.stubs.ApiPlatformTestUserStub.givenIndividualHasPassword
-import it.uk.gov.hmrc.api.testlogin.stubs.AuthLoginStub.givenNextAuthSessionReturnedForUserIs
-import it.uk.gov.hmrc.api.testlogin.stubs.ContinuePageStub
-import uk.gov.hmrc.api.testlogin.models.TestIndividual
+import it.uk.gov.hmrc.api.testlogin.stubs.{ApiPlatformTestUserStub, ContinuePageStub}
+import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginRequest, TestIndividual}
 import uk.gov.hmrc.crypto.ApplicationCrypto.SessionCookieCrypto
 import uk.gov.hmrc.crypto.Crypted
 import uk.gov.hmrc.domain._
 
 import scala.collection.JavaConversions._
 
-
 class LoginSpec extends BaseSpec {
 
   val testUser = TestIndividual("543212311772", SaUtr("1097172564"), Nino("AA100010B"))
   val password = "validPassword"
-  val authSession = "authToken=Bearer+1234"
+  val authenticatedSession = AuthenticatedSession("Bearer 1234", "/auth/oid/123", "GG_TOKEN", "Individual")
 
   feature("User Login") {
 
     scenario("Successful login") {
 
       Given("A test user")
-      givenIndividualHasPassword(testUser, password)
-
-      And("Auth-login-stub returns a session for the user")
-      givenNextAuthSessionReturnedForUserIs(testUser.username, authSession)
+      ApiPlatformTestUserStub.willSucceedAuthenticationWith(LoginRequest(testUser.username, password), authenticatedSession)
 
       When("I login with the user's credentials")
       goOn(LoginPage)
@@ -55,16 +50,13 @@ class LoginSpec extends BaseSpec {
 
       And("The cookie is set in the session")
       val encryptedMdtpCookie = webDriver.manage().getCookies.toSet.find(_.getName == "mdtp").get
-      val mdtpCookie = SessionCookieCrypto.decrypt(Crypted(encryptedMdtpCookie.getValue)).value
-      mdtpCookie shouldBe authSession
+      val mdtpCookieValue = SessionCookieCrypto.decrypt(Crypted(encryptedMdtpCookie.getValue)).value
+      mdtpCookieValue should include ("authToken=Bearer+1234")
     }
 
     scenario("Failed login") {
 
-      Given("A test user")
-      givenIndividualHasPassword(testUser, password)
-
-      When("I try to login with the wrong password")
+      When("I try to login with the wrong username or password")
       goOn(LoginPage)
       textField("userId").value = testUser.username
       pwdField("password").value = "wrongPassword"
@@ -81,5 +73,6 @@ class LoginSpec extends BaseSpec {
   override protected def beforeEach() = {
     super.beforeEach()
     ContinuePageStub.givenContinuePageIsUp()
+    ApiPlatformTestUserStub.willFailAuthenticationByDefault()
   }
 }

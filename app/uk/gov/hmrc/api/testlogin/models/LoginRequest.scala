@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,3 +18,7 @@ package uk.gov.hmrc.api.testlogin.models
 
 
 case class LoginRequest(username: String, password: String)
+
+case class AuthenticatedSession(authBearerToken: String, authorityURI: String, gatewayToken: String, affinityGroup: String)
+
+case class AuthenticationResponse(gatewayToken: String, affinityGroup: String)

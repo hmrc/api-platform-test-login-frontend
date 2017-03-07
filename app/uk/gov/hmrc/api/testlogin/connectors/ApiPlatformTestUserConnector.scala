@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +16,37 @@
 
 package uk.gov.hmrc.api.testlogin.connectors
 
+import javax.inject.Singleton
+
+import play.api.http.{Status, HeaderNames}
 import uk.gov.hmrc.api.testlogin.config.WSHttp
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
-import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest, TestUser}
+import uk.gov.hmrc.api.testlogin.models._
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpPost, Upstream4xxResponse}
+import uk.gov.hmrc.play.http.{Upstream4xxResponse, HeaderCarrier}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-trait ApiPlatformTestUserConnector {
+@Singleton
+class ApiPlatformTestUserConnector extends ServicesConfig {
+  lazy val serviceUrl: String = baseUrl("api-platform-test-user")
 
-  val http: HttpPost
-  val serviceUrl: String
+  def authenticate(loginRequest: LoginRequest)(implicit hc:HeaderCarrier): Future[AuthenticatedSession] = {
+    WSHttp.POST(s"$serviceUrl/session", loginRequest) map { response =>
+        val authenticationResponse = response.json.as[AuthenticationResponse]
 
-  def authenticate(loginRequest: LoginRequest)(implicit hc:HeaderCarrier): Future[TestUser] = {
-    http.POST[LoginRequest, TestUser](s"$serviceUrl/authenticate", loginRequest) recover {
-      case e: Upstream4xxResponse if e.upstreamResponseCode == 401 => throw LoginFailed(loginRequest.username)
+        (response.header(HeaderNames.AUTHORIZATION), response.header(HeaderNames.LOCATION)) match {
+          case (Some(authBearerToken), Some(authorityUri)) =>
+            AuthenticatedSession(
+              authBearerToken,
+              authorityUri,
+              authenticationResponse.gatewayToken,
+              authenticationResponse.affinityGroup)
+          case _ => throw new RuntimeException("Authorization and Location headers must be present in response")
+      }
+    } recoverWith {
+      case e: Upstream4xxResponse if e.upstreamResponseCode == Status.UNAUTHORIZED => Future.failed(LoginFailed(loginRequest.username))
     }
   }
-}
-
-class ApiPlatformTestUserConnectorImpl extends ApiPlatformTestUserConnector with ServicesConfig {
-  override val http: HttpPost = WSHttp
-  override val serviceUrl: String = baseUrl("api-platform-test-user")
 }
