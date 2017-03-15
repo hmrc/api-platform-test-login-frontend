@@ -18,8 +18,8 @@ trait MicroService {
   import TestPhases._
 
   val appName: String
+  val appDependencies: Seq[ModuleID]
 
-  lazy val appDependencies : Seq[ModuleID] = ???
   lazy val plugins : Seq[Plugins] = Seq.empty
   lazy val playSettings : Seq[Setting[_]] = Seq.empty
 
