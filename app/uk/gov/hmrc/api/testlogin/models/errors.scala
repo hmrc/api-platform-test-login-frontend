@@ -16,4 +16,4 @@
 
 package uk.gov.hmrc.api.testlogin.models
 
-case class LoginFailed(username: String) extends Exception
+case class LoginFailed(userId: String) extends Exception
