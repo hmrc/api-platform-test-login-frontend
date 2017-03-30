@@ -46,7 +46,7 @@ class ApiPlatformTestUserConnector extends ServicesConfig {
           case _ => throw new RuntimeException("Authorization and Location headers must be present in response")
       }
     } recoverWith {
-      case e: Upstream4xxResponse if e.upstreamResponseCode == Status.UNAUTHORIZED => Future.failed(LoginFailed(loginRequest.username))
+      case e: Upstream4xxResponse if e.upstreamResponseCode == Status.UNAUTHORIZED => Future.failed(LoginFailed(loginRequest.userId))
     }
   }
 }

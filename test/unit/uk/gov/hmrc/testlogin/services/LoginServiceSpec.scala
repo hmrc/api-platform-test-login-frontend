@@ -62,7 +62,7 @@ class LoginServiceSpec extends UnitSpec with MockitoSugar with BeforeAndAfterAll
 
       result shouldBe Session(Map(
         SessionKeys.affinityGroup -> "Individual",
-        SessionKeys.name -> loginRequest.username,
+        SessionKeys.name -> loginRequest.userId,
         SessionKeys.authToken -> authSession.authBearerToken,
         SessionKeys.lastRequestTimestamp -> "10000",
         SessionKeys.authProvider -> "GGW",

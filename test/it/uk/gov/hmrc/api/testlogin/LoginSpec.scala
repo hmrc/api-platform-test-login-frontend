@@ -37,11 +37,11 @@ class LoginSpec extends BaseSpec {
     scenario("Successful login") {
 
       Given("A test user")
-      ApiPlatformTestUserStub.willSucceedAuthenticationWith(LoginRequest(testUser.username, password), authenticatedSession)
+      ApiPlatformTestUserStub.willSucceedAuthenticationWith(LoginRequest(testUser.userId, password), authenticatedSession)
 
       When("I login with the user's credentials")
       goOn(LoginPage)
-      textField("userId").value = testUser.username
+      textField("userId").value = testUser.userId
       pwdField("password").value = password
       clickOnSubmit()
 
@@ -56,9 +56,9 @@ class LoginSpec extends BaseSpec {
 
     scenario("Failed login") {
 
-      When("I try to login with the wrong username or password")
+      When("I try to login with the wrong userId or password")
       goOn(LoginPage)
-      textField("userId").value = testUser.username
+      textField("userId").value = testUser.userId
       pwdField("password").value = "wrongPassword"
       clickOnSubmit()
 

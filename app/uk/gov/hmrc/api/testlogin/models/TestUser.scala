@@ -19,12 +19,12 @@ package uk.gov.hmrc.api.testlogin.models
 import uk.gov.hmrc.domain._
 
 sealed trait TestUser {
-  val username: String
+  val userId: String
 }
 
-case class TestIndividual(override val username: String, saUtr: SaUtr, nino: Nino) extends TestUser
+case class TestIndividual(override val userId: String, saUtr: SaUtr, nino: Nino) extends TestUser
 
-case class TestOrganisation(override val username: String, saUtr: SaUtr, empRef: EmpRef, ctUtr: CtUtr, vrn: Vrn) extends TestUser
+case class TestOrganisation(override val userId: String, saUtr: SaUtr, empRef: EmpRef, ctUtr: CtUtr, vrn: Vrn) extends TestUser
 
 object UserType extends Enumeration {
   type UserType = Value
