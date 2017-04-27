@@ -16,9 +16,7 @@
 
 package uk.gov.hmrc.api.testlogin.config
 
-import javax.inject.Inject
-
-import play.api.Configuration
+import play.api.Play.{configuration, current}
 import uk.gov.hmrc.play.config.ServicesConfig
 
 trait AppConfig {
@@ -28,7 +26,7 @@ trait AppConfig {
   val reportAProblemNonJSUrl: String
 }
 
-class FrontendAppConfig @Inject()(configuration: Configuration) extends AppConfig with ServicesConfig {
+object FrontendAppConfig extends AppConfig with ServicesConfig {
 
   private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
