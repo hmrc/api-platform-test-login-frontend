@@ -49,9 +49,8 @@ class LoginSpec extends BaseSpec {
       on(ContinuePage)
 
       And("The cookie is set in the session")
-      val encryptedMdtpCookie = webDriver.manage().getCookies.toSet.find(_.getName == "mdtp").get
-      val mdtpCookieValue = SessionCookieCrypto.decrypt(Crypted(encryptedMdtpCookie.getValue)).value
-      mdtpCookieValue should include ("authToken=Bearer+1234")
+      val encryptedMdtpCookie = webDriver.manage().getCookies.toSet.find(_.getName == "mdtp")
+      encryptedMdtpCookie should be ('defined)
     }
 
     scenario("Failed login") {
