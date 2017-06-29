@@ -18,16 +18,19 @@ package uk.gov.hmrc.api.testlogin.config
 
 import com.typesafe.config.Config
 import net.ceedubs.ficus.Ficus._
+import org.joda.time.Duration
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.Request
 import play.api.{Application, Configuration, Play}
 import play.twirl.api.Html
+import uk.gov.hmrc.api.testlogin.controllers.routes
 import uk.gov.hmrc.api.testlogin.views.html.error_template
 import uk.gov.hmrc.crypto.ApplicationCrypto
 import uk.gov.hmrc.play.audit.filters.FrontendAuditFilter
 import uk.gov.hmrc.play.config.{AppName, ControllerConfig, RunMode}
 import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
+import uk.gov.hmrc.play.filters.frontend.SessionTimeoutFilter
 import uk.gov.hmrc.play.frontend.bootstrap.DefaultFrontendGlobal
 import uk.gov.hmrc.play.http.logging.filters.FrontendLoggingFilter
 
@@ -48,6 +51,31 @@ object FrontendGlobal
     error_template(pageTitle, heading, message)
 
   override def microserviceMetricsConfig(implicit app: Application): Option[Configuration] = app.configuration.getConfig(s"microservice.metrics")
+
+  override def sessionTimeoutFilter: SessionTimeoutFilter = {
+    val defaultTimeout = Duration.standardMinutes(15)
+    val timeoutDuration = configuration
+      .getLong("session.timeoutSeconds")
+      .map(Duration.standardSeconds)
+      .getOrElse(defaultTimeout)
+
+    val wipeIdleSession = configuration
+      .getBoolean("session.wipeIdleSession")
+      .getOrElse(true)
+
+    val additionalSessionKeysToKeep = configuration
+      .getStringSeq("session.additionalSessionKeysToKeep")
+      .getOrElse(Seq.empty).toSet
+
+    val whitelistedCalls = Set(WhitelistedCall("/api-test-login/sign-in", "GET"), WhitelistedCall("/api-test-login/sign-in", "POST"))
+
+    new SessionTimeoutFilterWithWhitelist(
+      timeoutDuration = timeoutDuration,
+      additionalSessionKeysToKeep = additionalSessionKeysToKeep,
+      onlyWipeAuthToken = !wipeIdleSession,
+      whitelistedCalls = whitelistedCalls
+    )
+  }
 }
 
 object ControllerConfiguration extends ControllerConfig {
