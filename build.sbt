@@ -53,7 +53,7 @@ lazy val test = Seq(
   "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
   "org.mockito" % "mockito-core" % mockitoVersion % scope,
   "com.github.tomakehurst" % "wiremock" % wiremockVersion % scope,
-  "org.seleniumhq.selenium" % "selenium-java" % "2.53.1" % "test,it",
+  "org.seleniumhq.selenium" % "selenium-java" % "2.53.1" % scope,
   "org.seleniumhq.selenium" % "selenium-htmlunit-driver" % "2.52.0"
 )
 
