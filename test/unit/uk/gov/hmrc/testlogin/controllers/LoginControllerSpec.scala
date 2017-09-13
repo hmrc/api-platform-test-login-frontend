@@ -70,7 +70,7 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
     val loginRequest = LoginRequest("aUser", "aPassword")
     val continueUrl = "/continueUrl"
     val request = FakeRequest()
-      .withFormUrlEncodedBody("userId" -> loginRequest.userId, "password" -> loginRequest.password, "continue" -> continueUrl)
+      .withFormUrlEncodedBody("userId" -> loginRequest.username, "password" -> loginRequest.password, "continue" -> continueUrl)
 
     "display invalid userId or password when the credentials are invalid" in new Setup {
 

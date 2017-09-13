@@ -17,7 +17,7 @@
 package uk.gov.hmrc.api.testlogin.models
 
 
-case class LoginRequest(userId: String, password: String)
+case class LoginRequest(username: String, password: String)
 
 case class AuthenticatedSession(authBearerToken: String, authorityURI: String, gatewayToken: String, affinityGroup: String)
 
