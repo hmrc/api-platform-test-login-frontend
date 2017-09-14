@@ -43,7 +43,7 @@ class LoginService @Inject()(apiPlatformTestUserConnector: ApiPlatformTestUserCo
     authToken -> authSession.authBearerToken,
     // APIS-1811 FIXME: This should probably be DateTime.now(DateTimeZone.UTC) to align with the session timeout filter
     lastRequestTimestamp -> DateTime.now.getMillis.toString,
-    name -> loginRequest.userId,
+    name -> loginRequest.username,
     authProvider -> "GGW",
     token -> authSession.gatewayToken,
     affinityGroup -> authSession.affinityGroup)
