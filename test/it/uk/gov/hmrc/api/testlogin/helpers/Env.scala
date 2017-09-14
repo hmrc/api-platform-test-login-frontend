@@ -16,7 +16,6 @@
 
 package it.uk.gov.hmrc.api.testlogin.helpers
 
-import org.openqa.selenium.chrome.{ChromeDriver, ChromeDriverService, ChromeOptions}
 import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxProfile}
 import org.openqa.selenium.{HasCapabilities, WebDriver}
 
@@ -25,7 +24,9 @@ import scala.util.Try
 trait Env {
 
   val driver: WebDriver with HasCapabilities = {
-    new ChromeDriver()
+    val profile = new FirefoxProfile
+    profile.setAcceptUntrustedCertificates(true)
+    new FirefoxDriver(profile)
   }
 
   sys addShutdownHook {
