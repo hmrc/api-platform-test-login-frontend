@@ -1,7 +1,7 @@
-@import uk.gov.hmrc.api.testlogin.config.FrontendAppConfig
+@import uk.gov.hmrc.api.testlogin.config.AppConfig
 @import uk.gov.hmrc.api.testlogin.controllers.routes.LoginController
 
-@(continue: String, errorMessage: Option[String] = None)(implicit request: Request[_], messages: Messages)
+@(continue: String, errorMessage: Option[String] = None)(implicit request: Request[_], appConfig: AppConfig, messages: Messages)
 
 @mainContent = {
     <div class="content__body">
@@ -35,4 +35,4 @@
     </div>
 }
 
-@govuk_wrapper(appConfig = FrontendAppConfig, title = "Sign in", mainContent = mainContent)
+@govuk_wrapper(appConfig = appConfig, title = "Sign in", mainContent = mainContent)
