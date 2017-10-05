@@ -21,13 +21,14 @@ import javax.inject.{Inject, Singleton}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.Action
+import play.api.mvc.{Action, AnyContent, Request, Result}
 import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest}
 import uk.gov.hmrc.api.testlogin.services.{ContinueUrlService, LoginService}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.api.testlogin.views.html.{error_template, login=>login_template}
+import uk.gov.hmrc.api.testlogin.views.html.{error_template, login => login_template}
 
+import scala.concurrent.Future
 import scala.concurrent.Future.successful
 
 @Singleton
@@ -46,11 +47,7 @@ class LoginController @Inject()(override val messagesApi: MessagesApi, loginServ
   )
 
   def showLoginPage(continue: String) = Action.async { implicit request =>
-    if(continueUrlService.isValidContinueUrl(continue)) {
-      successful(Ok(login_template(continue)))
-    } else {
-      successful(BadRequest(error_template("", "", "Invalid Parameters")))
-    }
+    if(continueUrlService.isValidContinueUrl(continue)) successful(Ok(login_template(continue))) else badRequest()
   }
 
   def login() = Action.async { implicit request =>
@@ -64,11 +61,11 @@ class LoginController @Inject()(override val messagesApi: MessagesApi, loginServ
       }
     }
 
-    def badRequest() = successful(BadRequest(error_template("", "", "Invalid Parameters")))
-
     loginForm.bindFromRequest.fold(
       formWithErrors => badRequest(),
       loginForm => if(continueUrlService.isValidContinueUrl(loginForm.continue)) handleLogin(loginForm) else badRequest()
     )
   }
+
+  private def badRequest()(implicit request: Request[AnyContent]) = successful(BadRequest(error_template("", "", "Invalid Parameters")))
 }
