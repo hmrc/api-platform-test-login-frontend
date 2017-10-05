@@ -24,7 +24,6 @@ import play.api.i18n.Messages.Implicits._
 import play.api.mvc.Request
 import play.api.{Application, Configuration, Play}
 import play.twirl.api.Html
-import uk.gov.hmrc.api.testlogin.controllers.routes
 import uk.gov.hmrc.api.testlogin.views.html.error_template
 import uk.gov.hmrc.crypto.ApplicationCrypto
 import uk.gov.hmrc.play.audit.filters.FrontendAuditFilter
@@ -41,6 +40,7 @@ object FrontendGlobal
   override val auditConnector = FrontendAuditConnector
   override val loggingFilter = LoggingFilter
   override val frontendAuditFilter = AuditFilter
+  lazy implicit val appConfig = new AppConfig(Play.current.configuration)
 
   override def onStart(app: Application) {
     super.onStart(app)

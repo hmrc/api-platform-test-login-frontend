@@ -19,6 +19,7 @@ package it.uk.gov.hmrc.api.testlogin.helpers
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
+import it.uk.gov.hmrc.api.testlogin.pages.ContinuePage
 import it.uk.gov.hmrc.api.testlogin.stubs.{ApiPlatformTestUserStub, ContinuePageStub}
 import org.openqa.selenium.WebDriver
 import org.scalatest._
@@ -35,7 +36,8 @@ with GivenWhenThen with NavigationSugar {
     .configure(
       "auditing.enabled" -> false,
       "auditing.traceRequests" -> false,
-      "microservice.services.api-platform-test-user.port" -> ApiPlatformTestUserStub.port
+      "microservice.services.api-platform-test-user.port" -> ApiPlatformTestUserStub.port,
+      "continue-url" -> ContinuePage.url
     )
     .build()
 

@@ -20,14 +20,15 @@ package unit.uk.gov.hmrc.testlogin.controllers
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import org.mockito.BDDMockito.given
-import org.mockito.Matchers.{any, refEq}
+import org.mockito.Matchers.{any, anyString, refEq}
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Session, Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, Session}
 import play.api.test.FakeRequest
+import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.controllers.LoginController
 import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest}
-import uk.gov.hmrc.api.testlogin.services.LoginService
+import uk.gov.hmrc.api.testlogin.services.{ContinueUrlService, LoginService}
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
@@ -42,8 +43,10 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
 
     val messagesApi: MessagesApi = fakeApplication.injector.instanceOf[MessagesApi]
     val loginService: LoginService = mock[LoginService]
+    val continueUrlService: ContinueUrlService = mock[ContinueUrlService]
+    val appConfig: AppConfig = fakeApplication.injector.instanceOf[AppConfig]
 
-    val underTest = new LoginController(messagesApi, loginService)
+    val underTest = new LoginController(messagesApi, loginService, continueUrlService, appConfig)
 
     def execute[T <: play.api.mvc.AnyContent](action: Action[AnyContent], request: FakeRequest[T] = FakeRequest()) = await(csrfAddToken(action)(request))
   }
@@ -52,12 +55,25 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
 
     "display the login page" in new Setup {
 
+      given(continueUrlService.isValidContinueUrl(anyString())).willReturn(true)
+
       val result = execute(underTest.showLoginPage("/continueUrl"))
 
       bodyOf(result) should include ("Sign in")
     }
 
+    "return a 400 if the continue URL is invalid" in new Setup {
+
+      given(continueUrlService.isValidContinueUrl(anyString())).willReturn(false)
+
+      val result = execute(underTest.showLoginPage("/continueUrl"))
+
+      status(result) shouldBe 400
+    }
+
     "display the Create Test User link which opens a new browser-tab" in new Setup {
+
+      given(continueUrlService.isValidContinueUrl(anyString())).willReturn(true)
 
       val result = execute(underTest.showLoginPage("/continueUrl"))
 
@@ -73,7 +89,7 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
       .withFormUrlEncodedBody("userId" -> loginRequest.username, "password" -> loginRequest.password, "continue" -> continueUrl)
 
     "display invalid userId or password when the credentials are invalid" in new Setup {
-
+      given(continueUrlService.isValidContinueUrl(anyString())).willReturn(true)
       given(loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier]())).willReturn(failed(LoginFailed("")))
 
       val result = execute(underTest.login(), request = request)
@@ -81,8 +97,16 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
       bodyOf(result) should include ("Invalid user ID or password. Try again.")
     }
 
-    "redirect to the continueUrl with the session when the credentials are valid" in new Setup {
+    "return a 400 when the continue URL is not valid" in new Setup {
+      given(continueUrlService.isValidContinueUrl(anyString())).willReturn(false)
 
+      val result = execute(underTest.login(), request = request)
+
+      status(result) shouldBe 400
+    }
+
+    "redirect to the continueUrl with the session when the credentials are valid and the continue URL is valid" in new Setup {
+      given(continueUrlService.isValidContinueUrl(anyString())).willReturn(true)
       val session = Session(Map("authBearerToken" -> "Bearer AUTH_TOKEN"))
       given(loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier]())).willReturn(session)
 

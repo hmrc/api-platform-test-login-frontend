@@ -16,20 +16,24 @@
 
 package uk.gov.hmrc.api.testlogin.controllers
 
-import javax.inject.{Singleton, Inject}
+import javax.inject.{Inject, Singleton}
 
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Action
+import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest}
-import uk.gov.hmrc.api.testlogin.services.LoginService
+import uk.gov.hmrc.api.testlogin.services.{ContinueUrlService, LoginService}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.api.testlogin.views.html.{error_template, login=>login_template}
 
 import scala.concurrent.Future.successful
 
 @Singleton
-class LoginController @Inject()(override val messagesApi: MessagesApi, loginService: LoginService) extends FrontendController with I18nSupport {
+class LoginController @Inject()(override val messagesApi: MessagesApi, loginService: LoginService,
+                                continueUrlService: ContinueUrlService, implicit val appConfig: AppConfig)
+  extends FrontendController with I18nSupport {
 
   case class LoginForm(userId: String, password: String, continue: String)
 
@@ -42,20 +46,29 @@ class LoginController @Inject()(override val messagesApi: MessagesApi, loginServ
   )
 
   def showLoginPage(continue: String) = Action.async { implicit request =>
-    successful(Ok(uk.gov.hmrc.api.testlogin.views.html.login(continue)))
+    if(continueUrlService.isValidContinueUrl(continue)) {
+      successful(Ok(login_template(continue)))
+    } else {
+      successful(BadRequest(error_template("", "", "Invalid Parameters")))
+    }
   }
 
   def login() = Action.async { implicit request =>
-    loginForm.bindFromRequest.fold(
-      formWithErrors => successful(BadRequest(uk.gov.hmrc.api.testlogin.views.html.error_template("", "", "Invalid Parameters"))),
-      loginForm => {
-        loginService.authenticate(LoginRequest(loginForm.userId, loginForm.password)) map { session =>
-          Redirect(loginForm.continue).withSession(session)
-        } recover {
-          case e : LoginFailed =>
-            Unauthorized(uk.gov.hmrc.api.testlogin.views.html.login(loginForm.continue, Some("Invalid user ID or password. Try again.")))
-        }
+
+    def handleLogin(loginForm: LoginForm) = {
+      loginService.authenticate(LoginRequest(loginForm.userId, loginForm.password)) map { session =>
+        Redirect(loginForm.continue).withSession(session)
+      } recover {
+        case e : LoginFailed =>
+          Unauthorized(login_template(loginForm.continue, Some("Invalid user ID or password. Try again.")))
       }
+    }
+
+    def badRequest() = successful(BadRequest(error_template("", "", "Invalid Parameters")))
+
+    loginForm.bindFromRequest.fold(
+      formWithErrors => badRequest(),
+      loginForm => if(continueUrlService.isValidContinueUrl(loginForm.continue)) handleLogin(loginForm) else badRequest()
     )
   }
 }
