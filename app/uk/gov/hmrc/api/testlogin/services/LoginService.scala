@@ -23,7 +23,7 @@ import org.joda.time.DateTime
 import play.api.mvc.Session
 import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
 import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginRequest}
-import _root_.uk.gov.hmrc.http.SessionKeys._
+import uk.gov.hmrc.http.SessionKeys._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
