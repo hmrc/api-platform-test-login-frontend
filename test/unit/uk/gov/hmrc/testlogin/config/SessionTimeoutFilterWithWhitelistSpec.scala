@@ -20,7 +20,7 @@ import org.joda.time.Duration
 import org.mockito.Matchers._
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import play.api.mvc._
 import play.api.test.FakeRequest
 import uk.gov.hmrc.api.testlogin.config.{SessionTimeoutFilterWithWhitelist, WhitelistedCall}

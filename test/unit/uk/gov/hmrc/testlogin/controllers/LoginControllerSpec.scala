@@ -29,10 +29,10 @@ import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.controllers.LoginController
 import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest}
 import uk.gov.hmrc.api.testlogin.services.{ContinueUrlService, LoginService}
-import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future.failed
+import uk.gov.hmrc.http.HeaderCarrier
 
 class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 

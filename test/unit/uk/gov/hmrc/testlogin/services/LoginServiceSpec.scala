@@ -26,11 +26,11 @@ import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
 import uk.gov.hmrc.api.testlogin.models._
 import uk.gov.hmrc.api.testlogin.services.LoginService
 import uk.gov.hmrc.domain.{Nino, SaUtr}
-import uk.gov.hmrc.play.http.SessionKeys.{token, sessionId}
-import uk.gov.hmrc.play.http.{SessionKeys, HeaderCarrier}
+import _root_.uk.gov.hmrc.http.SessionKeys.{token, sessionId}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future.failed
+import uk.gov.hmrc.http.{ HeaderCarrier, SessionKeys }
 
 class LoginServiceSpec extends UnitSpec with MockitoSugar with BeforeAndAfterAll {
 

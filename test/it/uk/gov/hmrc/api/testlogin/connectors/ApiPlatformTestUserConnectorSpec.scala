@@ -23,9 +23,9 @@ import play.api.libs.json.Json
 import play.api.libs.json.Json._
 import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
 import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginFailed, LoginRequest}
-import uk.gov.hmrc.play.http.{HeaderCarrier, Upstream5xxResponse}
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
+import uk.gov.hmrc.http.{ HeaderCarrier, Upstream5xxResponse }
 
 class ApiPlatformTestUserConnectorSpec extends UnitSpec with WiremockSugar with WithFakeApplication {
 
