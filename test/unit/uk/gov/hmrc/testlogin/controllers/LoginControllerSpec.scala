@@ -114,7 +114,7 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
 
       status(result) shouldBe 303
       result.header.headers("Location") shouldEqual continueUrl
-      result.header.headers("Set-Cookie") should include (s"authBearerToken=Bearer+AUTH_TOKEN")
+      result.header.headers("Set-Cookie") should include ("authBearerToken=Bearer+AUTH_TOKEN")
     }
   }
 }

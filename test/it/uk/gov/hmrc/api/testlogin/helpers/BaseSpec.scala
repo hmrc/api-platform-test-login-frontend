@@ -23,11 +23,11 @@ import it.uk.gov.hmrc.api.testlogin.pages.ContinuePage
 import it.uk.gov.hmrc.api.testlogin.stubs.{ApiPlatformTestUserStub, ContinuePageStub}
 import org.openqa.selenium.WebDriver
 import org.scalatest._
-import org.scalatestplus.play.OneServerPerSuite
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 
-trait BaseSpec extends FeatureSpec with BeforeAndAfterAll with BeforeAndAfterEach with Matchers with OneServerPerSuite
+trait BaseSpec extends FeatureSpec with BeforeAndAfterAll with BeforeAndAfterEach with Matchers with GuiceOneServerPerSuite
 with GivenWhenThen with NavigationSugar {
 
   override lazy val port = 9000
