@@ -1,30 +1,23 @@
-import play.core.PlayVersion
-import play.sbt.PlayImport._
-import sbt.Tests.{SubProcess, Group}
-import play.routes.compiler.StaticRoutesGenerator
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
-import uk.gov.hmrc._
-import DefaultBuildSettings._
-import uk.gov.hmrc.{SbtBuildInfo, ShellPrompt, SbtAutoBuildPlugin}
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
-import uk.gov.hmrc.versioning.SbtGitVersioning
 import _root_.play.sbt.routes.RoutesKeys.routesGenerator
+import play.core.PlayVersion
+import play.routes.compiler.StaticRoutesGenerator
+import play.sbt.PlayImport._
+import sbt.Tests.{Group, SubProcess}
+import uk.gov.hmrc.DefaultBuildSettings._
+import uk.gov.hmrc.{SbtAutoBuildPlugin, _}
+import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
+import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
+import uk.gov.hmrc.versioning.SbtGitVersioning
 
 lazy val appName = "api-platform-test-login-frontend"
 lazy val appDependencies: Seq[ModuleID] = compile ++ test
 
-lazy val playHealthVersion = "2.1.0"
-lazy val logbackJsonLoggerVersion = "3.1.0"
-lazy val frontendBootstrapVersion = "7.23.0"
-lazy val govukTemplateVersion = "5.2.0"
-lazy val playUiVersion = "7.2.1"
+lazy val frontendBootstrapVersion = "8.9.0"
 lazy val playPartialsVersion = "5.3.0"
-lazy val playAuthorisedFrontendVersion = "6.3.0"
-lazy val playConfigVersion = "4.3.0"
-lazy val hmrcTestVersion = "2.3.0"
+lazy val hmrcTestVersion = "3.0.0"
 lazy val scalaTestVersion = "2.2.6"
 lazy val pegdownVersion = "1.6.0"
-lazy val scalaTestPlusVersion = "1.5.1"
+lazy val scalaTestPlusVersion = "2.0.0"
 lazy val wiremockVersion = "1.58"
 lazy val hmrcPlayJsonUnionFormatterVersion = "1.3.0"
 lazy val mockitoVersion = "1.10.19"
@@ -33,13 +26,7 @@ lazy val compile = Seq(
   ws,
   "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion,
   "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
-  "uk.gov.hmrc" %% "play-authorised-frontend" % playAuthorisedFrontendVersion,
-  "uk.gov.hmrc" %% "play-config" % playConfigVersion,
-  "uk.gov.hmrc" %% "play-json-union-formatter" % hmrcPlayJsonUnionFormatterVersion,
-  "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
-  "uk.gov.hmrc" %% "govuk-template" % govukTemplateVersion,
-  "uk.gov.hmrc" %% "play-health" % playHealthVersion,
-  "uk.gov.hmrc" %% "play-ui" % playUiVersion
+  "uk.gov.hmrc" %% "play-json-union-formatter" % hmrcPlayJsonUnionFormatterVersion
 )
 
 lazy val scope: String = "test, it"
@@ -71,6 +58,7 @@ lazy val microservice = (project in file("."))
   .settings(defaultSettings(): _*)
   .settings(
     name := appName,
+    scalaVersion := "2.11.11",
     libraryDependencies ++= appDependencies,
     retrieveManaged := true,
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),

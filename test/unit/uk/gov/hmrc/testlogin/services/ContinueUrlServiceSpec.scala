@@ -32,22 +32,22 @@ class ContinueUrlServiceSpec extends UnitSpec with MockitoSugar {
 
   "ContinueUrlService.isValidContinueUrl" should {
 
-    s"return true when actual URL matches configured absolute URL" in new Setup {
+    "return true when actual URL matches configured absolute URL" in new Setup {
       given(appConfig.continueUrl).willReturn("http://localhost:9610/oauth/grantscope")
       underTest.isValidContinueUrl("http://localhost:9610/oauth/grantscope?auth_id=59d4de133500009100a027a8") shouldBe true
     }
 
-    s"return false when actual URL does not match configured absolute URL" in new Setup {
+    "return false when actual URL does not match configured absolute URL" in new Setup {
       given(appConfig.continueUrl).willReturn("http://localhost:9610/oauth/grantscope")
       underTest.isValidContinueUrl("http://nefarious-server.net:9610/oauth/grantscope?auth_id=59d4de133500009100a027a8") shouldBe false
     }
 
-    s"return true when actual matches configured relative URL" in new Setup {
+    "return true when actual matches configured relative URL" in new Setup {
       given(appConfig.continueUrl).willReturn("/oauth/grantscope")
       underTest.isValidContinueUrl("/oauth/grantscope?auth_id=59d4deb12600002700e141b8") shouldBe true
     }
 
-    s"return false when actual does not match configured relative URL" in new Setup {
+    "return false when actual does not match configured relative URL" in new Setup {
       given(appConfig.continueUrl).willReturn("/oauth/grantscope")
       underTest.isValidContinueUrl("http://nefarious-server.net/oauth/grantscope?auth_id=59d4deb12600002700e141b8") shouldBe false
     }

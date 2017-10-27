@@ -23,10 +23,10 @@ import uk.gov.hmrc.api.testlogin.config.WSHttp
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
 import uk.gov.hmrc.api.testlogin.models._
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http.{Upstream4xxResponse, HeaderCarrier}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, Upstream4xxResponse }
 
 @Singleton
 class ApiPlatformTestUserConnector extends ServicesConfig {

@@ -27,8 +27,8 @@ trait Env {
   lazy val createWebDriver: WebDriver = {
     val targetBrowser = System.getProperty("browser", "firefox-local").toLowerCase
     targetBrowser match {
-      case "chrome-local" => createChromeDriver
-      case "firefox-local" => createFirefoxDriver
+      case "chrome-local" => createChromeDriver()
+      case "firefox-local" => createFirefoxDriver()
       case _ => throw new IllegalArgumentException(s"target browser $targetBrowser not recognised")
     }
   }
