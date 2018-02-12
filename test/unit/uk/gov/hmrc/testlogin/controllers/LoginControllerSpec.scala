@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
 
       val result = execute(underTest.showLoginPage("/continueUrl"))
 
-      bodyOf(result) should include ("<a href=\"/api-test-user\" target=\"_blank\" rel=\"external\">Don't have Test User credentials</a>")
+      bodyOf(result) should include ("<a href=\"https://developer.service.hmrc.gov.uk/api-test-user\" target=\"_blank\" rel=\"external\">Don't have Test User credentials</a>")
     }
   }
 
