@@ -34,4 +34,5 @@ class AppConfig @Inject()(config: Configuration) extends ServicesConfig {
   lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
   lazy val continueUrl = loadConfig("continue-url")
+  lazy val devHubBaseUrl = loadConfig("dev-hub-base-url")
 }
