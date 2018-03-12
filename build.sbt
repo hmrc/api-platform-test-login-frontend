@@ -63,14 +63,14 @@ lazy val microservice = (project in file("."))
     retrieveManaged := true,
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
     parallelExecution in Test := false,
-    fork in Test := true,
+    fork in Test := false,
     testOptions in Test := Seq(Tests.Filter(unitFilter)),
     routesGenerator := StaticRoutesGenerator
   )
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(
-    fork in IntegrationTest := true,
+    fork in IntegrationTest := false,
     testOptions in IntegrationTest := Seq(Tests.Filter(itTestFilter)),
     unmanagedSourceDirectories in IntegrationTest <<= (baseDirectory in IntegrationTest) (base => Seq(base / "test")),
     addTestReportOption(IntegrationTest, "int-test-reports"),
