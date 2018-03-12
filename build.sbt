@@ -12,7 +12,7 @@ import uk.gov.hmrc.versioning.SbtGitVersioning
 lazy val appName = "api-platform-test-login-frontend"
 lazy val appDependencies: Seq[ModuleID] = compile ++ test
 
-lazy val frontendBootstrapVersion = "8.9.0"
+lazy val frontendBootstrapVersion = "8.19.0"
 lazy val playPartialsVersion = "5.3.0"
 lazy val hmrcTestVersion = "3.0.0"
 lazy val scalaTestVersion = "2.2.6"
@@ -63,14 +63,14 @@ lazy val microservice = (project in file("."))
     retrieveManaged := true,
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
     parallelExecution in Test := false,
-    fork in Test := false,
+    fork in Test := true,
     testOptions in Test := Seq(Tests.Filter(unitFilter)),
     routesGenerator := StaticRoutesGenerator
   )
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(
-    Keys.fork in IntegrationTest := false,
+    fork in IntegrationTest := true,
     testOptions in IntegrationTest := Seq(Tests.Filter(itTestFilter)),
     unmanagedSourceDirectories in IntegrationTest <<= (baseDirectory in IntegrationTest) (base => Seq(base / "test")),
     addTestReportOption(IntegrationTest, "int-test-reports"),
