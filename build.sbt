@@ -12,8 +12,8 @@ import uk.gov.hmrc.versioning.SbtGitVersioning
 lazy val appName = "api-platform-test-login-frontend"
 lazy val appDependencies: Seq[ModuleID] = compile ++ test
 
-lazy val frontendBootstrapVersion = "8.19.0"
-lazy val playPartialsVersion = "5.3.0"
+lazy val frontendBootstrapVersion = "8.20.0"
+lazy val playPartialsVersion = "6.1.0"
 lazy val hmrcTestVersion = "3.0.0"
 lazy val scalaTestVersion = "2.2.6"
 lazy val pegdownVersion = "1.6.0"
