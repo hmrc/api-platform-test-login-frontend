@@ -20,7 +20,7 @@ import it.uk.gov.hmrc.api.testlogin.helpers.WebPage
 
 object LoginPage extends WebPage {
 
-  override val url: String = s"http://localhost:9000/api-test-login/sign-in?continue=${ContinuePage.url}"
+  override val url: String = s"http://localhost:$port/api-test-login/sign-in?continue=${ContinuePage.url}"
 
   override def isCurrentPage: Boolean = find(cssSelector("h1")).fold(false)(_.text == "Sign in")
 }
