@@ -16,21 +16,33 @@
 
 package it.uk.gov.hmrc.api.testlogin.helpers
 
+import java.net.URL
+
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxProfile}
+import org.openqa.selenium.remote.{DesiredCapabilities, RemoteWebDriver}
 import org.openqa.selenium.WebDriver
 
-import scala.util.Try
+import scala.util.{Properties, Try}
 
 trait Env {
   val driver: WebDriver = createWebDriver
   lazy val createWebDriver: WebDriver = {
-    val targetBrowser = Option(System.getenv("test_driver")).getOrElse("firefox")
-    targetBrowser match {
+    Properties.propOrElse("test_driver", "firefox") match {
       case "chrome" => createChromeDriver()
       case "firefox" => createFirefoxDriver()
-      case _ => throw new IllegalArgumentException(s"target browser $targetBrowser not recognised")
+      case "remote-chrome" => createRemoteChromeDriver()
+      case "remote-firefox" => createRemoteFirefoxDriver()
+      case other => throw new IllegalArgumentException(s"target browser $other not recognised")
     }
+  }
+
+  def createRemoteChromeDriver() = {
+    new RemoteWebDriver(new URL(s"http://localhost:4444/wd/hub"), DesiredCapabilities.chrome)
+  }
+
+  def createRemoteFirefoxDriver() = {
+    new RemoteWebDriver(new URL(s"http://localhost:4444/wd/hub"), DesiredCapabilities.firefox)
   }
 
   def createChromeDriver(): WebDriver = {

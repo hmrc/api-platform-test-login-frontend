@@ -8,6 +8,7 @@ import uk.gov.hmrc.{SbtAutoBuildPlugin, _}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 import uk.gov.hmrc.versioning.SbtGitVersioning
+import scala.util.Properties
 
 lazy val appName = "api-platform-test-login-frontend"
 lazy val appDependencies: Seq[ModuleID] = compile ++ test
@@ -51,7 +52,7 @@ def unitFilter(name: String): Boolean = name startsWith "unit"
 def itTestFilter(name: String): Boolean = name startsWith "it"
 
 lazy val microservice = (project in file("."))
-  .enablePlugins(Seq(_root_.play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin) ++ plugins: _*)
+  .enablePlugins(Seq(_root_.play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory) ++ plugins: _*)
   .settings(playSettings: _*)
   .settings(scalaSettings: _*)
   .settings(publishingSettings: _*)
@@ -65,7 +66,8 @@ lazy val microservice = (project in file("."))
     parallelExecution in Test := false,
     fork in Test := false,
     testOptions in Test := Seq(Tests.Filter(unitFilter)),
-    routesGenerator := StaticRoutesGenerator
+    routesGenerator := StaticRoutesGenerator,
+    majorVersion := 0
   )
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
@@ -83,7 +85,14 @@ lazy val microservice = (project in file("."))
 
 def oneForkedJvmPerTest(tests: Seq[TestDefinition]) =
   tests map {
-    test => new Group(test.name, Seq(test), SubProcess(ForkOptions(runJVMOptions = Seq("-Dtest.name=" + test.name))))
+    test => new Group(
+      test.name,
+      Seq(test),
+      SubProcess(
+        ForkOptions(
+          runJVMOptions = Seq(
+            s"-Dtest.name=${test.name}",
+            s"-Dtest_driver=${Properties.propOrElse("test_driver", "firefox")}"))))
   }
 
 // Coverage configuration
