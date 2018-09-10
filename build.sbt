@@ -15,7 +15,7 @@ lazy val appDependencies: Seq[ModuleID] = compile ++ test
 
 lazy val frontendBootstrapVersion = "10.3.0"
 lazy val playPartialsVersion = "6.1.0"
-lazy val hmrcTestVersion = "3.0.0"
+lazy val hmrcTestVersion = "3.1.0"
 lazy val scalaTestVersion = "2.2.6"
 lazy val pegdownVersion = "1.6.0"
 lazy val scalaTestPlusVersion = "2.0.0"
