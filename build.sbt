@@ -13,7 +13,7 @@ import scala.util.Properties
 lazy val appName = "api-platform-test-login-frontend"
 lazy val appDependencies: Seq[ModuleID] = compile ++ test
 
-lazy val frontendBootstrapVersion = "8.20.0"
+lazy val frontendBootstrapVersion = "10.3.0"
 lazy val playPartialsVersion = "6.1.0"
 lazy val hmrcTestVersion = "3.0.0"
 lazy val scalaTestVersion = "2.2.6"
