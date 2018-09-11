@@ -21,7 +21,7 @@ import it.uk.gov.hmrc.api.testlogin.helpers.MockHost
 import it.uk.gov.hmrc.api.testlogin.pages.ContinuePage
 import org.apache.http.HttpStatus._
 
-object ContinuePageStub extends MockHost(11113) {
+object ContinuePageStub extends MockHost(6002) {
 
   def givenContinuePageIsUp() = {
     mock.register(get(urlPathEqualTo(ContinuePage.path))
