@@ -16,6 +16,7 @@
 
 package unit.uk.gov.hmrc.testlogin.config
 
+import akka.stream.Materializer
 import org.joda.time.{DateTime, DateTimeZone, Duration}
 import org.mockito.Matchers._
 import org.mockito.Mockito._
@@ -25,19 +26,25 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import play.api.mvc._
 import play.api.test.FakeRequest
-import uk.gov.hmrc.api.testlogin.config.{SessionTimeoutFilterWithWhitelist, WhitelistedCall}
+import uk.gov.hmrc.api.testlogin.config.SessionTimeoutFilterWithWhitelist
+import uk.gov.hmrc.play.bootstrap.filters.frontend.SessionTimeoutFilterConfig
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class SessionTimeoutFilterWithWhitelistSpec extends UnitSpec with MockitoSugar with ScalaFutures with WithFakeApplication {
 
   trait Setup {
-    val filter = new SessionTimeoutFilterWithWhitelist(
+
+    implicit val mat = fakeApplication.injector.instanceOf[Materializer]
+
+    val config = new SessionTimeoutFilterConfig(
       timeoutDuration = Duration.standardSeconds(1),
-      whitelistedCalls = Set(WhitelistedCall("/login", "GET")),
       onlyWipeAuthToken = false
     )
+
+    val filter = new SessionTimeoutFilterWithWhitelist(config)
 
     val nextOperationFunction = mock[RequestHeader => Future[Result]]
 

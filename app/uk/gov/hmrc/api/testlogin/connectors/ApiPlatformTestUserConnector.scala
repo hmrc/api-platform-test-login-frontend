@@ -16,34 +16,39 @@
 
 package uk.gov.hmrc.api.testlogin.connectors
 
-import javax.inject.Singleton
-
-import play.api.http.{Status, HeaderNames}
-import uk.gov.hmrc.api.testlogin.config.WSHttp
+import javax.inject.{Inject, Singleton}
+import play.api.http.{HeaderNames, Status}
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
 import uk.gov.hmrc.api.testlogin.models._
+import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.config.ServicesConfig
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderCarrier, Upstream4xxResponse }
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ApiPlatformTestUserConnector extends ServicesConfig {
+class ApiPlatformTestUserConnector @Inject()(httpClient: HttpClient,
+                                             override val runModeConfiguration: Configuration,
+                                             environment: Environment
+                                            )(implicit ec: ExecutionContext) extends ServicesConfig {
+
+  override protected def mode = environment.mode
+
   lazy val serviceUrl: String = baseUrl("api-platform-test-user")
 
-  def authenticate(loginRequest: LoginRequest)(implicit hc:HeaderCarrier): Future[AuthenticatedSession] = {
-    WSHttp.POST(s"$serviceUrl/session", loginRequest) map { response =>
-        val authenticationResponse = response.json.as[AuthenticationResponse]
+  def authenticate(loginRequest: LoginRequest)(implicit hc: HeaderCarrier): Future[AuthenticatedSession] = {
+    httpClient.POST(s"$serviceUrl/session", loginRequest) map { response =>
+      val authenticationResponse = response.json.as[AuthenticationResponse]
 
-        (response.header(HeaderNames.AUTHORIZATION), response.header(HeaderNames.LOCATION)) match {
-          case (Some(authBearerToken), Some(authorityUri)) =>
-            AuthenticatedSession(
-              authBearerToken,
-              authorityUri,
-              authenticationResponse.gatewayToken,
-              authenticationResponse.affinityGroup)
-          case _ => throw new RuntimeException("Authorization and Location headers must be present in response")
+      (response.header(HeaderNames.AUTHORIZATION), response.header(HeaderNames.LOCATION)) match {
+        case (Some(authBearerToken), Some(authorityUri)) =>
+          AuthenticatedSession(
+            authBearerToken,
+            authorityUri,
+            authenticationResponse.gatewayToken,
+            authenticationResponse.affinityGroup)
+        case _ => throw new RuntimeException("Authorization and Location headers must be present in response")
       }
     } recoverWith {
       case e: Upstream4xxResponse if e.upstreamResponseCode == Status.UNAUTHORIZED => Future.failed(LoginFailed(loginRequest.username))

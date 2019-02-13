@@ -16,24 +16,24 @@
 
 package uk.gov.hmrc.api.testlogin.config
 
-import org.joda.time.{DateTime, DateTimeZone, Duration}
+import akka.stream.Materializer
+import javax.inject.Inject
 import play.api.mvc._
+import uk.gov.hmrc.play.bootstrap.filters.frontend.{SessionTimeoutFilter, SessionTimeoutFilterConfig}
 
-import scala.concurrent.Future
-import uk.gov.hmrc.play.frontend.filters.{ MicroserviceFilterSupport, SessionTimeoutFilter }
+import scala.concurrent.{ExecutionContext, Future}
 
 case class WhitelistedCall(uri: String, method: String)
 
-class SessionTimeoutFilterWithWhitelist(clock: () => DateTime = () => DateTime.now(DateTimeZone.UTC),
-                                        timeoutDuration: Duration,
-                                        additionalSessionKeysToKeep: Set[String] = Set.empty,
-                                        onlyWipeAuthToken: Boolean = false, whitelistedCalls: Set[WhitelistedCall])
-  extends SessionTimeoutFilter(clock, timeoutDuration, additionalSessionKeysToKeep, onlyWipeAuthToken)
-    with Filter with MicroserviceFilterSupport {
+class SessionTimeoutFilterWithWhitelist @Inject()(config: SessionTimeoutFilterConfig)(implicit ec: ExecutionContext, override val mat: Materializer)
+  extends SessionTimeoutFilter(config) {
 
-  override def apply(f: (RequestHeader) => Future[Result])(rh: RequestHeader): Future[Result] = {
+  val loginUrl = uk.gov.hmrc.api.testlogin.controllers.routes.LoginController.login().url
+  val whitelistedCalls: Set[WhitelistedCall] = Set(WhitelistedCall(loginUrl, "GET"), WhitelistedCall(loginUrl, "POST"))
+
+  override def apply(f: RequestHeader => Future[Result])(rh: RequestHeader): Future[Result] = {
     if (whitelistedCalls.contains(WhitelistedCall(rh.path, rh.method))) f(rh)
     else super.apply(f)(rh)
   }
-
 }
+

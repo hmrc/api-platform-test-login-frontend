@@ -4,30 +4,36 @@ import play.routes.compiler.StaticRoutesGenerator
 import play.sbt.PlayImport._
 import sbt.Tests.{Group, SubProcess}
 import uk.gov.hmrc.DefaultBuildSettings._
-import uk.gov.hmrc.{SbtAutoBuildPlugin, _}
+import uk.gov.hmrc.SbtAutoBuildPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 import uk.gov.hmrc.versioning.SbtGitVersioning
+
 import scala.util.Properties
 
 lazy val appName = "api-platform-test-login-frontend"
 lazy val appDependencies: Seq[ModuleID] = compile ++ test
 
-lazy val frontendBootstrapVersion = "10.3.0"
-lazy val playPartialsVersion = "6.1.0"
-lazy val hmrcTestVersion = "3.1.0"
+lazy val bootstrapPlayVersion = "4.8.0"
+lazy val playPartialsVersion = "6.5.0"
+lazy val hmrcTestVersion = "3.4.0-play-25"
 lazy val scalaTestVersion = "2.2.6"
 lazy val pegdownVersion = "1.6.0"
 lazy val scalaTestPlusVersion = "2.0.0"
 lazy val wiremockVersion = "1.58"
-lazy val hmrcPlayJsonUnionFormatterVersion = "1.3.0"
+lazy val hmrcPlayJsonUnionFormatterVersion = "1.5.0"
 lazy val mockitoVersion = "1.10.19"
+lazy val govUkTemplateVersion = "5.28.0-play-25"
+lazy val playUiVersion = "7.32.0-play-25"
+lazy val domainVersion = "5.3.0"
 
 lazy val compile = Seq(
-  ws,
-  "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion,
+  "uk.gov.hmrc" %% "bootstrap-play-25" % bootstrapPlayVersion,
+  "uk.gov.hmrc" %% "domain" % domainVersion,
   "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
-  "uk.gov.hmrc" %% "play-json-union-formatter" % hmrcPlayJsonUnionFormatterVersion
+  "uk.gov.hmrc" %% "play-json-union-formatter" % hmrcPlayJsonUnionFormatterVersion,
+  "uk.gov.hmrc" %% "govuk-template" % govUkTemplateVersion,
+  "uk.gov.hmrc" %% "play-ui" % playUiVersion
 )
 
 lazy val scope: String = "test, it"
@@ -85,17 +91,18 @@ lazy val microservice = (project in file("."))
 
 def oneForkedJvmPerTest(tests: Seq[TestDefinition]) =
   tests map {
-    test => new Group(
-      test.name,
-      Seq(test),
-      SubProcess(
-        ForkOptions(
-          runJVMOptions = Seq(
-            s"-Dtest.name=${test.name}",
-            s"-Dtest_driver=${Properties.propOrElse("test_driver", "firefox")}"))))
+    test =>
+      new Group(
+        test.name,
+        Seq(test),
+        SubProcess(
+          ForkOptions(
+            runJVMOptions = Seq(
+              s"-Dtest.name=${test.name}",
+              s"-Dtest_driver=${Properties.propOrElse("test_driver", "firefox")}"))))
   }
 
 // Coverage configuration
-coverageMinimum := 95
+coverageMinimum := 96
 coverageFailOnMinimum := true
 coverageExcludedPackages := "<empty>;com.kenshoo.play.metrics.*;.*definition.*;prod.*;testOnlyDoNotUseInAppConf.*;app.*;uk.gov.hmrc.BuildInfo"

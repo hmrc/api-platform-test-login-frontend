@@ -17,12 +17,13 @@
 package uk.gov.hmrc.api.testlogin.config
 
 import javax.inject.{Inject, Singleton}
-
-import play.api.Configuration
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.config.ServicesConfig
 
 @Singleton
-class AppConfig @Inject()(config: Configuration) extends ServicesConfig {
+class AppConfig @Inject()(config: Configuration, override val runModeConfiguration: Configuration, environment: Environment) extends ServicesConfig {
+
+  override protected def mode = environment.mode
 
   private def loadConfig(key: String) = config.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 

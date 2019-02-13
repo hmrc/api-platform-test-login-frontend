@@ -19,19 +19,29 @@ package it.uk.gov.hmrc.api.testlogin.connectors
 import com.github.tomakehurst.wiremock.client.WireMock._
 import it.uk.gov.hmrc.api.testlogin.helpers.WiremockSugar
 import play.api.http.HeaderNames.{AUTHORIZATION, LOCATION}
+import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.json.Json._
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
-import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginFailed, LoginRequest}
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
-import uk.gov.hmrc.http.{ HeaderCarrier, Upstream5xxResponse }
+import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginFailed, LoginRequest}
+import uk.gov.hmrc.http.{HeaderCarrier, Upstream5xxResponse}
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class ApiPlatformTestUserConnectorSpec extends UnitSpec with WiremockSugar with WithFakeApplication {
 
   trait Setup {
     implicit val hc = HeaderCarrier()
-    val underTest = new ApiPlatformTestUserConnector {
+
+    val underTest = new ApiPlatformTestUserConnector(
+      fakeApplication.injector.instanceOf[HttpClient],
+      fakeApplication.injector.instanceOf[Configuration],
+      fakeApplication.injector.instanceOf[Environment]
+    ) {
       override lazy val serviceUrl: String = wireMockUrl
     }
   }
@@ -49,7 +59,7 @@ class ApiPlatformTestUserConnectorSpec extends UnitSpec with WiremockSugar with 
       stubFor(post(urlEqualTo("/session"))
         .withRequestBody(equalToJson(toJson(loginRequest).toString()))
         .willReturn(aResponse()
-          .withStatus(201)
+          .withStatus(CREATED)
           .withBody(Json.obj("gatewayToken" -> gatewayToken, "affinityGroup" -> affinityGroup).toString())
           .withHeader(AUTHORIZATION, authBearerToken)
           .withHeader(LOCATION, userOid)))
@@ -64,9 +74,11 @@ class ApiPlatformTestUserConnectorSpec extends UnitSpec with WiremockSugar with 
       stubFor(post(urlEqualTo("/session"))
         .withRequestBody(equalToJson(toJson(loginRequest).toString()))
         .willReturn(aResponse()
-          .withStatus(401)))
+          .withStatus(UNAUTHORIZED)))
 
-      intercept[LoginFailed]{await(underTest.authenticate(loginRequest))}
+      intercept[LoginFailed] {
+        await(underTest.authenticate(loginRequest))
+      }
     }
 
     "fail when the authenticate call returns an error" in new Setup {
@@ -74,9 +86,11 @@ class ApiPlatformTestUserConnectorSpec extends UnitSpec with WiremockSugar with 
       stubFor(post(urlEqualTo("/session"))
         .withRequestBody(equalToJson(toJson(loginRequest).toString()))
         .willReturn(aResponse()
-          .withStatus(500)))
+          .withStatus(INTERNAL_SERVER_ERROR)))
 
-      intercept[Upstream5xxResponse]{await(underTest.authenticate(loginRequest))}
+      intercept[Upstream5xxResponse] {
+        await(underTest.authenticate(loginRequest))
+      }
     }
 
   }
