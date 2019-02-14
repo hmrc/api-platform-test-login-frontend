@@ -20,8 +20,6 @@ import it.uk.gov.hmrc.api.testlogin.helpers.BaseSpec
 import it.uk.gov.hmrc.api.testlogin.pages.{ContinuePage, LoginPage}
 import it.uk.gov.hmrc.api.testlogin.stubs.{ApiPlatformTestUserStub, ContinuePageStub}
 import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginRequest, TestIndividual}
-import uk.gov.hmrc.crypto.ApplicationCrypto.SessionCookieCrypto
-import uk.gov.hmrc.crypto.Crypted
 import uk.gov.hmrc.domain._
 
 import scala.collection.JavaConversions._

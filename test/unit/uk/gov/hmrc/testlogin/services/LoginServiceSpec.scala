@@ -17,7 +17,8 @@
 package unit.uk.gov.hmrc.testlogin.services
 
 
-import org.joda.time.DateTimeUtils.{setCurrentMillisSystem, setCurrentMillisFixed}
+import _root_.uk.gov.hmrc.http.SessionKeys.{sessionId, token}
+import org.joda.time.DateTimeUtils.{setCurrentMillisFixed, setCurrentMillisSystem}
 import org.mockito.BDDMockito.given
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.mock.MockitoSugar
@@ -26,11 +27,11 @@ import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
 import uk.gov.hmrc.api.testlogin.models._
 import uk.gov.hmrc.api.testlogin.services.LoginService
 import uk.gov.hmrc.domain.{Nino, SaUtr}
-import _root_.uk.gov.hmrc.http.SessionKeys.{token, sessionId}
+import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.UnitSpec
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future.failed
-import uk.gov.hmrc.http.{ HeaderCarrier, SessionKeys }
 
 class LoginServiceSpec extends UnitSpec with MockitoSugar with BeforeAndAfterAll {
 
@@ -78,7 +79,9 @@ class LoginServiceSpec extends UnitSpec with MockitoSugar with BeforeAndAfterAll
 
       given(apiPlatformTestUserConnector.authenticate(loginRequest)).willReturn(failed(new LoginFailed("user")))
 
-      intercept[LoginFailed]{await(underTest.authenticate(loginRequest))}
+      intercept[LoginFailed] {
+        await(underTest.authenticate(loginRequest))
+      }
     }
   }
 }

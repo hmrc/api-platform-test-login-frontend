@@ -17,16 +17,17 @@
 package uk.gov.hmrc.api.testlogin.config
 
 import javax.inject.{Inject, Singleton}
-
-import play.api.Configuration
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.config.ServicesConfig
 
 @Singleton
-class AppConfig @Inject()(config: Configuration) extends ServicesConfig {
+class AppConfig @Inject()(override val runModeConfiguration: Configuration, environment: Environment) extends ServicesConfig {
 
-  private def loadConfig(key: String) = config.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
+  override protected def mode = environment.mode
 
-  private val contactHost = config.getString("contact-frontend.host").getOrElse("")
+  private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
+
+  private val contactHost = runModeConfiguration.getString("contact-frontend.host").getOrElse("")
   private val contactFormServiceIdentifier = "MyService"
 
   lazy val analyticsToken = loadConfig("google-analytics.token")

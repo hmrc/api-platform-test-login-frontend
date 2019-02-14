@@ -17,23 +17,22 @@
 package uk.gov.hmrc.api.testlogin.services
 
 import java.util.UUID
-import javax.inject.{Singleton, Inject}
 
+import javax.inject.{Inject, Singleton}
 import org.joda.time.DateTime
 import play.api.mvc.Session
 import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
 import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginRequest}
 import uk.gov.hmrc.http.SessionKeys._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
 
 @Singleton
 class LoginService @Inject()(apiPlatformTestUserConnector: ApiPlatformTestUserConnector) {
 
-  def authenticate(loginRequest: LoginRequest)(implicit hc: HeaderCarrier): Future[Session] = {
+  def authenticate(loginRequest: LoginRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Session] = {
     apiPlatformTestUserConnector.authenticate(loginRequest) map (buildSession(_, loginRequest))
   }
 

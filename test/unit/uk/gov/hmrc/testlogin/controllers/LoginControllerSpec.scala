@@ -29,10 +29,11 @@ import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.controllers.LoginController
 import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest}
 import uk.gov.hmrc.api.testlogin.services.{ContinueUrlService, LoginService}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
+import scala.concurrent.ExecutionContext
 import scala.concurrent.Future.failed
-import uk.gov.hmrc.http.HeaderCarrier
 
 class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 
@@ -59,7 +60,7 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
 
       val result = execute(underTest.showLoginPage("/continueUrl"))
 
-      bodyOf(result) should include ("Sign in")
+      bodyOf(result) should include("Sign in")
     }
 
     "return a 400 if the continue URL is invalid" in new Setup {
@@ -77,7 +78,7 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
 
       val result = execute(underTest.showLoginPage("/continueUrl"))
 
-      bodyOf(result) should include ("<a href=\"http://localhost:9680/api-test-user\" target=\"_blank\" rel=\"external\">Don't have Test User credentials</a>")
+      bodyOf(result) should include("<a href=\"http://localhost:9680/api-test-user\" target=\"_blank\" rel=\"external\">Don't have Test User credentials</a>")
     }
   }
 
@@ -90,11 +91,11 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
 
     "display invalid userId or password when the credentials are invalid" in new Setup {
       given(continueUrlService.isValidContinueUrl(anyString())).willReturn(true)
-      given(loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier]())).willReturn(failed(LoginFailed("")))
+      given(loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier](), any[ExecutionContext])).willReturn(failed(LoginFailed("")))
 
       val result = execute(underTest.login(), request = request)
 
-      bodyOf(result) should include ("Invalid user ID or password. Try again.")
+      bodyOf(result) should include("Invalid user ID or password. Try again.")
     }
 
     "return a 400 when the continue URL is not valid" in new Setup {
@@ -108,13 +109,13 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
     "redirect to the continueUrl with the session when the credentials are valid and the continue URL is valid" in new Setup {
       given(continueUrlService.isValidContinueUrl(anyString())).willReturn(true)
       val session = Session(Map("authBearerToken" -> "Bearer AUTH_TOKEN"))
-      given(loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier]())).willReturn(session)
+      given(loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier](), any[ExecutionContext])).willReturn(session)
 
       val result = await(underTest.login()(request))
 
       status(result) shouldBe 303
       result.header.headers("Location") shouldEqual continueUrl
-      result.header.headers("Set-Cookie") should include ("authBearerToken=Bearer+AUTH_TOKEN")
+      result.header.headers("Set-Cookie") should include("authBearerToken=Bearer+AUTH_TOKEN")
     }
   }
 }
