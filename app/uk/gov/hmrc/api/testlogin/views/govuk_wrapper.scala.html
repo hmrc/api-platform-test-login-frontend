@@ -29,10 +29,14 @@
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{helpers => uiHelpers, layouts => uiLayouts}
 
+@headScripts = {
+    <script src='@routes.Assets.at("javascripts/googleTagManager.js")'></script>
+}
+
 @head = {
     @uiLayouts.head(
       linkElem = None,
-      headScripts = None)
+      headScripts = Some(headScripts))
     <link href='@routes.Assets.at("sandbox.css")' media='screen' rel='stylesheet' type='text/css'>
     <meta name="format-detection" content="telephone=no" />
 }
@@ -75,6 +79,8 @@
 @getHelpForm = @{uiHelpers.reportAProblemLink(appConfig.reportAProblemPartialUrl, appConfig.reportAProblemNonJSUrl)}
 
 @content = {
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TSFTCWZ"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     @uiLayouts.main_content(
       article = mainContent,
       mainClass = mainClass,
