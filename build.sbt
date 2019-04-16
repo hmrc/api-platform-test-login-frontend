@@ -1,7 +1,6 @@
 import _root_.play.sbt.routes.RoutesKeys.routesGenerator
 import play.core.PlayVersion
 import play.routes.compiler.StaticRoutesGenerator
-import play.sbt.PlayImport._
 import sbt.Tests.{Group, SubProcess}
 import uk.gov.hmrc.DefaultBuildSettings._
 import uk.gov.hmrc.SbtAutoBuildPlugin
@@ -14,18 +13,18 @@ import scala.util.Properties
 lazy val appName = "api-platform-test-login-frontend"
 lazy val appDependencies: Seq[ModuleID] = compile ++ test
 
-lazy val bootstrapPlayVersion = "4.8.0"
-lazy val playPartialsVersion = "6.5.0"
-lazy val hmrcTestVersion = "3.4.0-play-25"
+lazy val bootstrapPlayVersion = "4.11.0"
+lazy val playPartialsVersion = "6.8.0-play-25"
+lazy val hmrcTestVersion = "3.8.0-play-25"
 lazy val scalaTestVersion = "2.2.6"
 lazy val pegdownVersion = "1.6.0"
 lazy val scalaTestPlusVersion = "2.0.0"
 lazy val wiremockVersion = "1.58"
 lazy val hmrcPlayJsonUnionFormatterVersion = "1.5.0"
 lazy val mockitoVersion = "1.10.19"
-lazy val govUkTemplateVersion = "5.28.0-play-25"
-lazy val playUiVersion = "7.32.0-play-25"
-lazy val domainVersion = "5.3.0"
+lazy val govUkTemplateVersion = "5.33.0-play-25"
+lazy val playUiVersion = "7.39.0-play-25"
+lazy val domainVersion = "5.6.0-play-25"
 
 lazy val compile = Seq(
   "uk.gov.hmrc" %% "bootstrap-play-25" % bootstrapPlayVersion,
@@ -92,7 +91,7 @@ lazy val microservice = (project in file("."))
 def oneForkedJvmPerTest(tests: Seq[TestDefinition]) =
   tests map {
     test =>
-      new Group(
+      Group(
         test.name,
         Seq(test),
         SubProcess(
