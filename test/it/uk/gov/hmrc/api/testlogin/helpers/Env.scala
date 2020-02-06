@@ -29,7 +29,7 @@ trait Env {
   val driver: WebDriver = createWebDriver
   lazy val port = 6001
   lazy val createWebDriver: WebDriver = {
-    Properties.propOrElse("test_driver", "firefox") match {
+    Properties.propOrElse("test_driver", "chrome") match {
       case "chrome" => createChromeDriver()
       case "firefox" => createFirefoxDriver()
       case "remote-chrome" => createRemoteChromeDriver()
