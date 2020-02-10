@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ trait Env {
   val driver: WebDriver = createWebDriver
   lazy val port = 6001
   lazy val createWebDriver: WebDriver = {
-    Properties.propOrElse("test_driver", "firefox") match {
+    Properties.propOrElse("test_driver", "chrome") match {
       case "chrome" => createChromeDriver()
       case "firefox" => createFirefoxDriver()
       case "remote-chrome" => createRemoteChromeDriver()
