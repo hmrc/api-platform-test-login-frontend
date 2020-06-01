@@ -23,21 +23,19 @@ import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
 import uk.gov.hmrc.api.testlogin.models._
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.config.ServicesConfig
 
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.api.testlogin.config.AppConfig
 
 @Singleton
 class ApiPlatformTestUserConnector @Inject()(httpClient: HttpClient,
-                                             override val runModeConfiguration: Configuration,
+                                             appConfig: AppConfig,
                                              environment: Environment
-                                            )(implicit ec: ExecutionContext) extends ServicesConfig {
+                                            )(implicit ec: ExecutionContext) {
 
-  override protected def mode = environment.mode
+  import appConfig.serviceUrl
 
-  lazy val serviceUrl: String = baseUrl("api-platform-test-user")
-
-  def authenticate(loginRequest: LoginRequest)(implicit hc: HeaderCarrier): Future[AuthenticatedSession] = {
+ def authenticate(loginRequest: LoginRequest)(implicit hc: HeaderCarrier): Future[AuthenticatedSession] = {
     httpClient.POST(s"$serviceUrl/session", loginRequest) map { response =>
       val authenticationResponse = response.json.as[AuthenticationResponse]
 

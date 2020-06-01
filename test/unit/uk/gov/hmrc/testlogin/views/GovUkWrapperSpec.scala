@@ -18,13 +18,17 @@ package unit.uk.gov.hmrc.testlogin.views
 
 import org.mockito.Mockito.when
 import org.scalatest.Matchers
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.views.html
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import play.api.i18n.MessagesProvider
+import play.api.i18n.MessagesImpl
+import play.api.i18n.DefaultMessagesApi
+import play.api.i18n.Lang
 
 class GovUkWrapperSpec extends UnitSpec with Matchers with MockitoSugar with WithFakeApplication {
 
@@ -34,6 +38,8 @@ class GovUkWrapperSpec extends UnitSpec with Matchers with MockitoSugar with Wit
       implicit val fakeRequest = FakeRequest()
       implicit val application = fakeApplication
 
+      implicit val messagesProvider: MessagesProvider = MessagesImpl(Lang(java.util.Locale.ENGLISH), new DefaultMessagesApi())
+
       val appConfig: AppConfig = mock[AppConfig]
       when(appConfig.analyticsHost).thenReturn("")
       when(appConfig.analyticsToken).thenReturn("")
@@ -41,7 +47,7 @@ class GovUkWrapperSpec extends UnitSpec with Matchers with MockitoSugar with Wit
 
     "Indicate that embedded Microsoft browsers should render using the latest browser version available" in new Setup {
 
-      val mainView: Html = html.govuk_wrapper(appConfig, "Test")(fakeRequest, applicationMessages)
+      val mainView: Html = html.govuk_wrapper(appConfig, "Test")(fakeRequest, messagesProvider.messages)
       mainView.body should include("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">")
 
     }

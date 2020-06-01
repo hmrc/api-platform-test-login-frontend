@@ -21,7 +21,6 @@ import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import org.mockito.BDDMockito.given
 import org.mockito.Matchers.{any, anyString, refEq}
-import org.scalatest.mock.MockitoSugar
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, Session}
 import play.api.test.FakeRequest
@@ -34,6 +33,10 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future.failed
+import uk.gov.hmrc.api.testlogin.controllers.ErrorHandler
+import play.api.mvc.MessagesControllerComponents
+import scala.concurrent.ExecutionContext.Implicits.global
+import org.scalatestplus.mockito.MockitoSugar
 
 class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 
@@ -45,9 +48,11 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
     val messagesApi: MessagesApi = fakeApplication.injector.instanceOf[MessagesApi]
     val loginService: LoginService = mock[LoginService]
     val continueUrlService: ContinueUrlService = mock[ContinueUrlService]
-    val appConfig: AppConfig = fakeApplication.injector.instanceOf[AppConfig]
+    implicit val appConfig: AppConfig = fakeApplication.injector.instanceOf[AppConfig]
+    val errorHandler: ErrorHandler = fakeApplication.injector.instanceOf[ErrorHandler]
+    val mcc = fakeApplication.injector.instanceOf[MessagesControllerComponents]
 
-    val underTest = new LoginController(messagesApi, loginService, continueUrlService, appConfig)
+    val underTest = new LoginController(loginService, errorHandler, continueUrlService, mcc)(implicitly, appConfig, implicitly)
 
     def execute[T <: play.api.mvc.AnyContent](action: Action[AnyContent], request: FakeRequest[T] = FakeRequest()) = await(csrfAddToken(action)(request))
   }
@@ -115,7 +120,9 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
 
       status(result) shouldBe 303
       result.header.headers("Location") shouldEqual continueUrl
-      result.header.headers("Set-Cookie") should include("authBearerToken=Bearer+AUTH_TOKEN")
+      println(result.header.headers.keySet)
+      println(result.newSession)
+      result.newSession.flatMap(_.get("authBearerToken")) shouldBe Some("Bearer AUTH_TOKEN")
     }
   }
 }

@@ -17,6 +17,8 @@
 package it.uk.gov.hmrc.api.testlogin.connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
 import it.uk.gov.hmrc.api.testlogin.helpers.WiremockSugar
 import play.api.http.HeaderNames.{AUTHORIZATION, LOCATION}
 import play.api.http.Status._
@@ -31,19 +33,22 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import uk.gov.hmrc.api.testlogin.config.AppConfig
 
-class ApiPlatformTestUserConnectorSpec extends UnitSpec with WiremockSugar with WithFakeApplication {
+class ApiPlatformTestUserConnectorSpec extends UnitSpec with MockitoSugar with WiremockSugar with WithFakeApplication {
 
   trait Setup {
     implicit val hc = HeaderCarrier()
 
+    val appConfig = mock[AppConfig]
+
     val underTest = new ApiPlatformTestUserConnector(
       fakeApplication.injector.instanceOf[HttpClient],
-      fakeApplication.injector.instanceOf[Configuration],
+      appConfig,
       fakeApplication.injector.instanceOf[Environment]
-    ) {
-      override lazy val serviceUrl: String = wireMockUrl
-    }
+    )
+
+    when(appConfig.serviceUrl).thenReturn(wireMockUrl)
   }
 
   val loginRequest = LoginRequest("user", "password")

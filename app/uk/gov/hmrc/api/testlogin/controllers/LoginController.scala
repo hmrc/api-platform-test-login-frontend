@@ -30,11 +30,23 @@ import uk.gov.hmrc.api.testlogin.views.html.{error_template, login => login_temp
 
 import scala.concurrent.Future
 import scala.concurrent.Future.successful
+import play.api.mvc.ControllerComponents
+import akka.stream.Materializer
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import scala.concurrent.ExecutionContext
+import play.api.mvc.MessagesControllerComponents
 
 @Singleton
-class LoginController @Inject()(override val messagesApi: MessagesApi, loginService: LoginService,
-                                continueUrlService: ContinueUrlService, implicit val appConfig: AppConfig)
-  extends FrontendController with I18nSupport {
+class LoginController @Inject()(
+    loginService: LoginService,
+    errorHandler: ErrorHandler,
+    continueUrlService: ContinueUrlService,
+    mcc: MessagesControllerComponents
+)(
+    implicit val mat: Materializer,
+    val appConfig: AppConfig,
+    val ec: ExecutionContext
+) extends FrontendController(mcc) {
 
   case class LoginForm(userId: String, password: String, continue: String)
 
@@ -67,5 +79,5 @@ class LoginController @Inject()(override val messagesApi: MessagesApi, loginServ
     )
   }
 
-  private def badRequest()(implicit request: Request[AnyContent]) = successful(BadRequest(error_template("", "", "Invalid Parameters")))
+  private def badRequest()(implicit request: Request[AnyContent]) = successful(BadRequest(errorHandler.standardErrorTemplate("", "", "Invalid Parameters")))
 }
