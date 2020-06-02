@@ -25,7 +25,7 @@ import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest}
 import uk.gov.hmrc.api.testlogin.services.{ContinueUrlService, LoginService}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import uk.gov.hmrc.api.testlogin.views.html.{login => login_template}
+import uk.gov.hmrc.api.testlogin.views.html._
 
 import scala.concurrent.Future.successful
 import akka.stream.Materializer
@@ -39,7 +39,7 @@ class LoginController @Inject()(
     errorHandler: ErrorHandler,
     continueUrlService: ContinueUrlService,
     mcc: MessagesControllerComponents,
-    loginTemplate: login_template
+    loginView: LoginView
 )(
     implicit val mat: Materializer,
     val appConfig: AppConfig,
@@ -57,7 +57,7 @@ class LoginController @Inject()(
   )
 
   def showLoginPage(continue: String) = Action.async { implicit request =>
-    if(continueUrlService.isValidContinueUrl(continue)) successful(Ok(loginTemplate(continue))) else badRequest()
+    if(continueUrlService.isValidContinueUrl(continue)) successful(Ok(loginView(continue))) else badRequest()
   }
 
   def login() = Action.async { implicit request =>
@@ -67,7 +67,7 @@ class LoginController @Inject()(
         Redirect(loginForm.continue).withSession(session)
       } recover {
         case e : LoginFailed =>
-          Unauthorized(loginTemplate(loginForm.continue, Some("Invalid user ID or password. Try again.")))
+          Unauthorized(loginView(loginForm.continue, Some("Invalid user ID or password. Try again.")))
       }
     }
 

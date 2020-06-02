@@ -52,9 +52,9 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
     implicit val appConfig: AppConfig = fakeApplication.injector.instanceOf[AppConfig]
     val errorHandler: ErrorHandler = fakeApplication.injector.instanceOf[ErrorHandler]
     val mcc = fakeApplication.injector.instanceOf[MessagesControllerComponents]
-    val loginTemplate = fakeApplication.injector.instanceOf[login]
+    val loginView = fakeApplication.injector.instanceOf[LoginView]
 
-    val underTest = new LoginController(loginService, errorHandler, continueUrlService, mcc, loginTemplate)
+    val underTest = new LoginController(loginService, errorHandler, continueUrlService, mcc, loginView)
 
     def execute[T <: play.api.mvc.AnyContent](action: Action[AnyContent], request: FakeRequest[T] = FakeRequest()) = await(csrfAddToken(action)(request))
   }

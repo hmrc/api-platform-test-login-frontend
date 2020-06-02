@@ -25,10 +25,10 @@ import uk.gov.hmrc.api.testlogin.views.html._
 
 class ErrorHandler @Inject()(val messagesApi: MessagesApi,
                               val configuration: Configuration,
-                              errorTemplate: error_template) extends FrontendErrorHandler {
+                              errorView: ErrorView) extends FrontendErrorHandler {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]) = {
-    errorTemplate(pageTitle, heading, message)
+    errorView(pageTitle, heading, message)
   }
 }
 

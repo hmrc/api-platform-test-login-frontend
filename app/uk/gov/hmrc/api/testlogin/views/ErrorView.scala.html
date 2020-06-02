@@ -16,9 +16,9 @@
 
 @import uk.gov.hmrc.api.testlogin.config.AppConfig
 
-@this(govUkWrapper: govuk_wrapper, appConfig: AppConfig)
+@this(govUkWrapper: GovUkWrapper, appConfig: AppConfig)
 
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages)
+@(pageTitle: String, heading: String, message: String)(implicit messages: Messages)
 
 @contentHeader = {
   <h1>@heading</h1>

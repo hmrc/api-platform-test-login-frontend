@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.api.testlogin.config.AppConfig
 @import uk.gov.hmrc.api.testlogin.controllers.routes.LoginController
 
-@this(govUkWrapper: govuk_wrapper)
+@this(govUkWrapper: GovUkWrapper)
 
 @(continue: String, errorMessage: Option[String] = None)(implicit request: Request[_], appConfig: AppConfig, messages: Messages)
 

@@ -27,7 +27,7 @@ import play.api.i18n.MessagesProvider
 import play.api.i18n.MessagesImpl
 import play.api.i18n.DefaultMessagesApi
 import play.api.i18n.Lang
-import uk.gov.hmrc.api.testlogin.views.html.govuk_wrapper
+import uk.gov.hmrc.api.testlogin.views.html._
 
 class GovUkWrapperSpec extends UnitSpec with Matchers with MockitoSugar with WithFakeApplication {
 
@@ -39,7 +39,7 @@ class GovUkWrapperSpec extends UnitSpec with Matchers with MockitoSugar with Wit
 
       implicit val messagesProvider: MessagesProvider = MessagesImpl(Lang(java.util.Locale.ENGLISH), new DefaultMessagesApi())
 
-      val govUkWrapper = application.injector.instanceOf[govuk_wrapper]
+      val govUkWrapper = application.injector.instanceOf[GovUkWrapper]
       val appConfig: AppConfig = mock[AppConfig]
       when(appConfig.analyticsHost).thenReturn("")
       when(appConfig.analyticsToken).thenReturn("")
