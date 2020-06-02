@@ -17,6 +17,20 @@
 @import uk.gov.hmrc.api.testlogin.config.AppConfig
 @import play.twirl.api.HtmlFormat
 
+@import uk.gov.hmrc.play.views.html.layouts._
+@import uk.gov.hmrc.play.views.html.helpers.ReportAProblemLink
+@import views.html.layouts.GovUkTemplate
+
+@this(layoutsHead: Head,
+      layoutsHeaderNav: HeaderNav,
+      layoutsFooter: Footer,
+      layoutsServiceInfo: ServiceInfo,
+      layoutsMainContentHeader: MainContentHeader,
+      layoutsMainContent: MainContent,
+      helpersReportAProblemLink: ReportAProblemLink,
+      govUkTemplate: GovUkTemplate
+)
+
 @(appConfig: AppConfig,
   title: String,
   mainClass: Option[String] = None,
@@ -26,10 +40,7 @@
   contentHeader: Option[Html] = None,
   mainContent: Html = HtmlFormat.empty,
   serviceInfoContent: Html = HtmlFormat.empty,
-  scriptElem: Option[Html] = None)(implicit request: Request[_], messages: Messages)
-
-@import layouts.{govuk_template => hmrcGovUkTemplate}
-@import uk.gov.hmrc.play.views.html.{helpers => uiHelpers, layouts => uiLayouts}
+  scriptElem: Option[Html] = None)(implicit messages: Messages)
 
 @headScripts = {
     <script src='@routes.Assets.at("javascripts/googleTagManager.js")'></script>
@@ -37,7 +48,7 @@
 
 @head = {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    @uiLayouts.head(
+    @layoutsHead(
       linkElem = None,
       headScripts = Some(headScripts))
     <link href='@routes.Assets.at("sandbox.css")' media='screen' rel='stylesheet' type='text/css'>
@@ -45,7 +56,7 @@
 }
 
 @insideHeader = {
-    @uiLayouts.header_nav(
+    @layoutsHeaderNav(
       navTitle = None,
       navTitleLink = None,
       showBetaLink = false,
@@ -55,7 +66,7 @@
 @afterHeader = {}
 
 @bodyEnd = {
-    @uiLayouts.footer(
+    @layoutsFooter(
       analyticsToken = Some(appConfig.analyticsToken),
       analyticsHost = appConfig.analyticsHost,
       ssoUrl = None,
@@ -67,7 +78,7 @@
 @footerLinks = {}
 
 @serviceInfo = {
-    @uiLayouts.serviceInfo(
+    @layoutsServiceInfo(
       betaBanner = HtmlFormat.empty,
       includeGridWrapper = false,
       serviceInfoContent = None)
@@ -75,16 +86,16 @@
 
 @mainContentHeader = {
     @if(contentHeader.isDefined) {
-        @uiLayouts.main_content_header(contentHeader = contentHeader.get)
+        @layoutsMainContentHeader(contentHeader = contentHeader.get)
     }
 }
 
-@getHelpForm = @{uiHelpers.reportAProblemLink(appConfig.reportAProblemPartialUrl, appConfig.reportAProblemNonJSUrl)}
+@getHelpForm = @{helpersReportAProblemLink(appConfig.reportAProblemPartialUrl, appConfig.reportAProblemNonJSUrl)}
 
 @content = {
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TSFTCWZ"
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    @uiLayouts.main_content(
+    @layoutsMainContent(
       article = mainContent,
       mainClass = mainClass,
       mainDataAttributes = mainDataAttributes,
@@ -94,4 +105,4 @@
       sidebar = sidebar)
 }
 
-@hmrcGovUkTemplate(Some(title), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)
+@govUkTemplate(Some(title), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(footerLinks), true)(content)

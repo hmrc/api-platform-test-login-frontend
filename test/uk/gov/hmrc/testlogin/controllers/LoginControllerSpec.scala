@@ -37,6 +37,7 @@ import uk.gov.hmrc.api.testlogin.controllers.ErrorHandler
 import play.api.mvc.MessagesControllerComponents
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.scalatestplus.mockito.MockitoSugar
+import uk.gov.hmrc.api.testlogin.views.html._
 
 class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 
@@ -51,8 +52,9 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
     implicit val appConfig: AppConfig = fakeApplication.injector.instanceOf[AppConfig]
     val errorHandler: ErrorHandler = fakeApplication.injector.instanceOf[ErrorHandler]
     val mcc = fakeApplication.injector.instanceOf[MessagesControllerComponents]
+    val loginTemplate = fakeApplication.injector.instanceOf[login]
 
-    val underTest = new LoginController(loginService, errorHandler, continueUrlService, mcc)(implicitly, appConfig, implicitly)
+    val underTest = new LoginController(loginService, errorHandler, continueUrlService, mcc, loginTemplate)
 
     def execute[T <: play.api.mvc.AnyContent](action: Action[AnyContent], request: FakeRequest[T] = FakeRequest()) = await(csrfAddToken(action)(request))
   }

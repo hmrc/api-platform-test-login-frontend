@@ -15,7 +15,10 @@
  *@
 
 @import uk.gov.hmrc.api.testlogin.config.AppConfig
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], appConfig: AppConfig, messages: Messages)
+
+@this(govUkWrapper: govuk_wrapper, appConfig: AppConfig)
+
+@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages)
 
 @contentHeader = {
   <h1>@heading</h1>
@@ -25,4 +28,4 @@
   <p>@message</p>
 }
 
-@govuk_wrapper(appConfig = appConfig, title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent)
+@govUkWrapper(appConfig = appConfig, title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent)

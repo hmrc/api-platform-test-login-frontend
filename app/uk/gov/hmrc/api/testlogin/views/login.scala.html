@@ -17,6 +17,8 @@
 @import uk.gov.hmrc.api.testlogin.config.AppConfig
 @import uk.gov.hmrc.api.testlogin.controllers.routes.LoginController
 
+@this(govUkWrapper: govuk_wrapper)
+
 @(continue: String, errorMessage: Option[String] = None)(implicit request: Request[_], appConfig: AppConfig, messages: Messages)
 
 @mainContent = {
@@ -51,4 +53,4 @@
     </div>
 }
 
-@govuk_wrapper(appConfig = appConfig, title = "Sign in", mainContent = mainContent)
+@govUkWrapper(appConfig = appConfig, title = "Sign in", mainContent = mainContent)

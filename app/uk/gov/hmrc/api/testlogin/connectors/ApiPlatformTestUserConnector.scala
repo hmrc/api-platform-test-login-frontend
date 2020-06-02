@@ -18,7 +18,7 @@ package uk.gov.hmrc.api.testlogin.connectors
 
 import javax.inject.{Inject, Singleton}
 import play.api.http.{HeaderNames, Status}
-import play.api.{Configuration, Environment}
+import play.api.Environment
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
 import uk.gov.hmrc.api.testlogin.models._
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}

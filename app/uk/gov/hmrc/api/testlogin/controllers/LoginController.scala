@@ -38,7 +38,8 @@ class LoginController @Inject()(
     loginService: LoginService,
     errorHandler: ErrorHandler,
     continueUrlService: ContinueUrlService,
-    mcc: MessagesControllerComponents
+    mcc: MessagesControllerComponents,
+    loginTemplate: login_template
 )(
     implicit val mat: Materializer,
     val appConfig: AppConfig,
@@ -56,7 +57,7 @@ class LoginController @Inject()(
   )
 
   def showLoginPage(continue: String) = Action.async { implicit request =>
-    if(continueUrlService.isValidContinueUrl(continue)) successful(Ok(login_template(continue))) else badRequest()
+    if(continueUrlService.isValidContinueUrl(continue)) successful(Ok(loginTemplate(continue))) else badRequest()
   }
 
   def login() = Action.async { implicit request =>
@@ -66,7 +67,7 @@ class LoginController @Inject()(
         Redirect(loginForm.continue).withSession(session)
       } recover {
         case e : LoginFailed =>
-          Unauthorized(login_template(loginForm.continue, Some("Invalid user ID or password. Try again.")))
+          Unauthorized(loginTemplate(loginForm.continue, Some("Invalid user ID or password. Try again.")))
       }
     }
 

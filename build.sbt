@@ -21,8 +21,8 @@ lazy val scalaTestPlusVersion = "3.1.3"
 lazy val wiremockVersion = "1.58"
 lazy val hmrcPlayJsonUnionFormatterVersion = "1.11.0"
 lazy val mockitoVersion = "1.10.19"
-lazy val govUkTemplateVersion = "5.52.0-play-26"
-lazy val playUiVersion = "8.8.0-play-26"
+lazy val govUkTemplateVersion = "5.54.0-play-26"
+lazy val playUiVersion = "8.9.0-play-26"
 lazy val domainVersion = "5.6.0-play-26"
 
 lazy val compile = Seq(
