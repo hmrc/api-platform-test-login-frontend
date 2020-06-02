@@ -20,17 +20,14 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, Request, Result}
+import play.api.mvc.{AnyContent, Request}
 import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest}
 import uk.gov.hmrc.api.testlogin.services.{ContinueUrlService, LoginService}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import uk.gov.hmrc.api.testlogin.views.html.{error_template, login => login_template}
+import uk.gov.hmrc.api.testlogin.views.html.{login => login_template}
 
-import scala.concurrent.Future
 import scala.concurrent.Future.successful
-import play.api.mvc.ControllerComponents
 import akka.stream.Materializer
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import scala.concurrent.ExecutionContext
