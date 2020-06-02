@@ -36,15 +36,17 @@ class LoginService @Inject()(apiPlatformTestUserConnector: ApiPlatformTestUserCo
     apiPlatformTestUserConnector.authenticate(loginRequest) map (buildSession(_, loginRequest))
   }
 
-  private def buildSession(authSession: AuthenticatedSession, loginRequest: LoginRequest): Session = Session(Map(
-    sessionId -> SessionId(s"session-${UUID.randomUUID}").value,
-    userId -> authSession.authorityURI,
-    authToken -> authSession.authBearerToken,
-    // APIS-1811 FIXME: This should probably be DateTime.now(DateTimeZone.UTC) to align with the session timeout filter
-    lastRequestTimestamp -> DateTime.now.getMillis.toString,
-    name -> loginRequest.username,
-    authProvider -> "GGW",
-    token -> authSession.gatewayToken,
-    affinityGroup -> authSession.affinityGroup)
+  private def buildSession(authSession: AuthenticatedSession, loginRequest: LoginRequest): Session = Session(
+    Map(
+      sessionId -> SessionId(s"session-${UUID.randomUUID}").value,
+      userId -> authSession.authorityURI,
+      authToken -> authSession.authBearerToken,
+      // APIS-1811 FIXME: This should probably be DateTime.now(DateTimeZone.UTC) to align with the session timeout filter
+      lastRequestTimestamp -> DateTime.now.getMillis.toString,
+      name -> loginRequest.username,
+      authProvider -> "GGW",
+      token -> authSession.gatewayToken,
+      affinityGroup -> authSession.affinityGroup
+    )
   )
 }

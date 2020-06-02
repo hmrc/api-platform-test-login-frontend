@@ -1,8 +1,8 @@
 # microservice specific routes
 
-GET        /sign-in           @uk.gov.hmrc.api.testlogin.controllers.LoginController.showLoginPage(continue)
+GET        /sign-in           uk.gov.hmrc.api.testlogin.controllers.LoginController.showLoginPage(continue)
 
-POST       /sign-in           @uk.gov.hmrc.api.testlogin.controllers.LoginController.login()
+POST       /sign-in           uk.gov.hmrc.api.testlogin.controllers.LoginController.login()
 
 # Map static resources from the /public folder to the /assets URL path
 GET        /assets/*file      controllers.Assets.at(path="/public", file)

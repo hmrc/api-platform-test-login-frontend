@@ -17,17 +17,18 @@
 package uk.gov.hmrc.api.testlogin.config
 
 import javax.inject.{Inject, Singleton}
-import play.api.{Configuration, Environment}
-import uk.gov.hmrc.play.config.ServicesConfig
+import play.api.Configuration
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import uk.gov.hmrc.play.bootstrap.config.RunMode
+
 
 @Singleton
-class AppConfig @Inject()(override val runModeConfiguration: Configuration, environment: Environment) extends ServicesConfig {
+class AppConfig @Inject()(configuration: Configuration, runMode: RunMode)
+    extends ServicesConfig(configuration, runMode) {
 
-  override protected def mode = environment.mode
+  private def loadConfig(key: String) = configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
-  private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
-
-  private val contactHost = runModeConfiguration.getString("contact-frontend.host").getOrElse("")
+  private val contactHost = configuration.getOptional[String]("contact-frontend.host").getOrElse("")
   private val contactFormServiceIdentifier = "MyService"
 
   lazy val analyticsToken = loadConfig("google-analytics.token")
@@ -36,4 +37,6 @@ class AppConfig @Inject()(override val runModeConfiguration: Configuration, envi
   lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
   lazy val continueUrl = loadConfig("continue-url")
   lazy val devHubBaseUrl = loadConfig("dev-hub-base-url")
+
+  lazy val serviceUrl = baseUrl("api-platform-test-user")
 }

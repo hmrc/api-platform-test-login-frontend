@@ -20,21 +20,31 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, Request, Result}
+import play.api.mvc.{AnyContent, Request}
 import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest}
 import uk.gov.hmrc.api.testlogin.services.{ContinueUrlService, LoginService}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import uk.gov.hmrc.api.testlogin.views.html.{error_template, login => login_template}
+import uk.gov.hmrc.api.testlogin.views.html._
 
-import scala.concurrent.Future
 import scala.concurrent.Future.successful
+import akka.stream.Materializer
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import scala.concurrent.ExecutionContext
+import play.api.mvc.MessagesControllerComponents
 
 @Singleton
-class LoginController @Inject()(override val messagesApi: MessagesApi, loginService: LoginService,
-                                continueUrlService: ContinueUrlService, implicit val appConfig: AppConfig)
-  extends FrontendController with I18nSupport {
+class LoginController @Inject()(
+    loginService: LoginService,
+    errorHandler: ErrorHandler,
+    continueUrlService: ContinueUrlService,
+    mcc: MessagesControllerComponents,
+    loginView: LoginView
+)(
+    implicit val mat: Materializer,
+    val appConfig: AppConfig,
+    val ec: ExecutionContext
+) extends FrontendController(mcc) {
 
   case class LoginForm(userId: String, password: String, continue: String)
 
@@ -47,7 +57,7 @@ class LoginController @Inject()(override val messagesApi: MessagesApi, loginServ
   )
 
   def showLoginPage(continue: String) = Action.async { implicit request =>
-    if(continueUrlService.isValidContinueUrl(continue)) successful(Ok(login_template(continue))) else badRequest()
+    if(continueUrlService.isValidContinueUrl(continue)) successful(Ok(loginView(continue))) else badRequest()
   }
 
   def login() = Action.async { implicit request =>
@@ -57,7 +67,7 @@ class LoginController @Inject()(override val messagesApi: MessagesApi, loginServ
         Redirect(loginForm.continue).withSession(session)
       } recover {
         case e : LoginFailed =>
-          Unauthorized(login_template(loginForm.continue, Some("Invalid user ID or password. Try again.")))
+          Unauthorized(loginView(loginForm.continue, Some("Invalid user ID or password. Try again.")))
       }
     }
 
@@ -67,5 +77,5 @@ class LoginController @Inject()(override val messagesApi: MessagesApi, loginServ
     )
   }
 
-  private def badRequest()(implicit request: Request[AnyContent]) = successful(BadRequest(error_template("", "", "Invalid Parameters")))
+  private def badRequest()(implicit request: Request[AnyContent]) = successful(BadRequest(errorHandler.standardErrorTemplate("", "", "Invalid Parameters")))
 }
