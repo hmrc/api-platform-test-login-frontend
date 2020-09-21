@@ -28,7 +28,8 @@
       layoutsMainContentHeader: MainContentHeader,
       layoutsMainContent: MainContent,
       helpersReportAProblemLink: ReportAProblemLink,
-      govUkTemplate: GovUkTemplate
+      govUkTemplate: GovUkTemplate,
+      applicationConfig: AppConfig
 )
 
 @(appConfig: AppConfig,
@@ -40,7 +41,7 @@
   contentHeader: Option[Html] = None,
   mainContent: Html = HtmlFormat.empty,
   serviceInfoContent: Html = HtmlFormat.empty,
-  scriptElem: Option[Html] = None)(implicit messages: Messages)
+  scriptElem: Option[Html] = None)(implicit messages: Messages, request: play.api.mvc.Request[Any]))
 
 @headScripts = {
     <script src='@routes.Assets.at("javascripts/googleTagManager.js")'></script>
@@ -75,7 +76,12 @@
 }
 
 @footerTop = {}
-@footerLinks = {}
+
+@footerLinks = {
+  <ul class="platform-help-links">
+    <li><a href='@{applicationConfig.platformFrontendHost}/accessibility-statement/hmrc-developer-hub?referrerUrl=@{helper.urlEncode(request.uri)}' rel="noopener noreferrer" data-sso="false" data-journey-click="footer:Click:AccessibilityStatement">Accessibility statement</a></li>
+  </ul>
+}
 
 @serviceInfo = {
     @layoutsServiceInfo(

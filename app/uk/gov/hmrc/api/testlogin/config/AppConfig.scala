@@ -39,4 +39,6 @@ class AppConfig @Inject()(configuration: Configuration, runMode: RunMode)
   lazy val devHubBaseUrl = loadConfig("dev-hub-base-url")
 
   lazy val serviceUrl = baseUrl("api-platform-test-user")
+
+  lazy val platformFrontendHost = loadConfig("platform.frontend.host")
 }
