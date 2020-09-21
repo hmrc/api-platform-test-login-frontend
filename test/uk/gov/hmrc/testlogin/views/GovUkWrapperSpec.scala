@@ -47,7 +47,7 @@ class GovUkWrapperSpec extends UnitSpec with Matchers with MockitoSugar with Wit
 
     "Indicate that embedded Microsoft browsers should render using the latest browser version available" in new Setup {
 
-      val mainView: Html = govUkWrapper(appConfig, "Test")(messagesProvider.messages)
+      val mainView: Html = govUkWrapper(appConfig, "Test")(messagesProvider.messages, fakeRequest)
       mainView.body should include("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">")
 
     }
