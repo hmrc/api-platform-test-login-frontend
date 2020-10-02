@@ -14,18 +14,14 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.api.testlogin.config.AppConfig
+@import uk.gov.hmrc.hmrcfrontend.views.html.components._
 
-@this(govUkWrapper: GovUkWrapper, appConfig: AppConfig)
+@this(hmrcReportTechnicalIssue: HmrcReportTechnicalIssue)
 
-@(pageTitle: String, heading: String, message: String)(implicit messages: Messages, request: play.api.mvc.Request[Any])
+@()(implicit request: Request[_], messages: Messages)
 
-@contentHeader = {
-  <h1>@heading</h1>
-}
-
-@mainContent = {
-  <p>@message</p>
-}
-
-@govUkWrapper(appConfig = appConfig, title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent)
+@hmrcReportTechnicalIssue(ReportTechnicalIssue(
+   serviceCode = "api-test-login",
+   language = Some(messages.lang.code),
+   classList = None
+))

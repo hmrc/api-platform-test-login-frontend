@@ -21,7 +21,7 @@
 
 @(continue: String, errorMessage: Option[String] = None)(implicit request: Request[_], appConfig: AppConfig, messages: Messages)
 
-@govUkWrapper(pageTitle = Some("Sign in")) = {
+@govUkWrapper(pageTitle = Some("Sign in")) {
     <div class="content__body">
         <h1>Sign in</h1>
         <p>Enter your Test User credentials to sign in.</p>

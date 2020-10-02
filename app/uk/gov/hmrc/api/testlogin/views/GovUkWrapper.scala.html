@@ -15,9 +15,11 @@
  *@
 
 @import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.api.testlogin.views.html.SiteHelper
 
 @this(
-  govukLayout: GovukLayout
+  govukLayout: GovukLayout,
+  siteHelper: SiteHelper
 )
 
 @(
@@ -29,7 +31,7 @@
   footerItems: Seq[FooterItem] = Seq.empty,
   bodyEndBlock: Option[Html] = None,
   scriptsBlock: Option[Html] = None
-)(contentBlock: Html)(implicit messages: Messages)
+)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
 @head = {
   <link href='@controllers.routes.Assets.versioned("stylesheets/main.css")' media="screen" rel="stylesheet" type="text/css" />
@@ -40,6 +42,11 @@
   <script>window.GOVUKFrontend.initAll();</script>
 }
 
+@content = {
+  @contentBlock
+  @siteHelper()
+}
+
 @govukLayout(
   pageTitle = pageTitle,
   headBlock = Some(head),
@@ -48,4 +55,4 @@
   scriptsBlock = Some(scripts),
   headerBlock = headerBlock,
   footerItems = footerItems
-)(contentBlock)
+)(content)
