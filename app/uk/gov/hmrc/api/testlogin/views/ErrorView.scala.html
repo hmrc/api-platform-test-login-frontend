@@ -14,18 +14,15 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.api.testlogin.config.AppConfig
+@import uk.gov.hmrc.api.testlogin.views.html.GovUkWrapper
 
-@this(govUkWrapper: GovUkWrapper, appConfig: AppConfig)
+@this(govUkWrapper: GovUkWrapper)
 
 @(pageTitle: String, heading: String, message: String)(implicit messages: Messages, request: play.api.mvc.Request[Any])
 
-@contentHeader = {
-  <h1>@heading</h1>
-}
+@govuk_wrapper(Some(pageTitle)) {
 
-@mainContent = {
-  <p>@message</p>
-}
+  <h1 class="govuk-heading-xl">@heading</h1>
 
-@govUkWrapper(appConfig = appConfig, title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent)
+  <p class="govuk-body">@message</p>
+}

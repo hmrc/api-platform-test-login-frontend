@@ -21,7 +21,7 @@
 
 @(continue: String, errorMessage: Option[String] = None)(implicit request: Request[_], appConfig: AppConfig, messages: Messages)
 
-@mainContent = {
+@govUkWrapper(pageTitle = Some("Sign in")) = {
     <div class="content__body">
         <h1>Sign in</h1>
         <p>Enter your Test User credentials to sign in.</p>
@@ -52,5 +52,3 @@
         <p><a href="@{appConfig.devHubBaseUrl}/api-test-user" target="_blank" rel="external">Don't have Test User credentials</a></p>
     </div>
 }
-
-@govUkWrapper(appConfig = appConfig, title = "Sign in", mainContent = mainContent)
