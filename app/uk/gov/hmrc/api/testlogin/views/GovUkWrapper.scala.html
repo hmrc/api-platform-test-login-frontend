@@ -14,101 +14,38 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.api.testlogin.config.AppConfig
-@import play.twirl.api.HtmlFormat
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@import uk.gov.hmrc.play.views.html.layouts._
-@import uk.gov.hmrc.play.views.html.helpers.ReportAProblemLink
-@import views.html.layouts.GovUkTemplate
-
-@this(layoutsHead: Head,
-      layoutsHeaderNav: HeaderNav,
-      layoutsFooter: Footer,
-      layoutsServiceInfo: ServiceInfo,
-      layoutsMainContentHeader: MainContentHeader,
-      layoutsMainContent: MainContent,
-      helpersReportAProblemLink: ReportAProblemLink,
-      govUkTemplate: GovUkTemplate,
-      applicationConfig: AppConfig
+@this(
+  govukLayout: GovukLayout
 )
 
-@(appConfig: AppConfig,
-  title: String,
-  mainClass: Option[String] = None,
-  mainDataAttributes: Option[Html] = None,
-  bodyClasses: Option[String] = None,
-  sidebar: Html = HtmlFormat.empty,
-  contentHeader: Option[Html] = None,
-  mainContent: Html = HtmlFormat.empty,
-  serviceInfoContent: Html = HtmlFormat.empty,
-  scriptElem: Option[Html] = None)(implicit messages: Messages, request: play.api.mvc.Request[Any]))
-
-@headScripts = {
-    <script src='@routes.Assets.at("javascripts/googleTagManager.js")'></script>
-}
+@(
+  pageTitle: Option[String] = None,
+  headBlock: Option[Html] = None,
+  headerBlock: Option[Html] = None,
+  beforeContentBlock: Option[Html] = None,
+  footerBlock: Option[Html] = None,
+  footerItems: Seq[FooterItem] = Seq.empty,
+  bodyEndBlock: Option[Html] = None,
+  scriptsBlock: Option[Html] = None
+)(contentBlock: Html)(implicit messages: Messages)
 
 @head = {
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    @layoutsHead(
-      linkElem = None,
-      headScripts = Some(headScripts))
-    <link href='@routes.Assets.at("sandbox.css")' media='screen' rel='stylesheet' type='text/css'>
-    <meta name="format-detection" content="telephone=no" />
+  <link href='@controllers.routes.Assets.versioned("stylesheets/main.css")' media="screen" rel="stylesheet" type="text/css" />
 }
 
-@insideHeader = {
-    @layoutsHeaderNav(
-      navTitle = None,
-      navTitleLink = None,
-      showBetaLink = false,
-      navLinks = None)
+@scripts = {
+  <script src='@controllers.routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>
+  <script>window.GOVUKFrontend.initAll();</script>
 }
 
-@afterHeader = {}
-
-@bodyEnd = {
-    @layoutsFooter(
-      analyticsToken = Some(appConfig.analyticsToken),
-      analyticsHost = appConfig.analyticsHost,
-      ssoUrl = None,
-      scriptElem = scriptElem,
-      gaCalls = None)
-}
-
-@footerTop = {}
-
-@footerLinks = {
-  <ul class="platform-help-links">
-    <li><a href='@{applicationConfig.platformFrontendHost}/accessibility-statement/hmrc-developer-hub?referrerUrl=@{helper.urlEncode(request.uri)}' rel="noopener noreferrer" data-sso="false" data-journey-click="footer:Click:AccessibilityStatement">Accessibility statement</a></li>
-  </ul>
-}
-
-@serviceInfo = {
-    @layoutsServiceInfo(
-      betaBanner = HtmlFormat.empty,
-      includeGridWrapper = false,
-      serviceInfoContent = None)
-}
-
-@mainContentHeader = {
-    @if(contentHeader.isDefined) {
-        @layoutsMainContentHeader(contentHeader = contentHeader.get)
-    }
-}
-
-@getHelpForm = @{helpersReportAProblemLink(appConfig.reportAProblemPartialUrl, appConfig.reportAProblemNonJSUrl)}
-
-@content = {
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TSFTCWZ"
-                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    @layoutsMainContent(
-      article = mainContent,
-      mainClass = mainClass,
-      mainDataAttributes = mainDataAttributes,
-      mainContentHeader = mainContentHeader,
-      serviceInfo = serviceInfo,
-      getHelpForm = getHelpForm,
-      sidebar = sidebar)
-}
-
-@govUkTemplate(Some(title), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(footerLinks), true)(content)
+@govukLayout(
+  pageTitle = pageTitle,
+  headBlock = Some(head),
+  beforeContentBlock = beforeContentBlock,
+  bodyEndBlock = bodyEndBlock,
+  scriptsBlock = Some(scripts),
+  headerBlock = headerBlock,
+  footerItems = footerItems
+)(contentBlock)

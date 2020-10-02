@@ -32,6 +32,7 @@ lazy val compile = Seq(
   "uk.gov.hmrc" %% "play-json-union-formatter" % hmrcPlayJsonUnionFormatterVersion,
   "uk.gov.hmrc" %% "govuk-template" % govUkTemplateVersion,
   "uk.gov.hmrc" %% "play-ui" % playUiVersion
+  "uk.gov.hmrc" %% "play-frontend-govuk" % "0.49.0-play-26",
 )
 
 lazy val scope: String = "test, it"
@@ -75,6 +76,13 @@ lazy val microservice = (project in file("."))
   )
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
+  .settings(
+    TwirlKeys.templateImports ++= Seq(
+      "play.twirl.api.HtmlFormat",
+      "uk.gov.hmrc.govukfrontend.views.html.components._",
+      "uk.gov.hmrc.govukfrontend.views.html.helpers._"
+    )
+  )
   .settings(
     IntegrationTest / fork := false,
     IntegrationTest / unmanagedSourceDirectories += baseDirectory.value / "it",

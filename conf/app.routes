@@ -1,5 +1,7 @@
 # microservice specific routes
 
+->         /govuk-frontend                      govuk.Routes
+
 GET        /sign-in           uk.gov.hmrc.api.testlogin.controllers.LoginController.showLoginPage(continue)
 
 POST       /sign-in           uk.gov.hmrc.api.testlogin.controllers.LoginController.login()
