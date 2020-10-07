@@ -15,11 +15,14 @@
  *@
 
 @import uk.gov.hmrc.govukfrontend.views.html.components._
-@import uk.gov.hmrc.api.testlogin.views.html.components.{SiteHelper}
+@import uk.gov.hmrc.api.testlogin.views.html.components.{SiteHelper, SiteFooter}
+@import uk.gov.hmrc.api.testlogin.views.FooterLinks
 
 @this(
   govukLayout: GovukLayout,
-  siteHelper: SiteHelper
+  siteFooter: SiteFooter,
+  siteHelper: SiteHelper,
+  footerLinks: FooterLinks
 )
 
 @(
@@ -47,6 +50,10 @@
   @siteHelper()
 }
 
+@footerBlock = {
+  @siteFooter(new Footer(meta = Some(Meta(items = Some(footerLinks.items)))))
+}
+
 @govukLayout(
   pageTitle = pageTitle,
   headBlock = Some(head),
@@ -54,5 +61,5 @@
   bodyEndBlock = bodyEndBlock,
   scriptsBlock = Some(scripts),
   headerBlock = headerBlock,
-  footerItems = footerItems
+  footerBlock = Some(footerBlock)
 )(content)
