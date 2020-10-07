@@ -22,29 +22,6 @@
 @(continue: String, errorMessage: Option[String] = None)(implicit request: Request[_], appConfig: AppConfig, messages: Messages)
 
 @govUkWrapper(pageTitle = Some("Sign in")) {
-  <!-- @helper.form(action = LoginController.login()) {
-    <div class="govuk-form-group @if(errorMessage.isDefined) {govuk-form-group--error}">
-      @errorMessage.map { error =>
-        <span class="govuk-error-message">
-          <span class="govuk-visually-hidden">Error:</span>@Messages(error)
-        </span>
-      }
-      @helper.CSRF.formField
-      <input type="hidden" name="continue" id="continue" value="@{continue}">
-      <div class="govuk-form-group">
-        <label class="govuk-label" for="userId">User ID</label>
-        <input class="govuk-input govuk-input--width-10" type="text" id="userId" name="userId" required="">
-      </div>
-      <div class="govuk-form-group">
-        <label class="govuk-label" for="password">Password</label>
-        <input class="govuk-input govuk-input--width-10" type="password" id="password" name="password" required="">
-      </div>
-      <button id="submit" class="govuk-button" data-module="govuk-button" type="submit">
-        Sign in
-      </button>
-    </div>
-  } -->
-
   <fieldset class="govuk-fieldset">
     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
       <h1 class="govuk-fieldset__heading">
