@@ -63,7 +63,7 @@ class LoginSpec extends BaseSpec {
       on(LoginPage)
 
       And("An error message is displayed")
-      verifyText("error-notification", "Invalid user ID or password. Try again.")
+      verifyText("govuk-error-message", "Error:Invalid user ID or password. Try again.")
     }
   }
 
