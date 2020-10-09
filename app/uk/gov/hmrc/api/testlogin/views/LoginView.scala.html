@@ -22,7 +22,7 @@
 @(continue: String, errorMessage: Option[String] = None)(implicit request: Request[_], appConfig: AppConfig, messages: Messages)
 
 @govUkWrapper(pageTitle = Some("Sign in")) {
-  <fieldset class="govuk-fieldset" aria-describedby="login-issued-error">
+  <fieldset class="govuk-fieldset">
     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
       <h1 class="govuk-fieldset__heading">
         Sign in
