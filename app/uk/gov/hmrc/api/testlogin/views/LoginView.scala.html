@@ -21,36 +21,61 @@
 
 @(continue: String, errorMessage: Option[String] = None)(implicit request: Request[_], appConfig: AppConfig, messages: Messages)
 
-@mainContent = {
-    <div class="content__body">
-        <h1>Sign in</h1>
-        <p>Enter your Test User credentials to sign in.</p>
-
-        @helper.form(action = LoginController.login()) {
-
-            <div class="form-field-group @if(errorMessage.isDefined) {error}">
-                @errorMessage.map { error =>
-                    <span class="error-notification password">@Messages(error)</span>
-                }
-                @helper.CSRF.formField
-                <input type="hidden" name="continue" id="continue" value="@{continue}">
-
-                <div class="form-field">
-                    <label class="label--inline" for="userId">User ID</label>
-                    <input type="text" id="userId" name="userId" required="">
-                </div>
-                <div class="form-field">
-                    <label class="label--inline" for="password">Password</label>
-                    <input type="password" id="password" name="password" required="">
-                </div>
-                <div class="form-field">
-                    <button id="submit" class="button button--spaced button--padded" type="submit">Sign in</button>
-                </div>
-            </div>
+@govUkWrapper(pageTitle = Some("Sign in")) {
+  <fieldset class="govuk-fieldset">
+    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+      <h1 class="govuk-fieldset__heading">
+        Sign in
+      </h1>
+    </legend>
+    <!-- Error Summary -->
+    @errorMessage.map { error =>
+      <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">
+          There is a problem
+        </h2>
+        <div class="govuk-error-summary__body">
+          <ul class="govuk-list govuk-error-summary__list">
+            <li>
+              <a href="#apiTestLoginInputs">@Messages(error)</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    }
+    <p class="govuk-body">Enter your Test User credentials to sign in.</p>
+    <div id="apiTestLoginInputs" class="govuk-form-group @if(errorMessage.isDefined) {govuk-form-group--error}">
+      @helper.form(action = LoginController.login()) {
+        @errorMessage.map { error =>
+          <span id="login-issued-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span>@Messages(error)
+          </span>
         }
-        <h2>Problems signing in</h2>
-        <p><a href="@{appConfig.devHubBaseUrl}/api-test-user" target="_blank" rel="external">Don't have Test User credentials</a></p>
-    </div>
-}
+        @helper.CSRF.formField
+        <input type="hidden" name="continue" id="continue" value="@{continue}">
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="userId">
+            User ID
+          </label>
+          <input class="govuk-input govuk-!-width-one-half" id="userId" name="userId" type="text" aria-required="true" required>
+        </div>
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="password">
+            Password
+          </label>
+          <input class="govuk-input govuk-!-width-one-half" id="password" name="password" type="password" aria-required="true" required>
+        </div>
+      </div>
+      <button id="submit" class="govuk-button" data-module="govuk-button" type="submit">
+        Sign in
+      </button>
+    }
+  </fieldset>
 
-@govUkWrapper(appConfig = appConfig, title = "Sign in", mainContent = mainContent)
+  <div class="govuk-!-padding-bottom-7">
+    <h2 class="govuk-heading-m">Problems signing in</h2>
+    <p class="govuk-body">
+      <a href="@{appConfig.devHubBaseUrl}/api-test-user" class="govuk-link" target="_blank" rel="noreferrer noopener">Don't have Test User credentials (opens in new tab)</a>
+    </p>
+  </div>
+}

@@ -14,14 +14,14 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.api.testlogin.views.html.GovUkWrapper
+@import uk.gov.hmrc.hmrcfrontend.views.html.components._
 
-@this(govUkWrapper: GovUkWrapper)
+@this(hmrcReportTechnicalIssue: HmrcReportTechnicalIssue)
 
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages)
+@()(implicit request: Request[_], messages: Messages)
 
-@govUkWrapper(Some(pageTitle)) {
-  <h1 class="govuk-heading-xl">@heading</h1>
-
-  <p class="govuk-body">@message</p>
-}
+@hmrcReportTechnicalIssue(ReportTechnicalIssue(
+   serviceCode = "api-test-login",
+   language = Some(messages.lang.code),
+   classList = None
+))

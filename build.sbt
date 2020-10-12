@@ -31,7 +31,9 @@ lazy val compile = Seq(
   "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
   "uk.gov.hmrc" %% "play-json-union-formatter" % hmrcPlayJsonUnionFormatterVersion,
   "uk.gov.hmrc" %% "govuk-template" % govUkTemplateVersion,
-  "uk.gov.hmrc" %% "play-ui" % playUiVersion
+  "uk.gov.hmrc" %% "play-ui" % playUiVersion,
+  "uk.gov.hmrc" %% "play-frontend-govuk" % "0.49.0-play-26",
+  "uk.gov.hmrc" %% "play-frontend-hmrc" % "0.20.0-play-26"
 )
 
 lazy val scope: String = "test, it"
@@ -76,6 +78,13 @@ lazy val microservice = (project in file("."))
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(
+    TwirlKeys.templateImports ++= Seq(
+      "play.twirl.api.HtmlFormat",
+      "uk.gov.hmrc.govukfrontend.views.html.components._",
+      "uk.gov.hmrc.govukfrontend.views.html.helpers._"
+    )
+  )
+  .settings(
     IntegrationTest / fork := false,
     IntegrationTest / unmanagedSourceDirectories += baseDirectory.value / "it",
     addTestReportOption(IntegrationTest, "int-test-reports"),
@@ -86,6 +95,6 @@ lazy val microservice = (project in file("."))
   ))
 
 // Coverage configuration
-coverageMinimum := 96
+coverageMinimum := 94.5
 coverageFailOnMinimum := true
 coverageExcludedPackages := "<empty>;com.kenshoo.play.metrics.*;.*definition.*;prod.*;testOnlyDoNotUseInAppConf.*;app.*;uk.gov.hmrc.BuildInfo;.*javascript;.*Reverse.*"
