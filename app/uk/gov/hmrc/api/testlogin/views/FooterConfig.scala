@@ -18,16 +18,20 @@ package uk.gov.hmrc.api.testlogin.views
 
 import javax.inject.{Inject, Singleton}
 import play.api.Configuration
+import play.api.mvc.Request
+import views.html.helper
 
 @Singleton
 class FooterConfig @Inject()(config: Configuration) {
 
-  lazy val host: String = config.get[String]("host")
+  lazy val host: String = config.get[String]("platform.frontend.host")
   private lazy val urlFooterConfig = config.underlying.getConfig("urls.footer")
 
-  lazy val cookies: String         = urlFooterConfig.getString("cookies")
-  lazy val privacy: String         = urlFooterConfig.getString("privacy")
-  lazy val termsConditions: String = urlFooterConfig.getString("termsConditions")
-  lazy val govukHelp: String       = urlFooterConfig.getString("govukHelp")
-  lazy val accessibility: String   = urlFooterConfig.getString("accessibility")
+  lazy val cookies: String         = s"${host}${urlFooterConfig.getString("cookies")}"
+  lazy val privacy: String         = s"${host}${urlFooterConfig.getString("privacy")}"
+  lazy val termsConditions: String = s"${host}${urlFooterConfig.getString("termsConditions")}"
+  lazy val govukHelp: String       = s"${host}${urlFooterConfig.getString("govukHelp")}"
+
+  def accessibility(implicit request: Request[_]): String =
+    s"${host}${urlFooterConfig.getString("accessibility")}/hmrc-developer-hub?referrerUrl=${helper.urlEncode(request.uri)}"
 }

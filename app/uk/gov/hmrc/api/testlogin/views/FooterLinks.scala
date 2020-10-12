@@ -18,6 +18,7 @@ package uk.gov.hmrc.api.testlogin.views
 
 import javax.inject.Inject
 import play.api.i18n.Messages
+import play.api.mvc.Request
 import uk.gov.hmrc.govukfrontend.views.viewmodels.footer.FooterItem
 
 class FooterLinks @Inject()(appConfig: FooterConfig) {
@@ -42,12 +43,12 @@ class FooterLinks @Inject()(appConfig: FooterConfig) {
     Some(appConfig.govukHelp)
   )
 
-  def accessibilityLink(implicit messages: Messages): FooterItem = FooterItem(
+  def accessibilityLink(implicit messages: Messages, request: Request[_]): FooterItem = FooterItem(
     Some(messages("footer.accessibility")),
     Some(appConfig.accessibility)
   )
 
-  def items(implicit messages: Messages) = Seq(
+  def items(implicit messages: Messages, request: Request[_]): Seq[FooterItem] = Seq(
     cookieLink,
     accessibilityLink,
     privacyLink,
