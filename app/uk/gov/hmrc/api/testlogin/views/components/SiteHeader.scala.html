@@ -21,24 +21,6 @@
 @govukHeader(Header(
     homepageUrl = Some("https://www.gov.uk/"),
     serviceName = Some("HMRC Developer Hub"),
-    serviceUrl = Some("/api-documentation"),
-    containerClasses = Some("govuk-width-container"),
-    navigation = Some(Seq(
-        HeaderNavigation(
-            href = Some("/api-documentation/docs/using-the-hub"),
-            text = Some("Documentation")
-        ),
-        HeaderNavigation(
-            href = Some("/developer/application"),
-            text = Some("Applications")
-        ),
-        HeaderNavigation(
-            href = Some("/developer/support"),
-            text = Some("Support")
-        ),
-        HeaderNavigation(
-            href = Some("https://api-platform-status.production.tax.service.gov.uk/"),
-            text = Some("Availability")
-        )
-    ))
+    serviceUrl = Some("https://developer.service.hmrc.gov.uk/api-documentation"),
+    containerClasses = Some("govuk-width-container")
 ))
