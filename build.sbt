@@ -22,7 +22,6 @@ lazy val wiremockVersion = "1.58"
 lazy val hmrcPlayJsonUnionFormatterVersion = "1.11.0"
 lazy val mockitoVersion = "1.10.19"
 lazy val govUkTemplateVersion = "5.54.0-play-26"
-lazy val playUiVersion = "8.9.0-play-26"
 lazy val domainVersion = "5.6.0-play-26"
 
 lazy val compile = Seq(
@@ -31,9 +30,8 @@ lazy val compile = Seq(
   "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
   "uk.gov.hmrc" %% "play-json-union-formatter" % hmrcPlayJsonUnionFormatterVersion,
   "uk.gov.hmrc" %% "govuk-template" % govUkTemplateVersion,
-  "uk.gov.hmrc" %% "play-ui" % playUiVersion,
   "uk.gov.hmrc" %% "play-frontend-govuk" % "0.49.0-play-26",
-  "uk.gov.hmrc" %% "play-frontend-hmrc" % "0.20.0-play-26"
+  "uk.gov.hmrc" %% "play-frontend-hmrc" % "0.26.0-play-26"
 )
 
 lazy val scope: String = "test, it"
