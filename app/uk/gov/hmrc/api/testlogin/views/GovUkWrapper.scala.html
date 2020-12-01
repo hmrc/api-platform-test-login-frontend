@@ -15,6 +15,7 @@
  *@
 
 @import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcTrackingConsentSnippet
 @import uk.gov.hmrc.api.testlogin.views.html.components.{SiteHelper, SiteFooter, SiteHeader}
 @import uk.gov.hmrc.api.testlogin.views.FooterLinks
 
@@ -23,7 +24,8 @@
   siteFooter: SiteFooter,
   siteHelper: SiteHelper,
   siteHeader: SiteHeader,
-  footerLinks: FooterLinks
+  footerLinks: FooterLinks,
+  hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet
 )
 
 @(
@@ -39,6 +41,7 @@
 
 @head = {
   <link href='@controllers.routes.Assets.versioned("stylesheets/main.css")' media="screen" rel="stylesheet" type="text/css" />
+  @hmrcTrackingConsentSnippet()
 }
 
 @scripts = {
