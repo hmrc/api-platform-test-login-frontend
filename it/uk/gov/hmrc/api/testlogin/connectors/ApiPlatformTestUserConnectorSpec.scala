@@ -95,7 +95,7 @@ class ApiPlatformTestUserConnectorSpec extends UnitSpec with MockitoSugar with W
 
       intercept[UpstreamErrorResponse] {
         await(underTest.authenticate(loginRequest))
-      }.statusCode should be INTERNAL_SERVER_ERROR
+      }.statusCode shouldBe INTERNAL_SERVER_ERROR
     }
 
   }
