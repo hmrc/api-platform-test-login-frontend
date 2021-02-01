@@ -18,26 +18,23 @@ package uk.gov.hmrc.testlogin.config
 
 import akka.stream.Materializer
 import org.joda.time.{DateTime, DateTimeZone, Duration}
-import org.mockito.Matchers._
-import org.mockito.Mockito._
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc._
 import play.api.test.FakeRequest
 import uk.gov.hmrc.api.testlogin.config.SessionTimeoutFilterWithWhitelist
 import uk.gov.hmrc.play.bootstrap.filters.frontend.SessionTimeoutFilterConfig
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import uk.gov.hmrc.testlogin.AsyncHmrcSpec
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 
-class SessionTimeoutFilterWithWhitelistSpec extends UnitSpec with MockitoSugar with ScalaFutures with WithFakeApplication {
+class SessionTimeoutFilterWithWhitelistSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
 
   trait Setup {
 
-    implicit val mat = fakeApplication.injector.instanceOf[Materializer]
+    implicit val mat = app.injector.instanceOf[Materializer]
 
     val config = new SessionTimeoutFilterConfig(
       timeoutDuration = Duration.standardSeconds(1),
@@ -48,11 +45,9 @@ class SessionTimeoutFilterWithWhitelistSpec extends UnitSpec with MockitoSugar w
 
     val nextOperationFunction = mock[RequestHeader => Future[Result]]
 
-    when(nextOperationFunction.apply(any())).thenAnswer(new Answer[Future[Result]] {
-      override def answer(invocation: InvocationOnMock): Future[Result] = {
-        val headers = invocation.getArguments.head.asInstanceOf[RequestHeader]
-        Future.successful(Results.Ok.withSession(headers.session + ("authToken" -> "Bearer Token")))
-      }
+    when(nextOperationFunction.apply(*)).thenAnswer( (invocation: InvocationOnMock) => {
+      val headers = invocation.getArguments.head.asInstanceOf[RequestHeader]
+      Future.successful(Results.Ok.withSession(headers.session + ("authToken" -> "Bearer Token")))
     })
 
     def twoSecondsAgo: String = {
@@ -65,37 +60,34 @@ class SessionTimeoutFilterWithWhitelistSpec extends UnitSpec with MockitoSugar w
     "leave the session keys intact when path in whitelist" in new Setup {
       val request = FakeRequest(method = "GET", path = "/login")
 
-      whenReady(filter.apply(nextOperationFunction)(request.withSession("key" -> "value"))) { result =>
-        result.session(request).data("authToken") shouldBe "Bearer Token"
-      }
+      val result = await(filter.apply(nextOperationFunction)(request.withSession("key" -> "value")))
+      result.session(request).data("authToken") shouldBe "Bearer Token"
 
-      verify(nextOperationFunction).apply(any())
+      verify(nextOperationFunction).apply(*)
     }
 
     "leave the session keys when path not in whitelist" in new Setup {
       val request = FakeRequest(method = "GET", path = "/dashboard")
 
-      whenReady(filter.apply(nextOperationFunction)(request.withSession("key" -> "value"))) { result =>
-        val sessionData = result.session(request).data
-        sessionData.size shouldBe 3
-        sessionData.isDefinedAt("ts") shouldBe true
-        sessionData.isDefinedAt("key") shouldBe true
-      }
+      val result = await(filter.apply(nextOperationFunction)(request.withSession("key" -> "value")))
+      val sessionData = result.session(request).data
+      sessionData.size shouldBe 3
+      sessionData.isDefinedAt("ts") shouldBe true
+      sessionData.isDefinedAt("key") shouldBe true
 
-      verify(nextOperationFunction).apply(any())
+      verify(nextOperationFunction).apply(*)
     }
 
     "leave the session keys when path in whitelist with different method" in new Setup {
       val request = FakeRequest(method = "POST", path = "/login")
 
-      whenReady(filter.apply(nextOperationFunction)(request.withSession("key" -> "value"))) { result =>
-        val sessionData = result.session(request).data
-        sessionData.size shouldBe 3
-        sessionData.isDefinedAt("ts") shouldBe true
-        sessionData.isDefinedAt("key") shouldBe true
-      }
+      val result = await(filter.apply(nextOperationFunction)(request.withSession("key" -> "value")))
+      val sessionData = result.session(request).data
+      sessionData.size shouldBe 3
+      sessionData.isDefinedAt("ts") shouldBe true
+      sessionData.isDefinedAt("key") shouldBe true
 
-      verify(nextOperationFunction).apply(any())
+      verify(nextOperationFunction).apply(*)
     }
 
   }

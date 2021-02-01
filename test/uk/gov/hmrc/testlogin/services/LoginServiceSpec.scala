@@ -19,7 +19,7 @@ package uk.gov.hmrc.testlogin.services
 
 import _root_.uk.gov.hmrc.http.SessionKeys.{sessionId, token}
 import org.joda.time.DateTimeUtils.{setCurrentMillisFixed, setCurrentMillisSystem}
-import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.when
 import org.scalatest.BeforeAndAfterAll
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.Session
@@ -57,7 +57,7 @@ class LoginServiceSpec extends UnitSpec with MockitoSugar with BeforeAndAfterAll
       val loginRequest = LoginRequest("user", "password")
       val authSession = AuthenticatedSession("Bearer AUTH_TOKEN", "/auth/oid/12345", "GG_TOKEN", "Individual")
 
-      given(apiPlatformTestUserConnector.authenticate(loginRequest)).willReturn(authSession)
+      when(apiPlatformTestUserConnector.authenticate(loginRequest)).thenReturn(authSession)
 
       val result = await(underTest.authenticate(loginRequest))
 
@@ -77,7 +77,7 @@ class LoginServiceSpec extends UnitSpec with MockitoSugar with BeforeAndAfterAll
 
       val loginRequest = LoginRequest("user", "password")
 
-      given(apiPlatformTestUserConnector.authenticate(loginRequest)).willReturn(failed(new LoginFailed("user")))
+      when(apiPlatformTestUserConnector.authenticate(loginRequest)).thenReturn(failed(new LoginFailed("user")))
 
       intercept[LoginFailed] {
         await(underTest.authenticate(loginRequest))

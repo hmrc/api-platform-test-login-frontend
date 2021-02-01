@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.testlogin.services
 
-import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.services.ContinueUrlService
@@ -32,22 +32,22 @@ class ContinueUrlServiceSpec extends UnitSpec with MockitoSugar {
   "ContinueUrlService.isValidContinueUrl" should {
 
     "return true when actual URL matches configured absolute URL" in new Setup {
-      given(appConfig.continueUrl).willReturn("http://localhost:9610/oauth/grantscope")
+      when(appConfig.continueUrl).thenReturn("http://localhost:9610/oauth/grantscope")
       underTest.isValidContinueUrl("http://localhost:9610/oauth/grantscope?auth_id=59d4de133500009100a027a8") shouldBe true
     }
 
     "return false when actual URL does not match configured absolute URL" in new Setup {
-      given(appConfig.continueUrl).willReturn("http://localhost:9610/oauth/grantscope")
+      when(appConfig.continueUrl).thenReturn("http://localhost:9610/oauth/grantscope")
       underTest.isValidContinueUrl("http://nefarious-server.net:9610/oauth/grantscope?auth_id=59d4de133500009100a027a8") shouldBe false
     }
 
     "return true when actual matches configured relative URL" in new Setup {
-      given(appConfig.continueUrl).willReturn("/oauth/grantscope")
+      when(appConfig.continueUrl).thenReturn("/oauth/grantscope")
       underTest.isValidContinueUrl("/oauth/grantscope?auth_id=59d4deb12600002700e141b8") shouldBe true
     }
 
     "return false when actual does not match configured relative URL" in new Setup {
-      given(appConfig.continueUrl).willReturn("/oauth/grantscope")
+      when(appConfig.continueUrl).thenReturn("/oauth/grantscope")
       underTest.isValidContinueUrl("http://nefarious-server.net/oauth/grantscope?auth_id=59d4deb12600002700e141b8") shouldBe false
     }
   }

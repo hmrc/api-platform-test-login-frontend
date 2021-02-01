@@ -29,7 +29,7 @@ object ApiPlatformTestUserStub extends MockHost(11111) {
   def willSucceedAuthenticationWith(loginRequest: LoginRequest, authenticatedSession: AuthenticatedSession) = {
     mock.register(post(urlPathEqualTo("/session"))
       .withRequestBody(equalToJson(stringify(toJson(loginRequest))))
-      .willReturn(aResponse()
+      .thenReturn(aResponse()
         .withStatus(CREATED)
         .withBody(stringify(toJson(AuthenticationResponse(authenticatedSession.gatewayToken, authenticatedSession.affinityGroup))))
         .withHeader(HeaderNames.AUTHORIZATION, authenticatedSession.authBearerToken)
@@ -39,7 +39,7 @@ object ApiPlatformTestUserStub extends MockHost(11111) {
 
   def willFailAuthenticationByDefault() = {
     mock.register(post(urlPathEqualTo("/session"))
-      .willReturn(aResponse()
+      .thenReturn(aResponse()
       .withStatus(UNAUTHORIZED)))
   }
 }

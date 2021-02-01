@@ -19,8 +19,6 @@ package uk.gov.hmrc.testlogin.controllers
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import org.mockito.BDDMockito.given
-import org.mockito.Matchers.{any, anyString, refEq}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, Session}
 import play.api.test.FakeRequest
@@ -29,50 +27,49 @@ import uk.gov.hmrc.api.testlogin.controllers.LoginController
 import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest}
 import uk.gov.hmrc.api.testlogin.services.{ContinueUrlService, LoginService}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future.failed
 import uk.gov.hmrc.api.testlogin.controllers.ErrorHandler
 import play.api.mvc.MessagesControllerComponents
 import scala.concurrent.ExecutionContext.Implicits.global
-import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.api.testlogin.views.html._
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import uk.gov.hmrc.testlogin.AsyncHmrcSpec
 
-class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
-
+class LoginControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
 
   trait Setup {
     implicit val materializer = ActorMaterializer.create(ActorSystem.create())
-    private val csrfAddToken = fakeApplication.injector.instanceOf[play.filters.csrf.CSRFAddToken]
+    private val csrfAddToken = app.injector.instanceOf[play.filters.csrf.CSRFAddToken]
 
-    val messagesApi: MessagesApi = fakeApplication.injector.instanceOf[MessagesApi]
+    val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
     val loginService: LoginService = mock[LoginService]
     val continueUrlService: ContinueUrlService = mock[ContinueUrlService]
-    implicit val appConfig: AppConfig = fakeApplication.injector.instanceOf[AppConfig]
-    val errorHandler: ErrorHandler = fakeApplication.injector.instanceOf[ErrorHandler]
-    val mcc = fakeApplication.injector.instanceOf[MessagesControllerComponents]
-    val loginView = fakeApplication.injector.instanceOf[LoginView]
+    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+    val errorHandler: ErrorHandler = app.injector.instanceOf[ErrorHandler]
+    val mcc = app.injector.instanceOf[MessagesControllerComponents]
+    val loginView = app.injector.instanceOf[LoginView]
 
     val underTest = new LoginController(loginService, errorHandler, continueUrlService, mcc, loginView)
 
-    def execute[T <: play.api.mvc.AnyContent](action: Action[AnyContent], request: FakeRequest[T] = FakeRequest()) = await(csrfAddToken(action)(request))
+    def execute[T <: play.api.mvc.AnyContent](action: Action[AnyContent], request: FakeRequest[T] = FakeRequest()): Future[Result] = csrfAddToken(action)(request)
   }
 
   "showLoginPage" should {
 
     "display the login page" in new Setup {
 
-      given(continueUrlService.isValidContinueUrl(anyString())).willReturn(true)
+      when(continueUrlService.isValidContinueUrl(*)).thenReturn(true)
 
       val result = execute(underTest.showLoginPage("/continueUrl"))
 
-      bodyOf(result) should include("Sign in")
+      contentAsString(result) should include("Sign in")
     }
 
     "return a 400 if the continue URL is invalid" in new Setup {
 
-      given(continueUrlService.isValidContinueUrl(anyString())).willReturn(false)
+      when(continueUrlService.isValidContinueUrl(*)).thenReturn(false)
 
       val result = execute(underTest.showLoginPage("/continueUrl"))
 
@@ -81,7 +78,7 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
 
     "display the Create Test User link which opens a new browser-tab" in new Setup {
 
-      given(continueUrlService.isValidContinueUrl(anyString())).willReturn(true)
+      when(continueUrlService.isValidContinueUrl(*)).thenReturn(true)
 
       val result = execute(underTest.showLoginPage("/continueUrl"))
 
@@ -97,8 +94,8 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
       .withFormUrlEncodedBody("userId" -> loginRequest.username, "password" -> loginRequest.password, "continue" -> continueUrl)
 
     "display invalid userId or password when the credentials are invalid" in new Setup {
-      given(continueUrlService.isValidContinueUrl(anyString())).willReturn(true)
-      given(loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier](), any[ExecutionContext])).willReturn(failed(LoginFailed("")))
+      when(continueUrlService.isValidContinueUrl(*)).thenReturn(true)
+      when(loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier](), any[ExecutionContext])).thenReturn(failed(LoginFailed("")))
 
       val result = execute(underTest.login(), request = request)
 
@@ -106,7 +103,7 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
     }
 
     "return a 400 when the continue URL is not valid" in new Setup {
-      given(continueUrlService.isValidContinueUrl(anyString())).willReturn(false)
+      when(continueUrlService.isValidContinueUrl(*)).thenReturn(false)
 
       val result = execute(underTest.login(), request = request)
 
@@ -114,9 +111,9 @@ class LoginControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplic
     }
 
     "redirect to the continueUrl with the session when the credentials are valid and the continue URL is valid" in new Setup {
-      given(continueUrlService.isValidContinueUrl(anyString())).willReturn(true)
+      when(continueUrlService.isValidContinueUrl(*)).thenReturn(true)
       val session = Session(Map("authBearerToken" -> "Bearer AUTH_TOKEN"))
-      given(loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier](), any[ExecutionContext])).willReturn(session)
+      when(loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier](), any[ExecutionContext])).thenReturn(session)
 
       val result = await(underTest.login()(request))
 

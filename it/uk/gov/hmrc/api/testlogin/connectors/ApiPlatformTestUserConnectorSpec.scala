@@ -63,7 +63,7 @@ class ApiPlatformTestUserConnectorSpec extends UnitSpec with MockitoSugar with W
 
       stubFor(post(urlEqualTo("/session"))
         .withRequestBody(equalToJson(toJson(loginRequest).toString()))
-        .willReturn(aResponse()
+        .thenReturn(aResponse()
           .withStatus(CREATED)
           .withBody(Json.obj("gatewayToken" -> gatewayToken, "affinityGroup" -> affinityGroup).toString())
           .withHeader(AUTHORIZATION, authBearerToken)
@@ -78,7 +78,7 @@ class ApiPlatformTestUserConnectorSpec extends UnitSpec with MockitoSugar with W
 
       stubFor(post(urlEqualTo("/session"))
         .withRequestBody(equalToJson(toJson(loginRequest).toString()))
-        .willReturn(aResponse()
+        .thenReturn(aResponse()
           .withStatus(UNAUTHORIZED)))
 
       intercept[LoginFailed] {
@@ -90,7 +90,7 @@ class ApiPlatformTestUserConnectorSpec extends UnitSpec with MockitoSugar with W
 
       stubFor(post(urlEqualTo("/session"))
         .withRequestBody(equalToJson(toJson(loginRequest).toString()))
-        .willReturn(aResponse()
+        .thenReturn(aResponse()
           .withStatus(INTERNAL_SERVER_ERROR)))
 
       intercept[UpstreamErrorResponse] {

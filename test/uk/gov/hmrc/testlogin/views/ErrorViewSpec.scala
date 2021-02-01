@@ -10,7 +10,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class ErrorViewSpec @Inject()(govUkWrapper: GovUkWrapper) extends UnitSpec with MockitoSugar with GuiceOneServerPerSuite {
   "Error template page" should {
-    "render correctly when given title, heading and message" in {
+    "render correctly when when title, heading and message" in {
       val message = "Error Message"
 
       val messages = app.injector.instanceOf[Messages]
