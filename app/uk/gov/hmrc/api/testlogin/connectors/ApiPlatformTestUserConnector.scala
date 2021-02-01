@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,14 @@ import play.api.http.{HeaderNames, Status}
 import play.api.Environment
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
 import uk.gov.hmrc.api.testlogin.models._
-import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.api.testlogin.config.AppConfig
+import uk.gov.hmrc.http.UpstreamErrorResponse
+import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.HttpReads.Implicits._
 
 @Singleton
 class ApiPlatformTestUserConnector @Inject()(httpClient: HttpClient,
@@ -36,20 +39,22 @@ class ApiPlatformTestUserConnector @Inject()(httpClient: HttpClient,
   import appConfig.serviceUrl
 
  def authenticate(loginRequest: LoginRequest)(implicit hc: HeaderCarrier): Future[AuthenticatedSession] = {
-    httpClient.POST(s"$serviceUrl/session", loginRequest) map { response =>
-      val authenticationResponse = response.json.as[AuthenticationResponse]
+    httpClient.POST[LoginRequest, Either[UpstreamErrorResponse, HttpResponse]](s"$serviceUrl/session", loginRequest) map {
+      case Right(response) => 
+        val authenticationResponse = response.json.as[AuthenticationResponse]
 
-      (response.header(HeaderNames.AUTHORIZATION), response.header(HeaderNames.LOCATION)) match {
-        case (Some(authBearerToken), Some(authorityUri)) =>
-          AuthenticatedSession(
-            authBearerToken,
-            authorityUri,
-            authenticationResponse.gatewayToken,
-            authenticationResponse.affinityGroup)
-        case _ => throw new RuntimeException("Authorization and Location headers must be present in response")
-      }
-    } recoverWith {
-      case e: Upstream4xxResponse if e.upstreamResponseCode == Status.UNAUTHORIZED => Future.failed(LoginFailed(loginRequest.username))
+        (response.header(HeaderNames.AUTHORIZATION), response.header(HeaderNames.LOCATION)) match {
+          case (Some(authBearerToken), Some(authorityUri)) =>
+            AuthenticatedSession(
+              authBearerToken,
+              authorityUri,
+              authenticationResponse.gatewayToken,
+              authenticationResponse.affinityGroup)
+          case _ => throw new RuntimeException("Authorization and Location headers must be present in response")
+        }
+
+      case Left(UpstreamErrorResponse(_,Status.UNAUTHORIZED, _, _)) => throw LoginFailed(loginRequest.username)
+      case Left(err) => throw err
     }
   }
 }

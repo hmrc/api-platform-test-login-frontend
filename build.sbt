@@ -12,17 +12,18 @@ import scala.util.Properties
 lazy val appName = "api-platform-test-login-frontend"
 lazy val appDependencies: Seq[ModuleID] = compile ++ test
 
-lazy val bootstrapPlayVersion = "1.7.0"
+lazy val bootstrapPlayVersion = "1.16.0"
 lazy val playPartialsVersion = "6.11.0-play-26"
-lazy val hmrcTestVersion = "3.9.0-play-26"
-lazy val scalaTestVersion = "3.0.8"
-lazy val pegdownVersion = "1.6.0"
-lazy val scalaTestPlusVersion = "3.1.3"
-lazy val wiremockVersion = "1.58"
 lazy val hmrcPlayJsonUnionFormatterVersion = "1.11.0"
+lazy val govUkTemplateVersion = "5.61.0-play-26"
+lazy val domainVersion = "5.10.0-play-26"
+
 lazy val mockitoVersion = "1.10.19"
-lazy val govUkTemplateVersion = "5.54.0-play-26"
-lazy val domainVersion = "5.6.0-play-26"
+lazy val scalaTestVersion = "3.0.8"
+lazy val hmrcTestVersion = "3.9.0-play-26"
+lazy val scalaTestPlusVersion = "3.1.3"
+lazy val pegdownVersion = "1.6.0"
+lazy val wiremockVersion = "1.58"
 
 lazy val compile = Seq(
   "uk.gov.hmrc" %% "bootstrap-play-26" % bootstrapPlayVersion,
@@ -30,8 +31,8 @@ lazy val compile = Seq(
   "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
   "uk.gov.hmrc" %% "play-json-union-formatter" % hmrcPlayJsonUnionFormatterVersion,
   "uk.gov.hmrc" %% "govuk-template" % govUkTemplateVersion,
-  "uk.gov.hmrc" %% "play-frontend-govuk" % "0.49.0-play-26",
-  "uk.gov.hmrc" %% "play-frontend-hmrc" % "0.26.0-play-26"
+  "uk.gov.hmrc" %% "play-frontend-govuk" % "0.60.0-play-26",
+  "uk.gov.hmrc" %% "play-frontend-hmrc" % "0.38.0-play-26"
 )
 
 lazy val scope: String = "test, it"
@@ -58,6 +59,7 @@ lazy val microservice = (project in file("."))
   .settings(scalaSettings: _*)
   .settings(publishingSettings: _*)
   .settings(defaultSettings(): _*)
+  .settings(SilencerSettings(): _*)
   .settings(
     name := appName,
     scalaVersion := "2.12.11",

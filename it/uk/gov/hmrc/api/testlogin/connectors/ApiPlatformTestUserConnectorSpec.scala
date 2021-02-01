@@ -27,12 +27,13 @@ import play.api.libs.json.Json._
 import play.api.Environment
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
 import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginFailed, LoginRequest}
-import uk.gov.hmrc.http.{HeaderCarrier, Upstream5xxResponse}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import uk.gov.hmrc.api.testlogin.config.AppConfig
+import uk.gov.hmrc.http.UpstreamErrorResponse
 
 class ApiPlatformTestUserConnectorSpec extends UnitSpec with MockitoSugar with WiremockSugar with WithFakeApplication {
 
@@ -92,9 +93,9 @@ class ApiPlatformTestUserConnectorSpec extends UnitSpec with MockitoSugar with W
         .willReturn(aResponse()
           .withStatus(INTERNAL_SERVER_ERROR)))
 
-      intercept[Upstream5xxResponse] {
+      intercept[UpstreamErrorResponse] {
         await(underTest.authenticate(loginRequest))
-      }
+      }.statusCode should be INTERNAL_SERVER_ERROR
     }
 
   }
