@@ -17,9 +17,7 @@
 package uk.gov.hmrc.api.testlogin.connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
-import uk.gov.hmrc.api.testlogin.helpers.WiremockSugar
+import uk.gov.hmrc.api.testlogin.helpers.WireMockSugar
 import play.api.http.HeaderNames.{AUTHORIZATION, LOCATION}
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -29,13 +27,21 @@ import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
 import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginFailed, LoginRequest}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.http.UpstreamErrorResponse
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 
-class ApiPlatformTestUserConnectorSpec extends UnitSpec with MockitoSugar with WiremockSugar with WithFakeApplication {
+class ApiPlatformTestUserConnectorSpec extends AsyncHmrcSpec with WireMockSugar with GuiceOneAppPerSuite {
+
+  override def fakeApplication(): Application =
+  GuiceApplicationBuilder()
+    .configure(("metrics.jvm", false))
+    .build()
 
   trait Setup {
     implicit val hc = HeaderCarrier()
@@ -61,13 +67,16 @@ class ApiPlatformTestUserConnectorSpec extends UnitSpec with MockitoSugar with W
       val gatewayToken = "GG_TOKEN"
       val affinityGroup = "Individual"
 
-      stubFor(post(urlEqualTo("/session"))
-        .withRequestBody(equalToJson(toJson(loginRequest).toString()))
+      stubFor(
+        post(urlEqualTo("/session"))
+        .withJsonRequestBody(loginRequest)
         .willReturn(aResponse()
           .withStatus(CREATED)
           .withBody(Json.obj("gatewayToken" -> gatewayToken, "affinityGroup" -> affinityGroup).toString())
           .withHeader(AUTHORIZATION, authBearerToken)
-          .withHeader(LOCATION, userOid)))
+          .withHeader(LOCATION, userOid)
+        )
+      )
 
       val result = await(underTest.authenticate(loginRequest))
 
@@ -79,7 +88,9 @@ class ApiPlatformTestUserConnectorSpec extends UnitSpec with MockitoSugar with W
       stubFor(post(urlEqualTo("/session"))
         .withRequestBody(equalToJson(toJson(loginRequest).toString()))
         .willReturn(aResponse()
-          .withStatus(UNAUTHORIZED)))
+          .withStatus(UNAUTHORIZED)
+        )
+      )
 
       intercept[LoginFailed] {
         await(underTest.authenticate(loginRequest))
@@ -88,10 +99,14 @@ class ApiPlatformTestUserConnectorSpec extends UnitSpec with MockitoSugar with W
 
     "fail when the authenticate call returns an error" in new Setup {
 
-      stubFor(post(urlEqualTo("/session"))
-        .withRequestBody(equalToJson(toJson(loginRequest).toString()))
-        .willReturn(aResponse()
-          .withStatus(INTERNAL_SERVER_ERROR)))
+      stubFor(
+        post(urlEqualTo("/session"))
+        .withJsonRequestBody(loginRequest)
+        .willReturn(
+          aResponse()
+          .withStatus(INTERNAL_SERVER_ERROR)
+        )
+      )
 
       intercept[UpstreamErrorResponse] {
         await(underTest.authenticate(loginRequest))

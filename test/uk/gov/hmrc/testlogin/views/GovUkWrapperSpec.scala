@@ -16,30 +16,34 @@
 
 package uk.gov.hmrc.testlogin.views
 
-import org.mockito.Mockito.when
-import org.scalatest.Matchers
-import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.api.testlogin.config.AppConfig
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.i18n.MessagesProvider
 import play.api.i18n.MessagesImpl
 import play.api.i18n.DefaultMessagesApi
 import play.api.i18n.Lang
 import uk.gov.hmrc.api.testlogin.views.html._
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 
-class GovUkWrapperSpec extends UnitSpec with Matchers with MockitoSugar with WithFakeApplication {
+class GovUkWrapperSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
+
+  override def fakeApplication(): Application =
+    GuiceApplicationBuilder()
+      .configure(("metrics.jvm", false))
+      .build()
 
   "GovUKWrapper" should {
 
     trait Setup {
       implicit val fakeRequest = FakeRequest()
-      implicit val application = fakeApplication
 
       implicit val messagesProvider: MessagesProvider = MessagesImpl(Lang(java.util.Locale.ENGLISH), new DefaultMessagesApi())
 
-      val govUkWrapper = application.injector.instanceOf[GovUkWrapper]
+      val govUkWrapper = app.injector.instanceOf[GovUkWrapper]
       val appConfig: AppConfig = mock[AppConfig]
       when(appConfig.analyticsHost).thenReturn("")
       when(appConfig.analyticsToken).thenReturn("")

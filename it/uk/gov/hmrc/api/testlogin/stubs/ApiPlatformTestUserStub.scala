@@ -20,26 +20,30 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import uk.gov.hmrc.api.testlogin.helpers.MockHost
 import play.api.http.HeaderNames
 import play.api.http.Status.{CREATED, UNAUTHORIZED}
-import play.api.libs.json.Json.{stringify, toJson}
 import uk.gov.hmrc.api.testlogin.models.{LoginRequest, AuthenticationResponse, AuthenticatedSession}
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
+import uk.gov.hmrc.api.testlogin.helpers.WireMockJsonSugar
 
-object ApiPlatformTestUserStub extends MockHost(11111) {
+object ApiPlatformTestUserStub extends MockHost(11111) with WireMockJsonSugar {
 
   def willSucceedAuthenticationWith(loginRequest: LoginRequest, authenticatedSession: AuthenticatedSession) = {
-    mock.register(post(urlPathEqualTo("/session"))
-      .withRequestBody(equalToJson(stringify(toJson(loginRequest))))
-      .willReturn(aResponse()
+    mock.register(
+      post(urlPathEqualTo("/session"))
+      .withJsonRequestBody(loginRequest)
+      .willReturn(
+        aResponse()
         .withStatus(CREATED)
-        .withBody(stringify(toJson(AuthenticationResponse(authenticatedSession.gatewayToken, authenticatedSession.affinityGroup))))
+        .withJsonBody(AuthenticationResponse(authenticatedSession.gatewayToken, authenticatedSession.affinityGroup))
         .withHeader(HeaderNames.AUTHORIZATION, authenticatedSession.authBearerToken)
-        .withHeader(HeaderNames.LOCATION, authenticatedSession.authorityURI))
+        .withHeader(HeaderNames.LOCATION, authenticatedSession.authorityURI)
+      )
     )
   }
 
   def willFailAuthenticationByDefault() = {
-    mock.register(post(urlPathEqualTo("/session"))
-      .willReturn(aResponse()
-      .withStatus(UNAUTHORIZED)))
+    mock.register(
+      post(urlPathEqualTo("/session"))
+      .willReturn(aResponse().withStatus(UNAUTHORIZED))
+    )
   }
 }

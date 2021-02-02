@@ -34,7 +34,7 @@ class LoginSpec extends BaseSpec {
 
     scenario("Successful login") {
 
-      Given("A test user")
+      When("A test user")
       ApiPlatformTestUserStub.willSucceedAuthenticationWith(LoginRequest(testUser.userId, password), authenticatedSession)
 
       When("I login with the user's credentials")
@@ -69,7 +69,7 @@ class LoginSpec extends BaseSpec {
 
   override protected def beforeEach() = {
     super.beforeEach()
-    ContinuePageStub.givenContinuePageIsUp()
+    ContinuePageStub.whenContinuePageIsUp()
     ApiPlatformTestUserStub.willFailAuthenticationByDefault()
   }
 }

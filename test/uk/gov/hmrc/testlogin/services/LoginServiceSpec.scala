@@ -19,21 +19,19 @@ package uk.gov.hmrc.testlogin.services
 
 import _root_.uk.gov.hmrc.http.SessionKeys.{sessionId, token}
 import org.joda.time.DateTimeUtils.{setCurrentMillisFixed, setCurrentMillisSystem}
-import org.mockito.BDDMockito.given
 import org.scalatest.BeforeAndAfterAll
-import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.Session
 import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
 import uk.gov.hmrc.api.testlogin.models._
 import uk.gov.hmrc.api.testlogin.services.LoginService
 import uk.gov.hmrc.domain.{Nino, SaUtr}
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future.failed
+import scala.concurrent.Future.{successful, failed}
 
-class LoginServiceSpec extends UnitSpec with MockitoSugar with BeforeAndAfterAll {
+class LoginServiceSpec extends AsyncHmrcSpec with BeforeAndAfterAll {
 
   val user = TestIndividual("543212311772", SaUtr("1097172564"), Nino("AA100010B"))
 
@@ -57,7 +55,7 @@ class LoginServiceSpec extends UnitSpec with MockitoSugar with BeforeAndAfterAll
       val loginRequest = LoginRequest("user", "password")
       val authSession = AuthenticatedSession("Bearer AUTH_TOKEN", "/auth/oid/12345", "GG_TOKEN", "Individual")
 
-      given(apiPlatformTestUserConnector.authenticate(loginRequest)).willReturn(authSession)
+      when(apiPlatformTestUserConnector.authenticate(loginRequest)).thenReturn(successful(authSession))
 
       val result = await(underTest.authenticate(loginRequest))
 
@@ -77,7 +75,7 @@ class LoginServiceSpec extends UnitSpec with MockitoSugar with BeforeAndAfterAll
 
       val loginRequest = LoginRequest("user", "password")
 
-      given(apiPlatformTestUserConnector.authenticate(loginRequest)).willReturn(failed(new LoginFailed("user")))
+      when(apiPlatformTestUserConnector.authenticate(loginRequest)).thenReturn(failed(new LoginFailed("user")))
 
       intercept[LoginFailed] {
         await(underTest.authenticate(loginRequest))
