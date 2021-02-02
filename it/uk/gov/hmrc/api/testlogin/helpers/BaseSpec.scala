@@ -27,8 +27,14 @@ import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 
-trait BaseSpec extends FeatureSpec with BeforeAndAfterAll with BeforeAndAfterEach with Matchers with GuiceOneServerPerSuite
-with whenWhenThen with NavigationSugar {
+trait BaseSpec 
+    extends FeatureSpec 
+    with BeforeAndAfterAll 
+    with BeforeAndAfterEach 
+    with Matchers 
+    with GuiceOneServerPerSuite
+    with GivenWhenThen
+    with NavigationSugar {
 
   override lazy val port = Env.port
   implicit val webDriver: WebDriver = Env.driver
@@ -37,25 +43,28 @@ with whenWhenThen with NavigationSugar {
       "auditing.enabled" -> false,
       "auditing.traceRequests" -> false,
       "microservice.services.api-platform-test-user.port" -> ApiPlatformTestUserStub.port,
-      "continue-url" -> ContinuePage.url
+      "continue-url" -> ContinuePage.url,
+      "metrics.jvm" -> false
     )
     .build()
 
   val mocks = Seq(ApiPlatformTestUserStub, ContinuePageStub)
 
   override protected def beforeEach(): Unit = {
+    super.beforeEach()
     mocks.foreach(m => if (!m.server.isRunning) m.server.start())
   }
 
   override protected def afterEach(): Unit = {
     webDriver.manage().deleteAllCookies()
     mocks.foreach(_.mock.resetMappings())
+    super.afterEach()
   }
 
   override protected def afterAll(): Unit = {
     mocks.foreach(_.server.stop())
+    super.afterAll()
   }
-
 }
 
 case class MockHost(port: Int) {

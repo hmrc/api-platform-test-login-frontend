@@ -16,13 +16,11 @@
 
 package uk.gov.hmrc.testlogin.services
 
-import org.mockito.BDDMockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.services.ContinueUrlService
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
 
-class ContinueUrlServiceSpec extends UnitSpec with MockitoSugar {
+class ContinueUrlServiceSpec extends AsyncHmrcSpec {
 
   trait Setup {
     val appConfig = mock[AppConfig]

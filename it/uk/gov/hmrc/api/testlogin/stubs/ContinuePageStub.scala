@@ -24,9 +24,13 @@ import org.apache.http.HttpStatus._
 object ContinuePageStub extends MockHost(6002) {
 
   def whenContinuePageIsUp() = {
-    mock.register(get(urlPathEqualTo(ContinuePage.path))
-      .thenReturn(aResponse()
+    mock.register(
+      get(urlPathEqualTo(ContinuePage.path))
+      .willReturn(
+        aResponse()
         .withStatus(SC_OK)
-        .withBody("<html><head><title>Continue Page</title></head><body><h1>Continue Page</h1></body></html>")))
+        .withBody("<html><head><title>Continue Page</title></head><body><h1>Continue Page</h1></body></html>")
+      )
+    )
   }
 }

@@ -34,7 +34,7 @@ class LoginSpec extends BaseSpec {
 
     scenario("Successful login") {
 
-      when("A test user")
+      When("A test user")
       ApiPlatformTestUserStub.willSucceedAuthenticationWith(LoginRequest(testUser.userId, password), authenticatedSession)
 
       When("I login with the user's credentials")

@@ -25,6 +25,7 @@ import org.openqa.selenium.WebDriver
 
 import scala.util.{Properties, Try}
 import org.openqa.selenium.firefox.FirefoxOptions
+import org.openqa.selenium.chrome.ChromeOptions
 
 trait Env {
   val driver: WebDriver = createWebDriver
@@ -48,7 +49,9 @@ trait Env {
   }
 
   def createChromeDriver(): WebDriver = {
-    new ChromeDriver()
+    val options = new ChromeOptions()
+    options.addArguments("--headless")
+    new ChromeDriver(options)
   }
 
   def createFirefoxDriver(): WebDriver = {

@@ -16,9 +16,6 @@
 
 package uk.gov.hmrc.testlogin.controllers
 
-
-import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, Session}
 import play.api.test.FakeRequest
@@ -26,21 +23,23 @@ import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.controllers.LoginController
 import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest}
 import uk.gov.hmrc.api.testlogin.services.{ContinueUrlService, LoginService}
-import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.ExecutionContext
-import scala.concurrent.Future.failed
+import scala.concurrent.Future.{successful, failed}
 import uk.gov.hmrc.api.testlogin.controllers.ErrorHandler
 import play.api.mvc.MessagesControllerComponents
 import scala.concurrent.ExecutionContext.Implicits.global
 import uk.gov.hmrc.api.testlogin.views.html._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import uk.gov.hmrc.testlogin.AsyncHmrcSpec
+import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
+import scala.concurrent.Future
+import play.api.mvc.Result
+import akka.stream.Materializer
+ import play.api.test.Helpers._
 
 class LoginControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
 
   trait Setup {
-    implicit val materializer = ActorMaterializer.create(ActorSystem.create())
+    implicit val materializer = app.injector.instanceOf[Materializer]
     private val csrfAddToken = app.injector.instanceOf[play.filters.csrf.CSRFAddToken]
 
     val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
@@ -82,7 +81,7 @@ class LoginControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
 
       val result = execute(underTest.showLoginPage("/continueUrl"))
 
-      bodyOf(result) should include("<a href=\"http://localhost:9680/api-test-user\" class=\"govuk-link\" target=\"_blank\" rel=\"noreferrer noopener\">Don't have Test User credentials (opens in new tab)</a>")
+      contentAsString(result) should include("<a href=\"http://localhost:9680/api-test-user\" class=\"govuk-link\" target=\"_blank\" rel=\"noreferrer noopener\">Don't have Test User credentials (opens in new tab)</a>")
     }
   }
 
@@ -95,11 +94,11 @@ class LoginControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
 
     "display invalid userId or password when the credentials are invalid" in new Setup {
       when(continueUrlService.isValidContinueUrl(*)).thenReturn(true)
-      when(loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier](), any[ExecutionContext])).thenReturn(failed(LoginFailed("")))
+      when(loginService.authenticate(refEq(loginRequest))(*, *)).thenReturn(failed(LoginFailed("")))
 
       val result = execute(underTest.login(), request = request)
 
-      bodyOf(result) should include("Invalid user ID or password. Try again.")
+      contentAsString(result) should include("Invalid user ID or password. Try again.")
     }
 
     "return a 400 when the continue URL is not valid" in new Setup {
@@ -112,16 +111,14 @@ class LoginControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
 
     "redirect to the continueUrl with the session when the credentials are valid and the continue URL is valid" in new Setup {
       when(continueUrlService.isValidContinueUrl(*)).thenReturn(true)
-      val session = Session(Map("authBearerToken" -> "Bearer AUTH_TOKEN"))
-      when(loginService.authenticate(refEq(loginRequest))(any[HeaderCarrier](), any[ExecutionContext])).thenReturn(session)
+      val sessionIn = Session(Map("authBearerToken" -> "Bearer AUTH_TOKEN"))
+      when(loginService.authenticate(refEq(loginRequest))(*, *)).thenReturn(successful(sessionIn))
 
-      val result = await(underTest.login()(request))
+      val result = underTest.login()(request)
 
       status(result) shouldBe 303
-      result.header.headers("Location") shouldEqual continueUrl
-      println(result.header.headers.keySet)
-      println(result.newSession)
-      result.newSession.flatMap(_.get("authBearerToken")) shouldBe Some("Bearer AUTH_TOKEN")
+      header("Location", result) shouldEqual Some(continueUrl)
+      session(result).get("authBearerToken") shouldBe Some("Bearer AUTH_TOKEN")
     }
   }
 }
