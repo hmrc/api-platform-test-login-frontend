@@ -24,8 +24,8 @@ object AppDependencies {
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
     "uk.gov.hmrc" %% "play-json-union-formatter" % hmrcPlayJsonUnionFormatterVersion,
     "uk.gov.hmrc" %% "govuk-template" % govUkTemplateVersion,
-    "uk.gov.hmrc" %% "play-frontend-govuk" % "0.60.0-play-26",
-    "uk.gov.hmrc" %% "play-frontend-hmrc" % "0.38.0-play-26"
+    "uk.gov.hmrc" %% "play-frontend-govuk" % "0.63.0-play-26",
+    "uk.gov.hmrc" %% "play-frontend-hmrc" % "0.57.0-play-26"
   )
 
   lazy val scope: String = "test, it"
