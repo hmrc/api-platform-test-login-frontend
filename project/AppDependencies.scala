@@ -19,7 +19,6 @@ object AppDependencies {
   lazy val wiremockVersion = "1.58"
 
   lazy val compile = Seq(
-    "uk.gov.hmrc" %% "bootstrap-backend-play-26" % bootstrapPlayVersion,
     "uk.gov.hmrc" %% "bootstrap-frontend-play-26" % bootstrapPlayVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion,
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,

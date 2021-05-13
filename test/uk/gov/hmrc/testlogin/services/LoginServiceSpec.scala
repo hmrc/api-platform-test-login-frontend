@@ -17,7 +17,7 @@
 package uk.gov.hmrc.testlogin.services
 
 
-import _root_.uk.gov.hmrc.http.SessionKeys.sessionId
+import uk.gov.hmrc.http.SessionKeys.sessionId
 import org.joda.time.DateTimeUtils.{setCurrentMillisFixed, setCurrentMillisSystem}
 import org.scalatest.BeforeAndAfterAll
 import play.api.mvc.Session
