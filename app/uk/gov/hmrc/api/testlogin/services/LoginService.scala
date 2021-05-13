@@ -27,7 +27,7 @@ import uk.gov.hmrc.http.SessionKeys._
 
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.logging.SessionId
+import uk.gov.hmrc.http.SessionId
 
 @Singleton
 class LoginService @Inject()(apiPlatformTestUserConnector: ApiPlatformTestUserConnector) {
@@ -38,15 +38,11 @@ class LoginService @Inject()(apiPlatformTestUserConnector: ApiPlatformTestUserCo
 
   private def buildSession(authSession: AuthenticatedSession, loginRequest: LoginRequest): Session = Session(
     Map(
+
       sessionId -> SessionId(s"session-${UUID.randomUUID}").value,
-      userId -> authSession.authorityURI,
       authToken -> authSession.authBearerToken,
       // APIS-1811 FIXME: This should probably be DateTime.now(DateTimeZone.UTC) to align with the session timeout filter
-      lastRequestTimestamp -> DateTime.now.getMillis.toString,
-      name -> loginRequest.username,
-      authProvider -> "GGW",
-      token -> authSession.gatewayToken,
-      affinityGroup -> authSession.affinityGroup
+      lastRequestTimestamp -> DateTime.now.getMillis.toString
     )
   )
 }

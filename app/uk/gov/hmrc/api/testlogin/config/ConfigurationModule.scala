@@ -17,7 +17,7 @@
 package uk.gov.hmrc.api.testlogin.config
 
 import com.google.inject.AbstractModule
-import uk.gov.hmrc.play.bootstrap.filters.frontend.SessionTimeoutFilter
+import uk.gov.hmrc.play.bootstrap.frontend.filters.SessionTimeoutFilter
 
 class ConfigurationModule extends AbstractModule {
   override def configure(): Unit = {

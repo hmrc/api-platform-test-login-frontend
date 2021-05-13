@@ -17,7 +17,7 @@
 package uk.gov.hmrc.testlogin.services
 
 
-import _root_.uk.gov.hmrc.http.SessionKeys.{sessionId, token}
+import _root_.uk.gov.hmrc.http.SessionKeys.sessionId
 import org.joda.time.DateTimeUtils.{setCurrentMillisFixed, setCurrentMillisSystem}
 import org.scalatest.BeforeAndAfterAll
 import play.api.mvc.Session
@@ -60,15 +60,10 @@ class LoginServiceSpec extends AsyncHmrcSpec with BeforeAndAfterAll {
       val result = await(underTest.authenticate(loginRequest))
 
       result shouldBe Session(Map(
-        SessionKeys.affinityGroup -> "Individual",
-        SessionKeys.name -> loginRequest.username,
         SessionKeys.authToken -> authSession.authBearerToken,
         SessionKeys.lastRequestTimestamp -> "10000",
-        SessionKeys.authProvider -> "GGW",
-        token -> authSession.gatewayToken,
-        sessionId -> result.data(sessionId),
-        SessionKeys.userId -> authSession.authorityURI)
-      )
+        sessionId -> result.data(sessionId)
+      ))
     }
 
     "propagate LoginFailed exception when authentication fails" in new Setup {

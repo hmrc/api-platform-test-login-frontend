@@ -17,7 +17,8 @@
 package uk.gov.hmrc.testlogin.config
 
 import akka.stream.Materializer
-import org.joda.time.{DateTime, DateTimeZone, Duration}
+import org.joda.time.{DateTime, DateTimeZone}
+import java.time.Duration
 import org.mockito.invocation.InvocationOnMock
 import play.api.mvc._
 import play.api.test.FakeRequest
@@ -36,7 +37,7 @@ class SessionTimeoutFilterWithWhitelistSpec extends AsyncHmrcSpec with GuiceOneA
     implicit val mat = app.injector.instanceOf[Materializer]
 
     val config = new SessionTimeoutFilterConfig(
-      timeoutDuration = Duration.standardSeconds(1),
+      timeoutDuration = Duration.ofSeconds(1),
       onlyWipeAuthToken = false
     )
 
