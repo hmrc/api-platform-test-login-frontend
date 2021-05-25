@@ -19,12 +19,11 @@ package uk.gov.hmrc.api.testlogin.config
 import javax.inject.{Inject, Singleton}
 import play.api.Configuration
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.play.bootstrap.config.RunMode
 
 
 @Singleton
-class AppConfig @Inject()(configuration: Configuration, runMode: RunMode)
-    extends ServicesConfig(configuration, runMode) {
+class AppConfig @Inject()(configuration: Configuration)
+    extends ServicesConfig(configuration) {
 
   private def loadConfig(key: String) = configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 

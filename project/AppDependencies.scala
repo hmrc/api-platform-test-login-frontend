@@ -5,7 +5,7 @@ import play.sbt.PlayImport._
 object AppDependencies {
   def apply() = compile ++ test
 
-  lazy val bootstrapPlayVersion = "1.16.0"
+  lazy val bootstrapPlayVersion = "4.0.0"
   lazy val playPartialsVersion = "6.11.0-play-26"
   lazy val hmrcPlayJsonUnionFormatterVersion = "1.11.0"
   lazy val govUkTemplateVersion = "5.61.0-play-26"
@@ -19,7 +19,7 @@ object AppDependencies {
   lazy val wiremockVersion = "1.58"
 
   lazy val compile = Seq(
-    "uk.gov.hmrc" %% "bootstrap-play-26" % bootstrapPlayVersion,
+    "uk.gov.hmrc" %% "bootstrap-frontend-play-26" % bootstrapPlayVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion,
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
     "uk.gov.hmrc" %% "play-json-union-formatter" % hmrcPlayJsonUnionFormatterVersion,
