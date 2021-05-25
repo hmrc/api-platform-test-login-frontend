@@ -12,3 +12,4 @@ addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0")
 addSbtPlugin("org.irundaia.sbt" % "sbt-sassify" % "1.4.11")
 
 addSbtPlugin("ch.epfl.scala" % "sbt-bloop" % "1.4.8")
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.9.28")
