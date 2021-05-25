@@ -16,18 +16,16 @@
 
 package uk.gov.hmrc.testlogin.views
 
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+
+import play.api.Application
+import play.api.i18n.{DefaultMessagesApi, Lang, MessagesImpl, MessagesProvider}
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.twirl.api.Html
-import uk.gov.hmrc.api.testlogin.config.AppConfig
-import play.api.i18n.MessagesProvider
-import play.api.i18n.MessagesImpl
-import play.api.i18n.DefaultMessagesApi
-import play.api.i18n.Lang
-import uk.gov.hmrc.api.testlogin.views.html._
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
+import uk.gov.hmrc.api.testlogin.config.AppConfig
+import uk.gov.hmrc.api.testlogin.views.html._
 
 class GovUkWrapperSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
 

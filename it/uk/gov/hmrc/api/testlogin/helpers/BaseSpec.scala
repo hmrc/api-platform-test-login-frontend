@@ -19,13 +19,14 @@ package uk.gov.hmrc.api.testlogin.helpers
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
-import uk.gov.hmrc.api.testlogin.pages.ContinuePage
-import uk.gov.hmrc.api.testlogin.stubs.{ApiPlatformTestUserStub, ContinuePageStub}
 import org.openqa.selenium.WebDriver
 import org.scalatest._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
+import uk.gov.hmrc.api.testlogin.pages.ContinuePage
+import uk.gov.hmrc.api.testlogin.stubs.{ApiPlatformTestUserStub, ContinuePageStub}
 
 trait BaseSpec 
     extends FeatureSpec 

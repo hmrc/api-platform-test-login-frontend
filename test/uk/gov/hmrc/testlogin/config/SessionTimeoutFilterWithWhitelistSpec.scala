@@ -16,19 +16,20 @@
 
 package uk.gov.hmrc.testlogin.config
 
-import akka.stream.Materializer
-import org.joda.time.{DateTime, DateTimeZone}
 import java.time.Duration
-import org.mockito.invocation.InvocationOnMock
-import play.api.mvc._
-import play.api.test.FakeRequest
-import uk.gov.hmrc.api.testlogin.config.SessionTimeoutFilterWithWhitelist
-import uk.gov.hmrc.play.bootstrap.filters.frontend.SessionTimeoutFilterConfig
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
+
+import akka.stream.Materializer
+import org.joda.time.{DateTime, DateTimeZone}
+import org.mockito.invocation.InvocationOnMock
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+
+import play.api.mvc._
+import play.api.test.FakeRequest
+import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
+import uk.gov.hmrc.api.testlogin.config.SessionTimeoutFilterWithWhitelist
+import uk.gov.hmrc.play.bootstrap.filters.frontend.SessionTimeoutFilterConfig
 
 class SessionTimeoutFilterWithWhitelistSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
 

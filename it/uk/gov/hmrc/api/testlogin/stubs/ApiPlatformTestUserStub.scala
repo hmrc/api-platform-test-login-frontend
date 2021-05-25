@@ -17,12 +17,12 @@
 package uk.gov.hmrc.api.testlogin.stubs
 
 import com.github.tomakehurst.wiremock.client.WireMock._
-import uk.gov.hmrc.api.testlogin.helpers.MockHost
+
 import play.api.http.HeaderNames
 import play.api.http.Status.{CREATED, UNAUTHORIZED}
-import uk.gov.hmrc.api.testlogin.models.{LoginRequest, AuthenticationResponse, AuthenticatedSession}
+import uk.gov.hmrc.api.testlogin.helpers.{MockHost, WireMockJsonSugar}
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
-import uk.gov.hmrc.api.testlogin.helpers.WireMockJsonSugar
+import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, AuthenticationResponse, LoginRequest}
 
 object ApiPlatformTestUserStub extends MockHost(11111) with WireMockJsonSugar {
 

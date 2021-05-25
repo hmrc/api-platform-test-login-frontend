@@ -17,17 +17,16 @@
 package uk.gov.hmrc.api.testlogin.services
 
 import java.util.UUID
-
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
+
 import org.joda.time.DateTime
+
 import play.api.mvc.Session
 import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
 import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginRequest}
 import uk.gov.hmrc.http.SessionKeys._
-
-import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.SessionId
+import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 
 @Singleton
 class LoginService @Inject()(apiPlatformTestUserConnector: ApiPlatformTestUserConnector) {
