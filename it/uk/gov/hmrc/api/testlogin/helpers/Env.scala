@@ -17,15 +17,12 @@
 package uk.gov.hmrc.api.testlogin.helpers
 
 import java.net.URL
-
-import org.openqa.selenium.chrome.ChromeDriver
-import org.openqa.selenium.firefox.FirefoxDriver
-import org.openqa.selenium.remote.{DesiredCapabilities, RemoteWebDriver}
-import org.openqa.selenium.WebDriver
-
 import scala.util.{Properties, Try}
-import org.openqa.selenium.firefox.FirefoxOptions
-import org.openqa.selenium.chrome.ChromeOptions
+
+import org.openqa.selenium.WebDriver
+import org.openqa.selenium.chrome.{ChromeDriver, ChromeOptions}
+import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxOptions}
+import org.openqa.selenium.remote.{DesiredCapabilities, RemoteWebDriver}
 
 trait Env {
   val driver: WebDriver = createWebDriver

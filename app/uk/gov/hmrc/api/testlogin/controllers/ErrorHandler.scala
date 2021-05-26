@@ -17,11 +17,12 @@
 package uk.gov.hmrc.api.testlogin.controllers
 
 import javax.inject.Inject
+
 import play.api.Configuration
 import play.api.i18n.MessagesApi
 import play.api.mvc.Request
-import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import uk.gov.hmrc.api.testlogin.views.html._
+import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 
 class ErrorHandler @Inject()(val messagesApi: MessagesApi,
                               val configuration: Configuration,

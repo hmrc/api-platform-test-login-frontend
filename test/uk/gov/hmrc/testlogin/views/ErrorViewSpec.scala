@@ -1,11 +1,13 @@
 package uk.gov.hmrc.testlogin.views
 
 import javax.inject.Inject
+
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.api.testlogin.views.html.{ErrorView, GovUkWrapper}
 import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
+import uk.gov.hmrc.api.testlogin.views.html.{ErrorView, GovUkWrapper}
 
 class ErrorViewSpec @Inject()(govUkWrapper: GovUkWrapper) extends AsyncHmrcSpec with GuiceOneServerPerSuite {
   "Error template page" should {

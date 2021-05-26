@@ -16,9 +16,9 @@
 
 package uk.gov.hmrc.testlogin.services
 
+import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
 import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.services.ContinueUrlService
-import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
 
 class ContinueUrlServiceSpec extends AsyncHmrcSpec {
 

@@ -17,18 +17,16 @@
 package uk.gov.hmrc.api.testlogin.connectors
 
 import javax.inject.{Inject, Singleton}
-import play.api.http.{HeaderNames, Status}
+import scala.concurrent.{ExecutionContext, Future}
+
 import play.api.Environment
+import play.api.http.{HeaderNames, Status}
+import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
 import uk.gov.hmrc.api.testlogin.models._
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
-
-import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.api.testlogin.config.AppConfig
-import uk.gov.hmrc.http.UpstreamErrorResponse
-import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 @Singleton
 class ApiPlatformTestUserConnector @Inject()(httpClient: HttpClient,

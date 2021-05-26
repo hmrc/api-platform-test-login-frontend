@@ -17,19 +17,20 @@
 package uk.gov.hmrc.testlogin.services
 
 
-import uk.gov.hmrc.http.SessionKeys.sessionId
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future.{failed, successful}
+
 import org.joda.time.DateTimeUtils.{setCurrentMillisFixed, setCurrentMillisSystem}
 import org.scalatest.BeforeAndAfterAll
+
 import play.api.mvc.Session
+import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
 import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
 import uk.gov.hmrc.api.testlogin.models._
 import uk.gov.hmrc.api.testlogin.services.LoginService
 import uk.gov.hmrc.domain.{Nino, SaUtr}
+import uk.gov.hmrc.http.SessionKeys.sessionId
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
-import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future.{successful, failed}
 
 class LoginServiceSpec extends AsyncHmrcSpec with BeforeAndAfterAll {
 

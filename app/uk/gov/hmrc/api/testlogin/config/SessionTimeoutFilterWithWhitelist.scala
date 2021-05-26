@@ -16,12 +16,13 @@
 
 package uk.gov.hmrc.api.testlogin.config
 
-import akka.stream.Materializer
 import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
+
+import akka.stream.Materializer
+
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.filters.frontend.{SessionTimeoutFilter, SessionTimeoutFilterConfig}
-
-import scala.concurrent.{ExecutionContext, Future}
 
 case class WhitelistedCall(uri: String, method: String)
 

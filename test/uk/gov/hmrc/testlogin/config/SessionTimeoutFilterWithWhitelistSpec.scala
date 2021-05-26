@@ -16,19 +16,19 @@
 
 package uk.gov.hmrc.testlogin.config
 
-import akka.stream.Materializer
-import org.joda.time.{DateTime, DateTimeZone}
 import java.time.Duration
-import org.mockito.invocation.InvocationOnMock
-import play.api.mvc._
-import play.api.test.FakeRequest
-import uk.gov.hmrc.api.testlogin.config.SessionTimeoutFilterWithWhitelist
-import uk.gov.hmrc.play.bootstrap.filters.frontend.SessionTimeoutFilterConfig
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
+
+import akka.stream.Materializer
+import org.joda.time.{DateTime, DateTimeZone}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+
+import play.api.mvc._
+import play.api.test.FakeRequest
+import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
+import uk.gov.hmrc.api.testlogin.config.SessionTimeoutFilterWithWhitelist
+import uk.gov.hmrc.play.bootstrap.frontend.filters.SessionTimeoutFilterConfig
 
 class SessionTimeoutFilterWithWhitelistSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
 
@@ -45,9 +45,8 @@ class SessionTimeoutFilterWithWhitelistSpec extends AsyncHmrcSpec with GuiceOneA
 
     val nextOperationFunction = mock[RequestHeader => Future[Result]]
 
-    when(nextOperationFunction.apply(*)).thenAnswer( (invocation: InvocationOnMock) => {
-      val headers = invocation.getArguments.head.asInstanceOf[RequestHeader]
-      Future.successful(Results.Ok.withSession(headers.session + ("authToken" -> "Bearer Token")))
+    when(nextOperationFunction.apply(*)).thenAnswer( (requestHeader: RequestHeader) => {
+      Future.successful(Results.Ok.withSession(requestHeader.session + ("authToken" -> "Bearer Token")))
     })
 
     def twoSecondsAgo: String = {

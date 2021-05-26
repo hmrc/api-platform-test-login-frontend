@@ -16,25 +16,23 @@
 
 package uk.gov.hmrc.testlogin.controllers
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.Future.{failed, successful}
+
+import akka.stream.Materializer
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, Session}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result, Session}
 import play.api.test.FakeRequest
+import play.api.test.Helpers._
+import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
 import uk.gov.hmrc.api.testlogin.config.AppConfig
-import uk.gov.hmrc.api.testlogin.controllers.LoginController
+import uk.gov.hmrc.api.testlogin.controllers.{ErrorHandler, LoginController}
 import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest}
 import uk.gov.hmrc.api.testlogin.services.{ContinueUrlService, LoginService}
-
-import scala.concurrent.Future.{successful, failed}
-import uk.gov.hmrc.api.testlogin.controllers.ErrorHandler
-import play.api.mvc.MessagesControllerComponents
-import scala.concurrent.ExecutionContext.Implicits.global
 import uk.gov.hmrc.api.testlogin.views.html._
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
-import scala.concurrent.Future
-import play.api.mvc.Result
-import akka.stream.Materializer
- import play.api.test.Helpers._
 
 class LoginControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
 

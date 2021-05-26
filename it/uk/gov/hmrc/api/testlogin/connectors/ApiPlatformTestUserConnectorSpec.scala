@@ -16,25 +16,24 @@
 
 package uk.gov.hmrc.api.testlogin.connectors
 
+import scala.concurrent.ExecutionContext.Implicits.global
+
 import com.github.tomakehurst.wiremock.client.WireMock._
-import uk.gov.hmrc.api.testlogin.helpers.WireMockSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+
 import play.api.http.HeaderNames.{AUTHORIZATION, LOCATION}
 import play.api.http.Status._
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.libs.json.Json._
-import play.api.Environment
+import play.api.{Application, Environment}
+import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
+import uk.gov.hmrc.api.testlogin.config.AppConfig
+import uk.gov.hmrc.api.testlogin.helpers.WireMockSugar
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
 import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginFailed, LoginRequest}
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import uk.gov.hmrc.api.testlogin.config.AppConfig
-import uk.gov.hmrc.http.UpstreamErrorResponse
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
 
 class ApiPlatformTestUserConnectorSpec extends AsyncHmrcSpec with WireMockSugar with GuiceOneAppPerSuite {
 
