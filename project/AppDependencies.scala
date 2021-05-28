@@ -5,13 +5,13 @@ import play.sbt.PlayImport._
 object AppDependencies {
   def apply() = compile ++ test
 
-  lazy val bootstrapPlayVersion = "4.0.0"
-  lazy val playPartialsVersion = "6.11.0-play-26"
-  lazy val hmrcPlayJsonUnionFormatterVersion = "1.11.0"
-  lazy val govUkTemplateVersion = "5.61.0-play-26"
-  lazy val domainVersion = "5.10.0-play-26"
+  private lazy val bootstrapPlayVersion = "4.0.0"
+  private lazy val playPartialsVersion = "6.11.0-play-26"
+  private lazy val hmrcPlayJsonUnionFormatterVersion = "1.11.0"
+  private lazy val govUkTemplateVersion = "5.61.0-play-26"
+  private lazy val domainVersion = "5.10.0-play-26"
 
-  lazy val compile = Seq(
+  private lazy val compile = Seq(
     "uk.gov.hmrc" %% "bootstrap-frontend-play-26" % bootstrapPlayVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion,
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
@@ -21,9 +21,9 @@ object AppDependencies {
     "uk.gov.hmrc" %% "play-frontend-hmrc" % "0.57.0-play-26"
   )
 
-  lazy val scope: String = "test, it"
+  private lazy val scope: String = "test, it"
 
-  lazy val test = Seq(
+  private lazy val test = Seq(
     "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.3" % scope,
     "org.pegdown" % "pegdown" % "1.6.0" % scope,
     "org.jsoup" % "jsoup" % "1.8.1" % scope,
