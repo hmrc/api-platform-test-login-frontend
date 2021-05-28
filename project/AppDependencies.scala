@@ -11,13 +11,6 @@ object AppDependencies {
   lazy val govUkTemplateVersion = "5.61.0-play-26"
   lazy val domainVersion = "5.10.0-play-26"
 
-  lazy val mockitoVersion = "1.10.19"
-  lazy val scalaTestVersion = "3.0.8"
-  lazy val hmrcTestVersion = "3.9.0-play-26"
-  lazy val scalaTestPlusVersion = "3.1.3"
-  lazy val pegdownVersion = "1.6.0"
-  lazy val wiremockVersion = "1.58"
-
   lazy val compile = Seq(
     "uk.gov.hmrc" %% "bootstrap-frontend-play-26" % bootstrapPlayVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion,
@@ -31,11 +24,11 @@ object AppDependencies {
   lazy val scope: String = "test, it"
 
   lazy val test = Seq(
-    "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
-    "org.pegdown" % "pegdown" % pegdownVersion % scope,
+    "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.3" % scope,
+    "org.pegdown" % "pegdown" % "1.6.0" % scope,
     "org.jsoup" % "jsoup" % "1.8.1" % scope,
     "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-    "com.github.tomakehurst" % "wiremock" % wiremockVersion % scope,
+    "com.github.tomakehurst" % "wiremock-jre8-standalone" % "2.27.1" % scope,
     "org.seleniumhq.selenium" % "selenium-java" % "3.141.59" % scope,
     "org.seleniumhq.selenium" % "selenium-firefox-driver" % "3.141.59" % scope,
     "org.seleniumhq.selenium" % "selenium-chrome-driver" % "3.141.59" % scope,
