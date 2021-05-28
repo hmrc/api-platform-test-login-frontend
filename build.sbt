@@ -42,6 +42,7 @@ lazy val microservice =
     majorVersion := 0
   )
   .settings(inConfig(Test)(Defaults.testSettings): _*)
+  .settings(inConfig(Test)(BloopDefaults.configSettings))
   .settings(
     Test / testOptions := Seq(Tests.Argument(TestFrameworks.ScalaTest, "-eT")),
     Test / unmanagedSourceDirectories += baseDirectory.value / "test",
