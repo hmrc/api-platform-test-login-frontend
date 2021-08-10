@@ -33,7 +33,7 @@ import uk.gov.hmrc.api.testlogin.helpers.WireMockSugar
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
 import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginFailed, LoginRequest}
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 
 class ApiPlatformTestUserConnectorSpec extends AsyncHmrcSpec with WireMockSugar with GuiceOneAppPerSuite {
 
