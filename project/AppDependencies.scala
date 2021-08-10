@@ -12,11 +12,9 @@ object AppDependencies {
   private lazy val domainVersion = "6.1.0-play-26"
 
   private lazy val mockitoVersion = "1.10.19"
-  private lazy val scalaTestVersion = "3.0.8"
-  private lazy val hmrcTestVersion = "3.9.0-play-26"
   private lazy val scalaTestPlusVersion = "3.1.3"
   private lazy val pegdownVersion = "1.6.0"
-  private lazy val wiremockVersion = "1.58"
+  private lazy val wiremockVersion = "2.27.1"
 
   private lazy val compile = Seq(
     "uk.gov.hmrc" %% "bootstrap-frontend-play-26" % bootstrapPlayVersion,
@@ -35,7 +33,7 @@ object AppDependencies {
     "org.pegdown" % "pegdown" % pegdownVersion % scope,
     "org.jsoup" % "jsoup" % "1.8.1" % scope,
     "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-    "com.github.tomakehurst" % "wiremock" % wiremockVersion % scope,
+    "com.github.tomakehurst" % "wiremock-jre8-standalone" % wiremockVersion % scope,
     "org.seleniumhq.selenium" % "selenium-java" % "3.141.59" % scope,
     "org.seleniumhq.selenium" % "selenium-firefox-driver" % "3.141.59" % scope,
     "org.seleniumhq.selenium" % "selenium-chrome-driver" % "3.141.59" % scope,
