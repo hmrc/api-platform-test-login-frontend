@@ -5,13 +5,12 @@ import play.sbt.PlayImport._
 object AppDependencies {
   def apply() = compile ++ test
 
-  private lazy val bootstrapPlayVersion = "4.0.0"
+  private lazy val bootstrapPlayVersion = "5.10.0"
   private lazy val playPartialsVersion = "6.11.0-play-26"
-  private lazy val hmrcPlayJsonUnionFormatterVersion = "1.11.0"
+  private lazy val hmrcPlayJsonUnionFormatterVersion = "1.14.0-play-26"
   private lazy val govUkTemplateVersion = "5.69.0-play-26"
   private lazy val domainVersion = "6.1.0-play-26"
 
-  private lazy val mockitoVersion = "1.10.19"
   private lazy val scalaTestPlusVersion = "3.1.3"
   private lazy val pegdownVersion = "1.6.0"
   private lazy val wiremockVersion = "2.27.1"
