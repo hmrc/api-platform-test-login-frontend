@@ -18,9 +18,10 @@ package uk.gov.hmrc.api.testlogin.helpers
 
 import org.openqa.selenium.{By, WebDriver}
 import org.scalatest.concurrent.Eventually
-import org.scalatest.{Assertions, Matchers}
+import org.scalatest.Assertions
 import org.scalatestplus.selenium.WebBrowser
 import org.scalatestplus.selenium.WebBrowser.{go => goo}
+import org.scalatest.matchers.should.Matchers
 
 trait NavigationSugar extends WebBrowser with Eventually with Assertions with Matchers {
 
@@ -49,6 +50,7 @@ trait NavigationSugar extends WebBrowser with Eventually with Assertions with Ma
     eventually {
       webDriver.findElement(By.tagName("body"))
     }
+    
     withClue(s"Currently in page: $currentUrl " + find(tagName("h1")).map(_.text).fold(" - ")(h1 => s", with title '$h1' - ")) {
       assert(page.isCurrentPage, s"Page was not loaded: ${page.url}")
     }

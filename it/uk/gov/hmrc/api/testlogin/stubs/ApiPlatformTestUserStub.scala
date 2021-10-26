@@ -20,14 +20,14 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 
 import play.api.http.HeaderNames
 import play.api.http.Status.{CREATED, UNAUTHORIZED}
-import uk.gov.hmrc.api.testlogin.helpers.{MockHost, WireMockJsonSugar}
+import uk.gov.hmrc.api.testlogin.helpers.WireMockJsonSugar
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
 import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, AuthenticationResponse, LoginRequest}
 
-object ApiPlatformTestUserStub extends MockHost(11111) with WireMockJsonSugar {
+object ApiPlatformTestUserStub extends WireMockJsonSugar {
 
-  def willSucceedAuthenticationWith(loginRequest: LoginRequest, authenticatedSession: AuthenticatedSession) = {
-    mock.register(
+  def givenAuthenticationWillSucceedWith(loginRequest: LoginRequest, authenticatedSession: AuthenticatedSession) = {
+    stubFor(
       post(urlPathEqualTo("/session"))
       .withJsonRequestBody(loginRequest)
       .willReturn(
@@ -41,7 +41,7 @@ object ApiPlatformTestUserStub extends MockHost(11111) with WireMockJsonSugar {
   }
 
   def willFailAuthenticationByDefault() = {
-    mock.register(
+    stubFor(
       post(urlPathEqualTo("/session"))
       .willReturn(aResponse().withStatus(UNAUTHORIZED))
     )

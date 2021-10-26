@@ -27,6 +27,7 @@ import org.openqa.selenium.remote.{DesiredCapabilities, RemoteWebDriver}
 trait Env {
   val driver: WebDriver = createWebDriver
   lazy val port = 6001
+  
   lazy val createWebDriver: WebDriver = {
     Properties.propOrElse("test_driver", "chrome") match {
       case "chrome" => createChromeDriver()

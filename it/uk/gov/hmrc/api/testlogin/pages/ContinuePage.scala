@@ -18,10 +18,13 @@ package uk.gov.hmrc.api.testlogin.pages
 
 import uk.gov.hmrc.api.testlogin.helpers.WebPage
 
-object ContinuePage extends WebPage {
-
-  val path = "/continue"
-  override val url: String = s"http://localhost:6002$path"
+class ContinuePage(port: Int) extends WebPage {
+  import ContinuePage._
+  override val url: String = s"http://localhost:$port$path"
 
   override def isCurrentPage: Boolean = find(cssSelector("h1")).fold(false)(_.text == "Continue Page")
+}
+
+object ContinuePage {
+  val path = "/continue"
 }

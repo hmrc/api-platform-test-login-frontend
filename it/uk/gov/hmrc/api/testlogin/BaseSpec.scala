@@ -1,0 +1,83 @@
+/*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package uk.gov.hmrc.api.testlogin
+
+import com.github.tomakehurst.wiremock.WireMockServer
+import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration._
+import org.openqa.selenium.WebDriver
+import org.scalatest._
+
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
+import org.scalatest.featurespec.AnyFeatureSpec
+import org.scalatest.matchers.should.Matchers
+import play.api.test.RunningServer
+import org.scalatestplus.play.guice.GuiceOneServerPerTest
+import play.api.Mode
+import uk.gov.hmrc.api.testlogin.helpers.NavigationSugar
+import uk.gov.hmrc.api.testlogin.helpers.Env
+
+trait BaseSpec 
+    extends AnyFeatureSpec 
+    with BeforeAndAfterAll 
+    with BeforeAndAfterEach 
+    with Matchers 
+    with GuiceOneServerPerTest
+    with GivenWhenThen
+    with NavigationSugar {
+
+  val stubHost = "localhost"
+  val stubPort = 11111
+
+  override protected def newServerForTest(app: Application, testData: TestData): RunningServer = MyTestServerFactory.start(app)
+
+  implicit val webDriver: WebDriver = Env.driver
+
+  val wireMockServer = new WireMockServer(
+    wireMockConfig().port(stubPort)
+  )
+
+  val testSpecificConfiguration: List[(String, Any)]
+
+  override def newAppForTest(testData: TestData): Application = {
+    GuiceApplicationBuilder()
+      .configure(
+        "auditing.enabled" -> false,
+        "auditing.traceRequests" -> false,
+        "microservice.services.api-platform-test-user.port" -> stubPort,
+        "metrics.jvm" -> false
+      )
+      .configure(testSpecificConfiguration: _*)
+      .in(Mode.Prod)
+      .build()
+  }
+
+  override protected def beforeAll() = {
+    wireMockServer.start()
+    WireMock.configureFor(stubHost, stubPort)
+  }
+
+  override protected def beforeEach() = {
+    webDriver.manage().deleteAllCookies()
+    WireMock.reset()
+  }
+
+  override protected def afterAll() = {
+    wireMockServer.stop()
+  }
+}

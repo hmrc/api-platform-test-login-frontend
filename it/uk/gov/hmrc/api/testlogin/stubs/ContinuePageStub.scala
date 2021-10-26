@@ -17,19 +17,16 @@
 package uk.gov.hmrc.api.testlogin.stubs
 
 import com.github.tomakehurst.wiremock.client.WireMock._
-import org.apache.http.HttpStatus._
-
-import uk.gov.hmrc.api.testlogin.helpers.MockHost
+import play.api.test.Helpers._
 import uk.gov.hmrc.api.testlogin.pages.ContinuePage
 
-object ContinuePageStub extends MockHost(6002) {
-
+object ContinuePageStub {
   def whenContinuePageIsUp() = {
-    mock.register(
+    stubFor(
       get(urlPathEqualTo(ContinuePage.path))
       .willReturn(
         aResponse()
-        .withStatus(SC_OK)
+        .withStatus(OK)
         .withBody("<html><head><title>Continue Page</title></head><body><h1>Continue Page</h1></body></html>")
       )
     )

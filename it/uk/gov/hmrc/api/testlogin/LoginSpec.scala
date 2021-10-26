@@ -18,11 +18,11 @@ package uk.gov.hmrc.api.testlogin
 
 import scala.collection.JavaConverters._
 
-import uk.gov.hmrc.api.testlogin.helpers.BaseSpec
 import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginRequest, TestIndividual}
 import uk.gov.hmrc.api.testlogin.pages.{ContinuePage, LoginPage}
 import uk.gov.hmrc.api.testlogin.stubs.{ApiPlatformTestUserStub, ContinuePageStub}
 import uk.gov.hmrc.domain._
+import uk.gov.hmrc.api.testlogin.stubs.ApiPlatformTestUserStub._
 
 class LoginSpec extends BaseSpec {
 
@@ -30,37 +30,38 @@ class LoginSpec extends BaseSpec {
   val password = "validPassword"
   val authenticatedSession = AuthenticatedSession("Bearer 1234", "/auth/oid/123", "GG_TOKEN", "Individual")
 
-  feature("User Login") {
+  lazy val continuePage = new ContinuePage(stubPort)
+  lazy val loginPage = new LoginPage(port, continuePage)
 
-    scenario("Successful login") {
+  val testSpecificConfiguration: List[(String, Any)] = List("continue-url" -> "http://localhost:11111/continue")
 
-      When("A test user")
-      ApiPlatformTestUserStub.willSucceedAuthenticationWith(LoginRequest(testUser.userId, password), authenticatedSession)
-
+  Feature("User Login") {
+    Scenario("Successful login") {
+      givenAuthenticationWillSucceedWith(LoginRequest(testUser.userId, password), authenticatedSession)
+      
       When("I login with the user's credentials")
-      goOn(LoginPage)
+      goOn(loginPage)
       textField("userId").value = testUser.userId
       pwdField("password").value = password
       clickOnSubmit()
 
       Then("I am redirected to the continue URL")
-      on(ContinuePage)
+      on(continuePage)
 
       And("The cookie is set in the session")
       val encryptedMdtpCookie = webDriver.manage().getCookies.asScala.toSet.find(_.getName == "mdtp")
       encryptedMdtpCookie should be ('defined)
     }
 
-    scenario("Failed login") {
-
+    Scenario("Failed login") {
       When("I try to login with the wrong userId or password")
-      goOn(LoginPage)
+      goOn(loginPage)
       textField("userId").value = testUser.userId
       pwdField("password").value = "wrongPassword"
       clickOnSubmit()
 
       Then("I am on the login page")
-      on(LoginPage)
+      on(loginPage)
 
       And("An error message is displayed")
       verifyText("govuk-error-message", "Error:Invalid user ID or password. Try again.")
