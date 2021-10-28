@@ -59,7 +59,6 @@ class ApiPlatformTestUserConnectorSpec extends AsyncHmrcSpec with WireMockSugar 
   val loginRequest = LoginRequest("user", "password")
 
   "authenticate" should {
-
     "return the auth session when the credentials are valid" in new Setup {
       val authBearerToken = "Bearer AUTH_TOKEN"
       val userOid = "/auth/oid/12345"
@@ -83,7 +82,6 @@ class ApiPlatformTestUserConnectorSpec extends AsyncHmrcSpec with WireMockSugar 
     }
 
     "fail with LoginFailed when the credentials are not valid" in new Setup {
-
       stubFor(post(urlEqualTo("/session"))
         .withRequestBody(equalToJson(toJson(loginRequest).toString()))
         .willReturn(aResponse()
@@ -97,7 +95,6 @@ class ApiPlatformTestUserConnectorSpec extends AsyncHmrcSpec with WireMockSugar 
     }
 
     "fail when the authenticate call returns an error" in new Setup {
-
       stubFor(
         post(urlEqualTo("/session"))
         .withJsonRequestBody(loginRequest)
