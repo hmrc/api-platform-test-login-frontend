@@ -42,6 +42,7 @@ lazy val microservice =
   .settings(inConfig(Test)(Defaults.testSettings): _*)
   .settings(
     Test / testOptions := Seq(Tests.Argument(TestFrameworks.ScalaTest, "-eT")),
+    Test / unmanagedResourceDirectories += baseDirectory.value / "test" / "resources",
     Test / unmanagedSourceDirectories += baseDirectory.value / "test",
     Test / unmanagedSourceDirectories += baseDirectory.value / "test-common",
     Test / fork := false,
@@ -59,9 +60,10 @@ lazy val microservice =
   .settings(inConfig(IntegrationTest)(scalafixConfigSettings(IntegrationTest)))
   .settings(inConfig(IntegrationTest)(BloopDefaults.configSettings))
   .settings(
-    IntegrationTest / fork := false,
+    IntegrationTest / unmanagedResourceDirectories += baseDirectory.value / "test" / "resources",
     IntegrationTest / unmanagedSourceDirectories += baseDirectory.value / "it",
     IntegrationTest / unmanagedSourceDirectories += baseDirectory.value / "test-common",
     addTestReportOption(IntegrationTest, "int-test-reports"),
+    IntegrationTest / fork := false,
     IntegrationTest / parallelExecution:= false
   )
