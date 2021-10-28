@@ -39,7 +39,10 @@ class ApiPlatformTestUserConnectorSpec extends AsyncHmrcSpec with WireMockSugar 
 
   override def fakeApplication(): Application =
   GuiceApplicationBuilder()
-    .configure(("metrics.jvm", false))
+    .configure(
+      "metrics.jvm" -> false,
+      "auditing.enabled" -> false
+    )
     .build()
 
   trait Setup {
