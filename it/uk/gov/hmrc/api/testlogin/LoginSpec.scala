@@ -33,7 +33,7 @@ class LoginSpec extends BaseSpec {
   lazy val continuePage = new ContinuePage(stubPort)
   lazy val loginPage = new LoginPage(port, continuePage)
 
-  val testSpecificConfiguration: List[(String, Any)] = List("continue-url" -> "http://localhost:11111/continue")
+  val testSpecificConfiguration: List[(String, Any)] = List("continue-url" -> s"http://localhost:${stubPort}/continue")
 
   Feature("User Login") {
     Scenario("Successful login") {
