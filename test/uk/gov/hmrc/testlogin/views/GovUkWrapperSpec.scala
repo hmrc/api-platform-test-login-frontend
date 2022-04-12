@@ -16,8 +16,9 @@
 
 package uk.gov.hmrc.testlogin.views
 
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-
 import play.api.Application
 import play.api.i18n.{DefaultMessagesApi, Lang, MessagesImpl, MessagesProvider}
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -34,24 +35,32 @@ class GovUkWrapperSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
       .configure(("metrics.jvm", false))
       .build()
 
+  trait Setup {
+    implicit val fakeRequest = FakeRequest()
+    implicit val messagesProvider: MessagesProvider = MessagesImpl(Lang(java.util.Locale.ENGLISH), new DefaultMessagesApi())
+    implicit val appConfig: AppConfig = mock[AppConfig]
+
+    val govUkWrapper = app.injector.instanceOf[GovUkWrapper]
+    when(appConfig.analyticsHost).thenReturn("")
+    when(appConfig.analyticsToken).thenReturn("")
+
+    val mainView: Html = govUkWrapper(Some("Test"))(Html.apply("<h1>Test</h1>"))
+
+    def elementExistsById(doc: Document, id: String): Boolean = doc.select(s"#$id").html().nonEmpty
+  }
+
   "GovUKWrapper" should {
 
-    trait Setup {
-      implicit val fakeRequest = FakeRequest()
-
-      implicit val messagesProvider: MessagesProvider = MessagesImpl(Lang(java.util.Locale.ENGLISH), new DefaultMessagesApi())
-
-      val govUkWrapper = app.injector.instanceOf[GovUkWrapper]
-      val appConfig: AppConfig = mock[AppConfig]
-      when(appConfig.analyticsHost).thenReturn("")
-      when(appConfig.analyticsToken).thenReturn("")
+    "Indicate that embedded Microsoft browsers should render using the latest browser version available" in new Setup {
+      mainView.body should include("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">")
     }
 
-    "Indicate that embedded Microsoft browsers should render using the latest browser version available" in new Setup {
+    "render the page with feedback banner" in new Setup {
+      val document = Jsoup.parse(mainView.body)
 
-      val mainView: Html = govUkWrapper(Some("Test"))(Html.apply("<h1>Test</h1>"))
-      mainView.body should include("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">")
-
+      elementExistsById(document, "feedback") shouldBe true
+      elementExistsById(document, "show-survey") shouldBe true
+      document.getElementById("feedback-title").text() shouldBe "Your feedback helps us improve our service"
     }
   }
 }
