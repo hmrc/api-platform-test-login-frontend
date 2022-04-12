@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,17 @@
 package uk.gov.hmrc.api.testlogin.controllers
 
 import javax.inject.Inject
-
 import play.api.Configuration
 import play.api.i18n.MessagesApi
 import play.api.mvc.Request
+import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.views.html._
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 
 class ErrorHandler @Inject()(val messagesApi: MessagesApi,
-                              val configuration: Configuration,
-                              errorView: ErrorView) extends FrontendErrorHandler {
+                             val configuration: Configuration,
+                             errorView: ErrorView)(implicit val appConfig: AppConfig)
+                             extends FrontendErrorHandler {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]) = {
     errorView(pageTitle, heading, message)

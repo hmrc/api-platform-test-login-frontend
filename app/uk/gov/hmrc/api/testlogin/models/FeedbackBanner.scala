@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.api.testlogin.services
+package uk.gov.hmrc.api.testlogin.models
 
-import javax.inject.{Inject, Singleton}
+sealed trait FeedbackBanner {
+  val description: String
+  val surveyUrlKey: String
+}
 
-import uk.gov.hmrc.api.testlogin.config.AppConfig
-
-@Singleton
-class ContinueUrlService @Inject()(appConfig: AppConfig) {
-
-  lazy private val continueUrl = appConfig.continueUrl
-
-  def isValidContinueUrl(url: String): Boolean = {
-    stripQueryParameters(url) == continueUrl
-  }
-
-  private def stripQueryParameters(url: String) = url.split('?')(0)
+case object GenericFeedbackBanner extends FeedbackBanner {
+  override val description: String = "Take our survey and answer questions about the service."
+  override val surveyUrlKey: String = "feedbackBanner.generic.surveyUrl"
 }

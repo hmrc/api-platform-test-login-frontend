@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,4 +41,6 @@ class AppConfig @Inject()(configuration: Configuration)
   lazy val serviceUrl = baseUrl("api-platform-test-user")
 
   lazy val platformFrontendHost = loadConfig("platform.frontend.host")
+
+  lazy val feedbackSurveyUrl = loadConfig("feedbackBanner.generic.surveyUrl")
 }
