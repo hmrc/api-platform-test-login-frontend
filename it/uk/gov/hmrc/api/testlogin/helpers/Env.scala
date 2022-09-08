@@ -23,6 +23,7 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.{ChromeDriver, ChromeOptions}
 import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxOptions}
 import org.openqa.selenium.remote.{RemoteWebDriver}
+import org.openqa.selenium.Dimension
 
 trait Env {
   val driver: WebDriver = createWebDriver
@@ -39,8 +40,15 @@ trait Env {
   }
 
   def createRemoteChromeDriver() = {
-    val browserOptions = new FirefoxOptions().setAcceptInsecureCerts(true)
-    new RemoteWebDriver(new URL(s"http://localhost:4444/wd/hub"), browserOptions)
+    val browserOptions: ChromeOptions = new ChromeOptions()
+    browserOptions.addArguments("--headless")
+    browserOptions.addArguments("--proxy-server='direct://'")
+    browserOptions.addArguments("--proxy-bypass-list=*")
+
+    val driver = new RemoteWebDriver(new URL(s"http://localhost:4444/wd/hub"), browserOptions)
+    driver.manage().deleteAllCookies()
+    driver.manage().window().setSize(new Dimension(1280, 720))
+    driver
   }
 
   def createRemoteFirefoxDriver() = {
