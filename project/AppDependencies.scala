@@ -2,7 +2,10 @@ import sbt._
 import play.core.PlayVersion
 import play.sbt.PlayImport._
 
+
 object AppDependencies {
+  val seleniumVersion = "4.2.2"
+
   def apply() = compile ++ test
 
   lazy val bootstrapVersion  = "5.24.0"
@@ -21,9 +24,12 @@ object AppDependencies {
     "org.jsoup"               %  "jsoup"                      % "1.8.1",
     "com.typesafe.play"       %% "play-test"                  % PlayVersion.current,
     "com.github.tomakehurst"  %  "wiremock-jre8-standalone"   % "2.31.0",
-    "org.seleniumhq.selenium" %  "selenium-java"              % "3.141.59",
-    "org.seleniumhq.selenium" %  "selenium-firefox-driver"    % "3.141.59",
-    "org.seleniumhq.selenium" %  "selenium-chrome-driver"     % "3.141.59",
+    "org.scalatestplus"       %% "selenium-4-2"               % "3.2.13.0",
+    "org.seleniumhq.selenium" %  "selenium-java"              % seleniumVersion,
+    "org.seleniumhq.selenium" %  "selenium-api"               % seleniumVersion,
+    "org.seleniumhq.selenium" %  "selenium-firefox-driver"    % seleniumVersion,
+    "org.seleniumhq.selenium" %  "selenium-chrome-driver"     % seleniumVersion,
+    "com.vladsch.flexmark"    %  "flexmark-all"               % "0.62.2",
     "org.mockito"             %% "mockito-scala-scalatest"    % "1.7.1"
   ).map(_ % "test, it")
 }

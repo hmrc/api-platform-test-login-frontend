@@ -22,7 +22,7 @@ import scala.util.{Properties, Try}
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.{ChromeDriver, ChromeOptions}
 import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxOptions}
-import org.openqa.selenium.remote.{DesiredCapabilities, RemoteWebDriver}
+import org.openqa.selenium.remote.{RemoteWebDriver}
 
 trait Env {
   val driver: WebDriver = createWebDriver
@@ -39,11 +39,13 @@ trait Env {
   }
 
   def createRemoteChromeDriver() = {
-    new RemoteWebDriver(new URL(s"http://localhost:4444/wd/hub"), DesiredCapabilities.chrome)
+    val browserOptions = new FirefoxOptions().setAcceptInsecureCerts(true)
+    new RemoteWebDriver(new URL(s"http://localhost:4444/wd/hub"), browserOptions)
   }
 
   def createRemoteFirefoxDriver() = {
-    new RemoteWebDriver(new URL(s"http://localhost:4444/wd/hub"), DesiredCapabilities.firefox)
+    val browserOptions = new FirefoxOptions().setAcceptInsecureCerts(true)
+    new RemoteWebDriver(new URL(s"http://localhost:4444/wd/hub"), browserOptions)
   }
 
   def createChromeDriver(): WebDriver = {
