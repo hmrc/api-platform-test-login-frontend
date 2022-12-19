@@ -27,8 +27,8 @@ import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest}
 import uk.gov.hmrc.api.testlogin.services.{ContinueUrlService, LoginService}
 import uk.gov.hmrc.api.testlogin.views.html._
-import uk.gov.hmrc.play.bootstrap.controller.WithDefaultFormBinding
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.controller.WithUnsafeDefaultFormBinding
 
 @Singleton
 class LoginController @Inject()(
@@ -41,7 +41,7 @@ class LoginController @Inject()(
     implicit val mat: Materializer,
     val appConfig: AppConfig,
     val ec: ExecutionContext
-) extends FrontendController(mcc) with WithDefaultFormBinding {
+) extends FrontendController(mcc) with WithUnsafeDefaultFormBinding {
 
   case class LoginForm(userId: String, password: String, continue: String)
 
