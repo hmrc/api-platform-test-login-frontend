@@ -24,9 +24,11 @@ import uk.gov.hmrc.api.testlogin.config.AppConfig
 class ContinueUrlService @Inject()(appConfig: AppConfig) {
 
   lazy private val continueUrl = appConfig.continueUrl
+  lazy private val continueUrlCtc = appConfig.continueUrlCtc
 
   def isValidContinueUrl(url: String): Boolean = {
-    stripQueryParameters(url) == continueUrl
+    val strippedUrl = stripQueryParameters(url)
+    strippedUrl == continueUrl || strippedUrl == continueUrlCtc
   }
 
   private def stripQueryParameters(url: String) = url.split('?')(0)
