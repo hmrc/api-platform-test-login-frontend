@@ -2,7 +2,7 @@ import _root_.play.sbt.routes.RoutesKeys.routesGenerator
 import play.core.PlayVersion
 import sbt.Tests.{Group, SubProcess}
 import uk.gov.hmrc.DefaultBuildSettings._
-import uk.gov.hmrc.SbtAutoBuildPlugin
+import uk.gov.hmrc.{DefaultBuildSettings, SbtAutoBuildPlugin}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 import bloop.integrations.sbt.BloopDefaults
@@ -56,7 +56,7 @@ lazy val microservice =
   )
   .configs(IntegrationTest)
   
-  .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
+  .settings(DefaultBuildSettings.integrationTestSettings())
   .settings(inConfig(IntegrationTest)(scalafixConfigSettings(IntegrationTest)))
   .settings(inConfig(IntegrationTest)(BloopDefaults.configSettings))
   .settings(
