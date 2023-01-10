@@ -21,7 +21,7 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.api.testlogin.config.AppConfig
 
 @Singleton
-class ContinueUrlService @Inject()(appConfig: AppConfig) {
+class ContinueUrlService @Inject() (appConfig: AppConfig) {
 
   lazy private val continueUrl = appConfig.continueUrl
 

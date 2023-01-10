@@ -28,6 +28,6 @@ case class TestOrganisation(override val userId: String, saUtr: SaUtr, empRef: E
 
 object UserType extends Enumeration {
   type UserType = Value
-  val INDIVIDUAL = Value("INDIVIDUAL")
+  val INDIVIDUAL   = Value("INDIVIDUAL")
   val ORGANISATION = Value("ORGANISATION")
 }

@@ -18,11 +18,11 @@ package uk.gov.hmrc.api.testlogin
 
 import org.mockito.{ArgumentMatchersSugar, MockitoSugar}
 import org.scalatest.OptionValues
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.WsScalaTestClient
 
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
-import org.scalatest.wordspec.AnyWordSpec
-import org.scalatest.matchers.should.Matchers
 
 abstract class HmrcSpec extends AnyWordSpec with Matchers with OptionValues with WsScalaTestClient with MockitoSugar with ArgumentMatchersSugar
 

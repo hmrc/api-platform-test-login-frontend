@@ -21,6 +21,7 @@ import com.google.inject.AbstractModule
 import uk.gov.hmrc.play.bootstrap.frontend.filters.SessionTimeoutFilter
 
 class ConfigurationModule extends AbstractModule {
+
   override def configure(): Unit = {
     bind(classOf[SessionTimeoutFilter]).to(classOf[SessionTimeoutFilterWithWhitelist])
   }

@@ -24,7 +24,7 @@ import play.api.Configuration
 import play.api.mvc.Request
 
 @Singleton
-class FooterConfig @Inject()(config: Configuration) {
+class FooterConfig @Inject() (config: Configuration) {
 
   private lazy val urlFooterConfig = config.underlying.getConfig("urls.footer")
 

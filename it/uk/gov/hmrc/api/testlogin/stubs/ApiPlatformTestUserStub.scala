@@ -29,21 +29,21 @@ object ApiPlatformTestUserStub extends WireMockJsonSugar {
   def givenAuthenticationWillSucceedWith(loginRequest: LoginRequest, authenticatedSession: AuthenticatedSession) = {
     stubFor(
       post(urlPathEqualTo("/session"))
-      .withJsonRequestBody(loginRequest)
-      .willReturn(
-        aResponse()
-        .withStatus(CREATED)
-        .withJsonBody(AuthenticationResponse(authenticatedSession.gatewayToken, authenticatedSession.affinityGroup))
-        .withHeader(HeaderNames.AUTHORIZATION, authenticatedSession.authBearerToken)
-        .withHeader(HeaderNames.LOCATION, authenticatedSession.authorityURI)
-      )
+        .withJsonRequestBody(loginRequest)
+        .willReturn(
+          aResponse()
+            .withStatus(CREATED)
+            .withJsonBody(AuthenticationResponse(authenticatedSession.gatewayToken, authenticatedSession.affinityGroup))
+            .withHeader(HeaderNames.AUTHORIZATION, authenticatedSession.authBearerToken)
+            .withHeader(HeaderNames.LOCATION, authenticatedSession.authorityURI)
+        )
     )
   }
 
   def willFailAuthenticationByDefault() = {
     stubFor(
       post(urlPathEqualTo("/session"))
-      .willReturn(aResponse().withStatus(UNAUTHORIZED))
+        .willReturn(aResponse().withStatus(UNAUTHORIZED))
     )
   }
 }

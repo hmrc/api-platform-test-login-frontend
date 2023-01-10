@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.testlogin.services
 
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future.{failed, successful}
 
@@ -37,9 +36,9 @@ class LoginServiceSpec extends AsyncHmrcSpec with BeforeAndAfterAll {
   val user = TestIndividual("543212311772", SaUtr("1097172564"), Nino("AA100010B"))
 
   trait Setup {
-    implicit val hc = HeaderCarrier()
+    implicit val hc                  = HeaderCarrier()
     val apiPlatformTestUserConnector = mock[ApiPlatformTestUserConnector]
-    val underTest = new LoginService(apiPlatformTestUserConnector)
+    val underTest                    = new LoginService(apiPlatformTestUserConnector)
   }
 
   override def beforeAll() {
@@ -54,16 +53,16 @@ class LoginServiceSpec extends AsyncHmrcSpec with BeforeAndAfterAll {
     "return the session when the authentication is successful" in new Setup {
 
       val loginRequest = LoginRequest("user", "password")
-      val authSession = AuthenticatedSession("Bearer AUTH_TOKEN", "/auth/oid/12345", "GG_TOKEN", "Individual")
+      val authSession  = AuthenticatedSession("Bearer AUTH_TOKEN", "/auth/oid/12345", "GG_TOKEN", "Individual")
 
       when(apiPlatformTestUserConnector.authenticate(loginRequest)).thenReturn(successful(authSession))
 
       val result = await(underTest.authenticate(loginRequest))
 
       result shouldBe Session(Map(
-        SessionKeys.authToken -> authSession.authBearerToken,
+        SessionKeys.authToken            -> authSession.authBearerToken,
         SessionKeys.lastRequestTimestamp -> "10000",
-        sessionId -> result.data(sessionId)
+        sessionId                        -> result.data(sessionId)
       ))
     }
 

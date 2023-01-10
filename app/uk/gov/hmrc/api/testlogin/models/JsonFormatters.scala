@@ -20,7 +20,7 @@ import play.api.libs.json.{Format, Json}
 import uk.gov.hmrc.play.json.Union
 
 object JsonFormatters {
-  implicit val formatTestIndividual = Json.format[TestIndividual]
+  implicit val formatTestIndividual   = Json.format[TestIndividual]
   implicit val formatTestOrganisation = Json.format[TestOrganisation]
 
   implicit val formatTestUser: Format[TestUser] = Union.from[TestUser]("userType")
@@ -28,6 +28,6 @@ object JsonFormatters {
     .and[TestOrganisation](UserType.ORGANISATION.toString)
     .format
 
-  implicit val formatLoginRequest = Json.format[LoginRequest]
+  implicit val formatLoginRequest           = Json.format[LoginRequest]
   implicit val formatAuthenticationResponse = Json.format[AuthenticationResponse]
 }

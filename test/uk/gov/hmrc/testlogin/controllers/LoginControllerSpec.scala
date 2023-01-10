@@ -38,15 +38,15 @@ class LoginControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
 
   trait Setup {
     implicit val materializer = app.injector.instanceOf[Materializer]
-    private val csrfAddToken = app.injector.instanceOf[play.filters.csrf.CSRFAddToken]
+    private val csrfAddToken  = app.injector.instanceOf[play.filters.csrf.CSRFAddToken]
 
-    val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-    val loginService: LoginService = mock[LoginService]
+    val messagesApi: MessagesApi               = app.injector.instanceOf[MessagesApi]
+    val loginService: LoginService             = mock[LoginService]
     val continueUrlService: ContinueUrlService = mock[ContinueUrlService]
-    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-    val errorHandler: ErrorHandler = app.injector.instanceOf[ErrorHandler]
-    val mcc = app.injector.instanceOf[MessagesControllerComponents]
-    val loginView = app.injector.instanceOf[LoginView]
+    implicit val appConfig: AppConfig          = app.injector.instanceOf[AppConfig]
+    val errorHandler: ErrorHandler             = app.injector.instanceOf[ErrorHandler]
+    val mcc                                    = app.injector.instanceOf[MessagesControllerComponents]
+    val loginView                              = app.injector.instanceOf[LoginView]
 
     val underTest = new LoginController(loginService, errorHandler, continueUrlService, mcc, loginView)
 
@@ -79,15 +79,17 @@ class LoginControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
 
       val result = execute(underTest.showLoginPage("/continueUrl"))
 
-      contentAsString(result) should include("<a href=\"http://localhost:9680/api-test-user\" class=\"govuk-link\" target=\"_blank\" rel=\"noreferrer noopener\">Don't have Test User credentials (opens in new tab)</a>")
+      contentAsString(result) should include(
+        "<a href=\"http://localhost:9680/api-test-user\" class=\"govuk-link\" target=\"_blank\" rel=\"noreferrer noopener\">Don't have Test User credentials (opens in new tab)</a>"
+      )
     }
   }
 
   "login" should {
 
     val loginRequest = LoginRequest("aUser", "aPassword")
-    val continueUrl = "/continueUrl"
-    val request = FakeRequest()
+    val continueUrl  = "/continueUrl"
+    val request      = FakeRequest()
       .withFormUrlEncodedBody("userId" -> loginRequest.username, "password" -> loginRequest.password, "continue" -> continueUrl)
 
     "display invalid userId or password when the credentials are invalid" in new Setup {
