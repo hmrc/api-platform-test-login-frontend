@@ -33,7 +33,7 @@ lazy val microservice =
   .settings(ScoverageSettings(): _*)
   .settings(
     name := appName,
-    scalaVersion := "2.12.12",
+    scalaVersion := "2.12.15",
     libraryDependencies ++= AppDependencies(),
     retrieveManaged := true,
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
