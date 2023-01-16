@@ -11,12 +11,12 @@ lazy val appName = "api-platform-test-login-frontend"
 
 lazy val plugins: Seq[Plugins] = Seq.empty
 lazy val playSettings: Seq[Setting[_]] = Seq.empty
-
+val scalaVer = "2.12.15"
 ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.5.0"
 
 inThisBuild(
   List(
-    scalaVersion := "2.12.15",
+    scalaVersion := scalaVer,
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision
   )
@@ -33,7 +33,7 @@ lazy val microservice =
   .settings(ScoverageSettings(): _*)
   .settings(
     name := appName,
-    scalaVersion := "2.12.15",
+    scalaVersion := scalaVer,
     libraryDependencies ++= AppDependencies(),
     retrieveManaged := true,
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
