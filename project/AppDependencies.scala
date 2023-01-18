@@ -23,7 +23,7 @@ object AppDependencies {
     "org.jsoup"               %  "jsoup"                      % "1.8.1",
     "com.typesafe.play"       %% "play-test"                  % PlayVersion.current,
     "com.github.tomakehurst"  %  "wiremock-jre8-standalone"   % "2.31.0",
-    "uk.gov.hmrc"             %% "webdriver-factory"          % "0.38.0",
+    "uk.gov.hmrc"             %% "webdriver-factory"          % "0.39.0",
     "org.scalatestplus"       %% "selenium-4-2"               % "3.2.13.0",
     "org.seleniumhq.selenium" %  "selenium-java"              % seleniumVersion,
     "org.seleniumhq.selenium" %  "selenium-api"               % seleniumVersion,
