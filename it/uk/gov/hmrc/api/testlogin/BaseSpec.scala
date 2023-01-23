@@ -40,7 +40,7 @@ trait BaseSpec
     with NavigationSugar {
 
   val stubHost = "localhost"
-  val stubPort = 6005
+  val stubPort = 11111
 
   override protected def newServerForTest(app: Application, testData: TestData): RunningServer = MyTestServerFactory.start(app)
 

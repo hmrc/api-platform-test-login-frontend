@@ -7,12 +7,14 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 import bloop.integrations.sbt.BloopDefaults
 
+import scala.util.Properties
+
 lazy val appName = "api-platform-test-login-frontend"
 
 lazy val plugins: Seq[Plugins] = Seq.empty
 lazy val playSettings: Seq[Setting[_]] = Seq.empty
-val scalaVer = "2.12.15"
-ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.5.0"
+val scalaVer = "2.12.12"
+ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
 
 inThisBuild(
   List(
@@ -22,7 +24,7 @@ inThisBuild(
   )
 )
 
-lazy val microservice = 
+lazy val microservice =
   (project in file("."))
   .enablePlugins(Seq(_root_.play.sbt.PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin) ++ plugins: _*)
   .settings(playSettings: _*)
@@ -55,7 +57,6 @@ lazy val microservice =
     )
   )
   .configs(IntegrationTest)
-  
   .settings(DefaultBuildSettings.integrationTestSettings())
   .settings(inConfig(IntegrationTest)(scalafixConfigSettings(IntegrationTest)))
   .settings(inConfig(IntegrationTest)(BloopDefaults.configSettings))
@@ -63,7 +64,24 @@ lazy val microservice =
     IntegrationTest / unmanagedResourceDirectories += baseDirectory.value / "test" / "resources",
     IntegrationTest / unmanagedSourceDirectories += baseDirectory.value / "it",
     IntegrationTest / unmanagedSourceDirectories += baseDirectory.value / "test-common",
+    IntegrationTest / testGrouping := oneForkedJvmPerTest((IntegrationTest / definedTests).value),
     addTestReportOption(IntegrationTest, "int-test-reports"),
-    IntegrationTest / fork := false,
-    IntegrationTest / parallelExecution:= false
+    IntegrationTest / fork := false
   )
+
+def oneForkedJvmPerTest(tests: Seq[TestDefinition]): Seq[Group] =
+  tests map { test =>
+    Group(
+      test.name,
+      Seq(test),
+      SubProcess(
+        ForkOptions().withRunJVMOptions(
+          Vector(
+            s"-Dtest.name={test.name}",
+            s"-Dbrowser=${Properties.propOrElse("browser", "chrome")}",
+            s"-Daccessibility.test=${Properties.propOrElse("accessibility.test", "false")}"
+          )
+        )
+      )
+    )
+  }

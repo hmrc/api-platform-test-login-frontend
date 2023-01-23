@@ -3,7 +3,7 @@ import sbt.{CrossVersion, compilerPlugin, _}
 
 object SilencerSettings {
   // stop "unused import" warnings from routes files
-  val silencerVersion = "1.7.9"
+  val silencerVersion = "1.7.0"
 
   def apply() = Seq(
     libraryDependencies ++= Seq(
