@@ -64,6 +64,7 @@ lazy val microservice =
     IntegrationTest / unmanagedResourceDirectories += baseDirectory.value / "test" / "resources",
     IntegrationTest / unmanagedSourceDirectories += baseDirectory.value / "it",
     IntegrationTest / unmanagedSourceDirectories += baseDirectory.value / "test-common",
+    IntegrationTest / testGrouping := oneForkedJvmPerTest((IntegrationTest / definedTests).value),
     addTestReportOption(IntegrationTest, "int-test-reports"),
     IntegrationTest / fork := false
   )

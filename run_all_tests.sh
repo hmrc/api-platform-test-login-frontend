@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-sbt -Dbrowser=chrome clean compile coverage test it:test coverageReport
+sbt clean compile coverage test it:test coverageReport
 
