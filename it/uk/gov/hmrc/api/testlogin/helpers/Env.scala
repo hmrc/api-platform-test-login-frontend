@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,24 +19,25 @@ package uk.gov.hmrc.api.testlogin.helpers
 import java.net.URL
 import scala.util.{Properties, Try}
 
-import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.{ChromeDriver, ChromeOptions}
 import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxOptions}
-import org.openqa.selenium.remote.{RemoteWebDriver}
-import org.openqa.selenium.Dimension
+import org.openqa.selenium.remote.RemoteWebDriver
+import org.openqa.selenium.{Dimension, WebDriver}
+
 import uk.gov.hmrc.webdriver.SingletonDriver
+
 trait Env {
-  lazy val windowSize = new Dimension(1024, 800)
+  lazy val windowSize        = new Dimension(1024, 800)
   lazy val driver: WebDriver = createWebDriver()
 
-  private lazy val  browser = Properties.propOrElse("browser","chrome")
-  private lazy val accessibilityTest = Properties.propOrElse("accessibility.test","false") == "true"
+  private lazy val browser           = Properties.propOrElse("browser", "chrome")
+  private lazy val accessibilityTest = Properties.propOrElse("accessibility.test", "false") == "true"
 
   private def createWebDriver(): WebDriver = {
     val driver = browser match {
-      case "chrome" => if(accessibilityTest) SingletonDriver.getInstance() else createChromeDriver()
-      case "remote-chrome" => createRemoteChromeDriver()
-      case "firefox" => createFirefoxDriver()
+      case "chrome"         => if (accessibilityTest) SingletonDriver.getInstance() else createChromeDriver()
+      case "remote-chrome"  => createRemoteChromeDriver()
+      case "firefox"        => createFirefoxDriver()
       case "remote-firefox" => createRemoteFirefoxDriver()
     }
     driver.manage().deleteAllCookies()

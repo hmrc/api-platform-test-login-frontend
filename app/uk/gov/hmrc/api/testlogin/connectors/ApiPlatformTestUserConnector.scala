@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,20 +25,16 @@ import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
 import uk.gov.hmrc.api.testlogin.models._
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, UpstreamErrorResponse}
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
 
 @Singleton
-class ApiPlatformTestUserConnector @Inject()(httpClient: HttpClient,
-                                             appConfig: AppConfig,
-                                             environment: Environment
-                                            )(implicit ec: ExecutionContext) {
+class ApiPlatformTestUserConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig, environment: Environment)(implicit ec: ExecutionContext) {
 
   import appConfig.serviceUrl
 
- def authenticate(loginRequest: LoginRequest)(implicit hc: HeaderCarrier): Future[AuthenticatedSession] = {
+  def authenticate(loginRequest: LoginRequest)(implicit hc: HeaderCarrier): Future[AuthenticatedSession] = {
     httpClient.POST[LoginRequest, Either[UpstreamErrorResponse, HttpResponse]](s"$serviceUrl/session", loginRequest) map {
-      case Right(response) => 
+      case Right(response) =>
         val authenticationResponse = response.json.as[AuthenticationResponse]
 
         (response.header(HeaderNames.AUTHORIZATION), response.header(HeaderNames.LOCATION)) match {
@@ -47,12 +43,13 @@ class ApiPlatformTestUserConnector @Inject()(httpClient: HttpClient,
               authBearerToken,
               authorityUri,
               authenticationResponse.gatewayToken,
-              authenticationResponse.affinityGroup)
-          case _ => throw new RuntimeException("Authorization and Location headers must be present in response")
+              authenticationResponse.affinityGroup
+            )
+          case _                                           => throw new RuntimeException("Authorization and Location headers must be present in response")
         }
 
-      case Left(UpstreamErrorResponse(_,Status.UNAUTHORIZED, _, _)) => throw LoginFailed(loginRequest.username)
-      case Left(err) => throw err
+      case Left(UpstreamErrorResponse(_, Status.UNAUTHORIZED, _, _)) => throw LoginFailed(loginRequest.username)
+      case Left(err)                                                 => throw err
     }
   }
 }

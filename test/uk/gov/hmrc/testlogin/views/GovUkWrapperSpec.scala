@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package uk.gov.hmrc.testlogin.views
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+
 import play.api.Application
 import play.api.i18n.{DefaultMessagesApi, Lang, MessagesImpl, MessagesProvider}
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -36,9 +37,9 @@ class GovUkWrapperSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
       .build()
 
   trait Setup {
-    implicit val fakeRequest = FakeRequest()
+    implicit val fakeRequest                        = FakeRequest()
     implicit val messagesProvider: MessagesProvider = MessagesImpl(Lang(java.util.Locale.ENGLISH), new DefaultMessagesApi())
-    implicit val appConfig: AppConfig = mock[AppConfig]
+    implicit val appConfig: AppConfig               = mock[AppConfig]
 
     val govUkWrapper = app.injector.instanceOf[GovUkWrapper]
     when(appConfig.analyticsHost).thenReturn("")
@@ -64,4 +65,3 @@ class GovUkWrapperSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
     }
   }
 }
-

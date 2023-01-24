@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ class SessionTimeoutFilterWithWhitelistSpec extends AsyncHmrcSpec with GuiceOneA
 
     val nextOperationFunction = mock[RequestHeader => Future[Result]]
 
-    when(nextOperationFunction.apply(*)).thenAnswer( (requestHeader: RequestHeader) => {
+    when(nextOperationFunction.apply(*)).thenAnswer((requestHeader: RequestHeader) => {
       Future.successful(Results.Ok.withSession(requestHeader.session + ("authToken" -> "Bearer Token")))
     })
 
@@ -68,7 +68,7 @@ class SessionTimeoutFilterWithWhitelistSpec extends AsyncHmrcSpec with GuiceOneA
     "leave the session keys when path not in whitelist" in new Setup {
       val request = FakeRequest(method = "GET", path = "/dashboard")
 
-      val result = await(filter.apply(nextOperationFunction)(request.withSession("key" -> "value")))
+      val result      = await(filter.apply(nextOperationFunction)(request.withSession("key" -> "value")))
       val sessionData = result.session(request).data
       sessionData.size shouldBe 3
       sessionData.isDefinedAt("ts") shouldBe true
@@ -80,7 +80,7 @@ class SessionTimeoutFilterWithWhitelistSpec extends AsyncHmrcSpec with GuiceOneA
     "leave the session keys when path in whitelist with different method" in new Setup {
       val request = FakeRequest(method = "POST", path = "/login")
 
-      val result = await(filter.apply(nextOperationFunction)(request.withSession("key" -> "value")))
+      val result      = await(filter.apply(nextOperationFunction)(request.withSession("key" -> "value")))
       val sessionData = result.session(request).data
       sessionData.size shouldBe 3
       sessionData.isDefinedAt("ts") shouldBe true

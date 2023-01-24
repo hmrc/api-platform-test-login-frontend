@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,22 +21,20 @@ import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration._
 import org.openqa.selenium.WebDriver
 import org.scalatest._
-
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
 import org.scalatest.featurespec.AnyFeatureSpec
 import org.scalatest.matchers.should.Matchers
-import play.api.test.RunningServer
 import org.scalatestplus.play.guice.GuiceOneServerPerTest
-import play.api.Mode
-import uk.gov.hmrc.api.testlogin.helpers.NavigationSugar
-import uk.gov.hmrc.api.testlogin.helpers.Env
 
-trait BaseSpec 
-    extends AnyFeatureSpec 
-    with BeforeAndAfterAll 
-    with BeforeAndAfterEach 
-    with Matchers 
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.RunningServer
+import play.api.{Application, Mode}
+import uk.gov.hmrc.api.testlogin.helpers.{Env, NavigationSugar}
+
+trait BaseSpec
+    extends AnyFeatureSpec
+    with BeforeAndAfterAll
+    with BeforeAndAfterEach
+    with Matchers
     with GuiceOneServerPerTest
     with GivenWhenThen
     with NavigationSugar {
@@ -57,10 +55,10 @@ trait BaseSpec
   override def newAppForTest(testData: TestData): Application = {
     GuiceApplicationBuilder()
       .configure(
-        "auditing.enabled" -> false,
-        "auditing.traceRequests" -> false,
+        "auditing.enabled"                                  -> false,
+        "auditing.traceRequests"                            -> false,
         "microservice.services.api-platform-test-user.port" -> stubPort,
-        "metrics.jvm" -> false
+        "metrics.jvm"                                       -> false
       )
       .configure(testSpecificConfiguration: _*)
       .in(Mode.Prod)
