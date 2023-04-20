@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,23 +21,22 @@ import javax.inject.{Inject, Singleton}
 import play.api.Configuration
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-
 @Singleton
-class AppConfig @Inject()(configuration: Configuration)
+class AppConfig @Inject() (configuration: Configuration)
     extends ServicesConfig(configuration) {
 
   private def loadConfig(key: String) = configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
-  private val contactHost = configuration.getOptional[String]("contact-frontend.host").getOrElse("")
+  private val contactHost                  = configuration.getOptional[String]("contact-frontend.host").getOrElse("")
   private val contactFormServiceIdentifier = "MyService"
 
-  lazy val analyticsToken = loadConfig("google-analytics.token")
-  lazy val analyticsHost = loadConfig("google-analytics.host")
+  lazy val analyticsToken           = loadConfig("google-analytics.token")
+  lazy val analyticsHost            = loadConfig("google-analytics.host")
   lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
-  lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
-  lazy val continueUrl = loadConfig("continue-url")
-  lazy val continueUrlCtc = loadConfig("continue-url-ctc")
-  lazy val devHubBaseUrl = loadConfig("dev-hub-base-url")
+  lazy val reportAProblemNonJSUrl   = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
+  lazy val continueUrl              = loadConfig("continue-url")
+  lazy val devHubBaseUrl            = loadConfig("dev-hub-base-url")
+  lazy val continueUrlCtc           = loadConfig("continue-url-ctc")    
 
   lazy val serviceUrl = baseUrl("api-platform-test-user")
 

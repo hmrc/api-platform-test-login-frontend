@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ import uk.gov.hmrc.play.bootstrap.frontend.filters.{SessionTimeoutFilter, Sessio
 
 case class WhitelistedCall(uri: String, method: String)
 
-class SessionTimeoutFilterWithWhitelist @Inject()(config: SessionTimeoutFilterConfig)(implicit ec: ExecutionContext, override val mat: Materializer)
-  extends SessionTimeoutFilter(config) {
+class SessionTimeoutFilterWithWhitelist @Inject() (config: SessionTimeoutFilterConfig)(implicit ec: ExecutionContext, override val mat: Materializer)
+    extends SessionTimeoutFilter(config) {
 
-  val loginUrl = uk.gov.hmrc.api.testlogin.controllers.routes.LoginController.login().url
+  val loginUrl                               = uk.gov.hmrc.api.testlogin.controllers.routes.LoginController.login().url
   val whitelistedCalls: Set[WhitelistedCall] = Set(WhitelistedCall(loginUrl, "GET"), WhitelistedCall(loginUrl, "POST"))
 
   override def apply(f: RequestHeader => Future[Result])(rh: RequestHeader): Future[Result] = {
@@ -37,4 +37,3 @@ class SessionTimeoutFilterWithWhitelist @Inject()(config: SessionTimeoutFilterCo
     else super.apply(f)(rh)
   }
 }
-

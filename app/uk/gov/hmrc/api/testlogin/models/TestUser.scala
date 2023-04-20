@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,6 @@ case class TestOrganisation(override val userId: String, saUtr: SaUtr, empRef: E
 
 object UserType extends Enumeration {
   type UserType = Value
-  val INDIVIDUAL = Value("INDIVIDUAL")
+  val INDIVIDUAL   = Value("INDIVIDUAL")
   val ORGANISATION = Value("ORGANISATION")
 }
