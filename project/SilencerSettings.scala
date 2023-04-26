@@ -3,7 +3,7 @@ import sbt.{CrossVersion, compilerPlugin, _}
 
 object SilencerSettings {
   // stop "unused import" warnings from routes files
-  val silencerVersion = "1.7.0"
+  val silencerVersion = "1.7.12"
 
   def apply() = Seq(
     libraryDependencies ++= Seq(
@@ -15,4 +15,4 @@ object SilencerSettings {
     // Make sure you only exclude warnings for the project directories, i.e. make builds reproducible
     scalacOptions += s"-P:silencer:sourceRoots=${baseDirectory.value.getCanonicalPath}"
   )
-} 
+}

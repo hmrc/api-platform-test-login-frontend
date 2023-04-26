@@ -4,7 +4,7 @@ import play.sbt.PlayImport._
 
 
 object AppDependencies {
-  val seleniumVersion = "4.2.2"
+  val seleniumVersion = "4.8.3"
 
   def apply() = compile ++ test
 
@@ -24,11 +24,9 @@ object AppDependencies {
     "com.typesafe.play"       %% "play-test"                  % PlayVersion.current,
     "com.github.tomakehurst"  %  "wiremock-jre8-standalone"   % "2.31.0",
     "uk.gov.hmrc"             %% "webdriver-factory"          % "0.39.0",
-    "org.scalatestplus"       %% "selenium-4-2"               % "3.2.13.0",
+    "org.scalatestplus"       %% "selenium-4-7"               % "3.2.15.0",
     "org.seleniumhq.selenium" %  "selenium-java"              % seleniumVersion,
-    "org.seleniumhq.selenium" %  "selenium-api"               % seleniumVersion,
-    "org.seleniumhq.selenium" %  "selenium-firefox-driver"    % seleniumVersion,
-    "org.seleniumhq.selenium" %  "selenium-chrome-driver"     % seleniumVersion,
+    "org.seleniumhq.selenium" %  "htmlunit-driver"            % seleniumVersion,
     "com.vladsch.flexmark"    %  "flexmark-all"               % "0.62.2",
     "org.mockito"             %% "mockito-scala-scalatest"    % "1.7.1"
   ).map(_ % "test, it")
