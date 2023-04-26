@@ -11,18 +11,14 @@ import scala.util.Properties
 
 lazy val appName = "api-platform-test-login-frontend"
 
+scalaVersion := "2.13.8"
+
 lazy val plugins: Seq[Plugins] = Seq.empty
 lazy val playSettings: Seq[Setting[_]] = Seq.empty
-val scalaVer = "2.12.12"
-ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
 
-inThisBuild(
-  List(
-    scalaVersion := scalaVer,
-    semanticdbEnabled := true,
-    semanticdbVersion := scalafixSemanticdb.revision
-  )
-)
+ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
+ThisBuild / semanticdbEnabled := true
+ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 
 lazy val microservice =
   (project in file("."))
@@ -31,11 +27,9 @@ lazy val microservice =
   .settings(scalaSettings: _*)
   .settings(publishingSettings: _*)
   .settings(defaultSettings(): _*)
-  .settings(SilencerSettings(): _*)
   .settings(ScoverageSettings(): _*)
   .settings(
     name := appName,
-    scalaVersion := scalaVer,
     libraryDependencies ++= AppDependencies(),
     retrieveManaged := true,
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
@@ -67,6 +61,14 @@ lazy val microservice =
     IntegrationTest / testGrouping := oneForkedJvmPerTest((IntegrationTest / definedTests).value),
     addTestReportOption(IntegrationTest, "int-test-reports"),
     IntegrationTest / fork := false
+  )
+  .settings(
+    scalacOptions ++= Seq(
+      "-Wconf:cat=unused&src=views/.*\\.scala:s",
+      "-Wconf:cat=unused&src=.*RoutesPrefix\\.scala:s",
+      "-Wconf:cat=unused&src=.*Routes\\.scala:s",
+      "-Wconf:cat=unused&src=.*ReverseRoutes\\.scala:s"
+    )
   )
 
 def oneForkedJvmPerTest(tests: Seq[TestDefinition]): Seq[Group] =
