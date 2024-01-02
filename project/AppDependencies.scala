@@ -28,6 +28,7 @@ object AppDependencies {
     "org.seleniumhq.selenium" %  "selenium-java"              % seleniumVersion,
     "org.seleniumhq.selenium" %  "htmlunit-driver"            % seleniumVersion,
     "com.vladsch.flexmark"    %  "flexmark-all"               % "0.62.2",
-    "org.mockito"             %% "mockito-scala-scalatest"    % "1.7.1"
+    "org.mockito"             %% "mockito-scala-scalatest"    % "1.17.29",
+    "org.scalatest"           %%  "scalatest"                 % "3.2.17"
   ).map(_ % "test, it")
 }
