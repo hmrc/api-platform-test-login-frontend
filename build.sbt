@@ -11,14 +11,14 @@ import scala.util.Properties
 
 lazy val appName = "api-platform-test-login-frontend"
 
-scalaVersion := "2.13.8"
+scalaVersion := "2.13.12"
 
 lazy val plugins: Seq[Plugins] = Seq.empty
 lazy val playSettings: Seq[Setting[_]] = Seq.empty
 
-ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
 ThisBuild / semanticdbEnabled := true
 ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
+ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
 
 lazy val microservice =
   (project in file("."))
