@@ -22,7 +22,7 @@ ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" 
 
 lazy val microservice =
   (project in file("."))
-  .enablePlugins(Seq(_root_.play.sbt.PlayScala, SbtDistributablesPlugin) ++ plugins: _*)
+  .enablePlugins(Seq(PlayScala, SbtDistributablesPlugin) ++ plugins: _*)
   .settings(playSettings: _*)
   .settings(scalaSettings: _*)
   .settings(defaultSettings(): _*)
