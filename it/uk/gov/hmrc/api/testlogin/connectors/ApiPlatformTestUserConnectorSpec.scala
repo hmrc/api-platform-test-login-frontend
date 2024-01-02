@@ -47,14 +47,14 @@ class ApiPlatformTestUserConnectorSpec extends AsyncHmrcSpec with WireMockSugar 
       .build()
 
   trait Setup {
-    implicit val hc = HeaderCarrier()
+    implicit val hc: HeaderCarrier = HeaderCarrier()
 
     val appConfig = mock[AppConfig]
 
     val underTest = new ApiPlatformTestUserConnector(
-      fakeApplication.injector.instanceOf[HttpClient],
+      fakeApplication().injector.instanceOf[HttpClient],
       appConfig,
-      fakeApplication.injector.instanceOf[Environment]
+      fakeApplication().injector.instanceOf[Environment]
     )
 
     when(appConfig.serviceUrl).thenReturn(wireMockUrl)

@@ -37,8 +37,8 @@ import uk.gov.hmrc.api.testlogin.views.html._
 class LoginControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
 
   trait Setup {
-    implicit val materializer = app.injector.instanceOf[Materializer]
-    private val csrfAddToken  = app.injector.instanceOf[play.filters.csrf.CSRFAddToken]
+    implicit val materializer: Materializer = app.injector.instanceOf[Materializer]
+    private val csrfAddToken                = app.injector.instanceOf[play.filters.csrf.CSRFAddToken]
 
     val messagesApi: MessagesApi               = app.injector.instanceOf[MessagesApi]
     val loginService: LoginService             = mock[LoginService]
