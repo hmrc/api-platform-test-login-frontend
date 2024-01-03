@@ -2,7 +2,7 @@ import _root_.play.sbt.routes.RoutesKeys.routesGenerator
 import play.core.PlayVersion
 import sbt.Tests.{Group, SubProcess}
 import uk.gov.hmrc.DefaultBuildSettings._
-import uk.gov.hmrc.{DefaultBuildSettings, SbtAutoBuildPlugin}
+import uk.gov.hmrc.DefaultBuildSettings
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 import bloop.integrations.sbt.BloopDefaults
@@ -11,18 +11,18 @@ import scala.util.Properties
 
 lazy val appName = "api-platform-test-login-frontend"
 
-scalaVersion := "2.13.8"
+scalaVersion := "2.13.12"
 
 lazy val plugins: Seq[Plugins] = Seq.empty
 lazy val playSettings: Seq[Setting[_]] = Seq.empty
 
-ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
 ThisBuild / semanticdbEnabled := true
 ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
+ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
 
 lazy val microservice =
   (project in file("."))
-  .enablePlugins(Seq(_root_.play.sbt.PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin) ++ plugins: _*)
+  .enablePlugins(Seq(PlayScala, SbtDistributablesPlugin) ++ plugins: _*)
   .settings(playSettings: _*)
   .settings(scalaSettings: _*)
   .settings(defaultSettings(): _*)
@@ -31,7 +31,6 @@ lazy val microservice =
     name := appName,
     libraryDependencies ++= AppDependencies(),
     retrieveManaged := true,
-    evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
     majorVersion := 0
   )
   .settings(inConfig(Test)(Defaults.testSettings): _*)
@@ -86,3 +85,12 @@ def oneForkedJvmPerTest(tests: Seq[TestDefinition]): Seq[Group] =
       )
     )
   }
+
+commands ++= Seq(
+  Command.command("run-all-tests") { state => "test" :: "it:test" :: state },
+
+  Command.command("clean-and-test") { state => "clean" :: "compile" :: "run-all-tests" :: state },
+
+  // Coverage does not need compile !
+  Command.command("pre-commit") { state => "clean" :: "scalafmtAll" :: "scalafixAll" :: "coverage" :: "run-all-tests" :: "coverageOff" :: "coverageAggregate" :: state }
+)

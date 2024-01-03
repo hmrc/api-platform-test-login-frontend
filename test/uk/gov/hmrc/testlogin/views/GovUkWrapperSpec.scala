@@ -23,6 +23,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{DefaultMessagesApi, Lang, MessagesImpl, MessagesProvider}
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
@@ -37,9 +38,9 @@ class GovUkWrapperSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
       .build()
 
   trait Setup {
-    implicit val fakeRequest                        = FakeRequest()
-    implicit val messagesProvider: MessagesProvider = MessagesImpl(Lang(java.util.Locale.ENGLISH), new DefaultMessagesApi())
-    implicit val appConfig: AppConfig               = mock[AppConfig]
+    implicit val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+    implicit val messagesProvider: MessagesProvider               = MessagesImpl(Lang(java.util.Locale.ENGLISH), new DefaultMessagesApi())
+    implicit val appConfig: AppConfig                             = mock[AppConfig]
 
     val govUkWrapper = app.injector.instanceOf[GovUkWrapper]
     when(appConfig.analyticsHost).thenReturn("")

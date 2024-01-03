@@ -16,18 +16,18 @@
 
 package uk.gov.hmrc.api.testlogin.models
 
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json.{Format, Json, OFormat}
 import uk.gov.hmrc.play.json.Union
 
 object JsonFormatters {
-  implicit val formatTestIndividual   = Json.format[TestIndividual]
-  implicit val formatTestOrganisation = Json.format[TestOrganisation]
+  implicit val formatTestIndividual: OFormat[TestIndividual]     = Json.format[TestIndividual]
+  implicit val formatTestOrganisation: OFormat[TestOrganisation] = Json.format[TestOrganisation]
 
   implicit val formatTestUser: Format[TestUser] = Union.from[TestUser]("userType")
     .and[TestIndividual](UserType.INDIVIDUAL.toString)
     .and[TestOrganisation](UserType.ORGANISATION.toString)
     .format
 
-  implicit val formatLoginRequest           = Json.format[LoginRequest]
-  implicit val formatAuthenticationResponse = Json.format[AuthenticationResponse]
+  implicit val formatLoginRequest: OFormat[LoginRequest]                     = Json.format[LoginRequest]
+  implicit val formatAuthenticationResponse: OFormat[AuthenticationResponse] = Json.format[AuthenticationResponse]
 }

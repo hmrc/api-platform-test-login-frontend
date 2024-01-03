@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.api.testlogin
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginRequest, TestIndividual}
 import uk.gov.hmrc.api.testlogin.pages.{ContinuePage, LoginPage}
@@ -50,7 +50,7 @@ class LoginSpec extends BaseSpec {
 
       And("The cookie is set in the session")
       val encryptedMdtpCookie = webDriver.manage().getCookies.asScala.toSet.find(_.getName == "mdtp")
-      encryptedMdtpCookie should be('defined)
+      encryptedMdtpCookie should be(Symbol("defined"))
     }
 
     Scenario("Failed login") {

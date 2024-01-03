@@ -36,16 +36,16 @@ class LoginServiceSpec extends AsyncHmrcSpec with BeforeAndAfterAll {
   val user = TestIndividual("543212311772", SaUtr("1097172564"), Nino("AA100010B"))
 
   trait Setup {
-    implicit val hc                  = HeaderCarrier()
+    implicit val hc: HeaderCarrier   = HeaderCarrier()
     val apiPlatformTestUserConnector = mock[ApiPlatformTestUserConnector]
     val underTest                    = new LoginService(apiPlatformTestUserConnector)
   }
 
-  override def beforeAll() {
+  override def beforeAll(): Unit = {
     setCurrentMillisFixed(10000)
   }
 
-  override def afterAll() {
+  override def afterAll(): Unit = {
     setCurrentMillisSystem()
   }
 

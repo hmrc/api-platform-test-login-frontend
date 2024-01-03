@@ -34,7 +34,7 @@ class SessionTimeoutFilterWithWhitelistSpec extends AsyncHmrcSpec with GuiceOneA
 
   trait Setup {
 
-    implicit val mat = app.injector.instanceOf[Materializer]
+    implicit val mat: Materializer = app.injector.instanceOf[Materializer]
 
     val config = new SessionTimeoutFilterConfig(
       timeoutDuration = Duration.ofSeconds(1),
