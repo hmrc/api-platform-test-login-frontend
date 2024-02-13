@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.api.testlogin.services
 
-import java.time.{Clock, Instant}
+import java.time.Clock
 import java.util.UUID
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -24,11 +24,12 @@ import scala.concurrent.{ExecutionContext, Future}
 import play.api.mvc.Session
 import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
 import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginRequest}
+import uk.gov.hmrc.apiplatform.modules.common.services.ClockNow
 import uk.gov.hmrc.http.SessionKeys._
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 
 @Singleton
-class LoginService @Inject() (apiPlatformTestUserConnector: ApiPlatformTestUserConnector, clock: Clock) {
+class LoginService @Inject() (apiPlatformTestUserConnector: ApiPlatformTestUserConnector, val clock: Clock) extends ClockNow {
 
   def authenticate(loginRequest: LoginRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Session] = {
     apiPlatformTestUserConnector.authenticate(loginRequest) map (buildSession(_, loginRequest))
@@ -38,7 +39,7 @@ class LoginService @Inject() (apiPlatformTestUserConnector: ApiPlatformTestUserC
     Map(
       sessionId            -> SessionId(s"session-${UUID.randomUUID}").value,
       authToken            -> authSession.authBearerToken,
-      lastRequestTimestamp -> Instant.now(clock).toEpochMilli.toString
+      lastRequestTimestamp -> instant().toEpochMilli.toString
     )
   )
 }

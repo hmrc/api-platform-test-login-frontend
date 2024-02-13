@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.testlogin.services
 
-import java.time.{Clock, Instant, ZoneOffset}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future.{failed, successful}
 
@@ -27,19 +26,18 @@ import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
 import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
 import uk.gov.hmrc.api.testlogin.models._
 import uk.gov.hmrc.api.testlogin.services.LoginService
+import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
 import uk.gov.hmrc.domain.{Nino, SaUtr}
 import uk.gov.hmrc.http.SessionKeys.sessionId
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 
-class LoginServiceSpec extends AsyncHmrcSpec with BeforeAndAfterAll {
+class LoginServiceSpec extends AsyncHmrcSpec with BeforeAndAfterAll with FixedClock {
 
   val user = TestIndividual("543212311772", SaUtr("1097172564"), Nino("AA100010B"))
 
   trait Setup {
     implicit val hc: HeaderCarrier   = HeaderCarrier()
     val apiPlatformTestUserConnector = mock[ApiPlatformTestUserConnector]
-    val now                          = Instant.now()
-    val clock                        = Clock.fixed(now, ZoneOffset.UTC)
     val underTest                    = new LoginService(apiPlatformTestUserConnector, clock)
   }
 
@@ -55,7 +53,7 @@ class LoginServiceSpec extends AsyncHmrcSpec with BeforeAndAfterAll {
 
       result shouldBe Session(Map(
         SessionKeys.authToken            -> authSession.authBearerToken,
-        SessionKeys.lastRequestTimestamp -> now.toEpochMilli.toString(),
+        SessionKeys.lastRequestTimestamp -> instant.toEpochMilli.toString(),
         sessionId                        -> result.data(sessionId)
       ))
     }
