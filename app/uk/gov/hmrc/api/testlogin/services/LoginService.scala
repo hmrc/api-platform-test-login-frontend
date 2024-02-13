@@ -16,11 +16,10 @@
 
 package uk.gov.hmrc.api.testlogin.services
 
+import java.time.{Clock, Instant}
 import java.util.UUID
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-
-import org.joda.time.DateTime
 
 import play.api.mvc.Session
 import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
@@ -29,7 +28,7 @@ import uk.gov.hmrc.http.SessionKeys._
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 
 @Singleton
-class LoginService @Inject() (apiPlatformTestUserConnector: ApiPlatformTestUserConnector) {
+class LoginService @Inject() (apiPlatformTestUserConnector: ApiPlatformTestUserConnector, clock: Clock) {
 
   def authenticate(loginRequest: LoginRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Session] = {
     apiPlatformTestUserConnector.authenticate(loginRequest) map (buildSession(_, loginRequest))
@@ -39,8 +38,7 @@ class LoginService @Inject() (apiPlatformTestUserConnector: ApiPlatformTestUserC
     Map(
       sessionId            -> SessionId(s"session-${UUID.randomUUID}").value,
       authToken            -> authSession.authBearerToken,
-      // APIS-1811 FIXME: This should probably be DateTime.now(DateTimeZone.UTC) to align with the session timeout filter
-      lastRequestTimestamp -> DateTime.now.getMillis.toString
+      lastRequestTimestamp -> Instant.now(clock).toEpochMilli.toString
     )
   )
 }

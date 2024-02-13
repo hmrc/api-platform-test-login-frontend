@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.testlogin.services
 
+import java.time.{Clock, Instant, ZoneOffset}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future.{failed, successful}
 
-import org.joda.time.DateTimeUtils.{setCurrentMillisFixed, setCurrentMillisSystem}
 import org.scalatest.BeforeAndAfterAll
 
 import play.api.mvc.Session
@@ -38,15 +38,9 @@ class LoginServiceSpec extends AsyncHmrcSpec with BeforeAndAfterAll {
   trait Setup {
     implicit val hc: HeaderCarrier   = HeaderCarrier()
     val apiPlatformTestUserConnector = mock[ApiPlatformTestUserConnector]
-    val underTest                    = new LoginService(apiPlatformTestUserConnector)
-  }
-
-  override def beforeAll(): Unit = {
-    setCurrentMillisFixed(10000)
-  }
-
-  override def afterAll(): Unit = {
-    setCurrentMillisSystem()
+    val now                          = Instant.now()
+    val clock                        = Clock.fixed(now, ZoneOffset.UTC)
+    val underTest                    = new LoginService(apiPlatformTestUserConnector, clock)
   }
 
   "login" should {
@@ -61,7 +55,7 @@ class LoginServiceSpec extends AsyncHmrcSpec with BeforeAndAfterAll {
 
       result shouldBe Session(Map(
         SessionKeys.authToken            -> authSession.authBearerToken,
-        SessionKeys.lastRequestTimestamp -> "10000",
+        SessionKeys.lastRequestTimestamp -> now.toEpochMilli.toString(),
         sessionId                        -> result.data(sessionId)
       ))
     }
