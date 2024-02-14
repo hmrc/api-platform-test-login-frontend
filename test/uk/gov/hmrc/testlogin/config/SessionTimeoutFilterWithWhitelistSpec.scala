@@ -16,12 +16,11 @@
 
 package uk.gov.hmrc.testlogin.config
 
-import java.time.Duration
+import java.time.{Duration, Instant}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-import akka.stream.Materializer
-import org.joda.time.{DateTime, DateTimeZone}
+import org.apache.pekko.stream.Materializer
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 
 import play.api.mvc._
@@ -50,7 +49,7 @@ class SessionTimeoutFilterWithWhitelistSpec extends AsyncHmrcSpec with GuiceOneA
     })
 
     def twoSecondsAgo: String = {
-      DateTime.now(DateTimeZone.UTC).minusSeconds(2).getMillis.toString
+      Instant.now().minusSeconds(2).toEpochMilli().toString()
     }
   }
 

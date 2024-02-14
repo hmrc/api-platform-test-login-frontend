@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future.successful
 
-import akka.stream.Materializer
+import org.apache.pekko.stream.Materializer
 
 import play.api.data.Form
 import play.api.data.Forms._
