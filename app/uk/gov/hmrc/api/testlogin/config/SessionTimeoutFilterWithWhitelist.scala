@@ -19,7 +19,7 @@ package uk.gov.hmrc.api.testlogin.config
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-import akka.stream.Materializer
+import org.apache.pekko.stream.Materializer
 
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.filters.{SessionTimeoutFilter, SessionTimeoutFilterConfig}
