@@ -23,7 +23,6 @@ object AppDependencies {
   private lazy val test = Seq(
     "uk.gov.hmrc"             %% "bootstrap-test-play-30"          % bootstrapVersion,
     "org.jsoup"               %  "jsoup"                           % "1.15.4",
-    "uk.gov.hmrc"             %% "webdriver-factory"               % "0.46.0",
     "org.mockito"             %% "mockito-scala-scalatest"         % "1.17.29",
     "uk.gov.hmrc"             %% "api-platform-test-common-domain" % commonDomainVersion
   ).map(_ % "test, it")
