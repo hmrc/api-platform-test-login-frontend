@@ -18,11 +18,12 @@ package uk.gov.hmrc.api.testlogin
 
 import scala.jdk.CollectionConverters._
 
+import uk.gov.hmrc.domain._
+
 import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginRequest, TestIndividual}
 import uk.gov.hmrc.api.testlogin.pages.{ContinuePage, LoginPage}
 import uk.gov.hmrc.api.testlogin.stubs.ApiPlatformTestUserStub._
 import uk.gov.hmrc.api.testlogin.stubs.{ApiPlatformTestUserStub, ContinuePageStub}
-import uk.gov.hmrc.domain._
 
 class LoginSpec extends BaseSpec {
 

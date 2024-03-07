@@ -26,6 +26,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.twirl.api.Html
+
 import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
 import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.views.html._

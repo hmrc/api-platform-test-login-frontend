@@ -27,6 +27,7 @@ import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result, Session}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+
 import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
 import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.controllers.{ErrorHandler, LoginController}

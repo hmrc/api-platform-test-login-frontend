@@ -28,6 +28,7 @@ import org.scalatestplus.play.guice.GuiceOneServerPerTest
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.RunningServer
 import play.api.{Application, Mode}
+
 import uk.gov.hmrc.api.testlogin.helpers.{Env, NavigationSugar}
 
 trait BaseSpec
