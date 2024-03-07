@@ -16,7 +16,6 @@ object AppDependencies {
     "uk.gov.hmrc"             %% "play-frontend-hmrc-play-30"      % "8.5.0",
     "uk.gov.hmrc"             %% "play-partials-play-30"           % "9.1.0",
     "uk.gov.hmrc"             %% "domain-play-30"                  % "9.0.0",
-    "uk.gov.hmrc"             %% "play-json-union-formatter"       % "1.20.0",
     "uk.gov.hmrc"             %% "api-platform-common-domain"      % commonDomainVersion
   )
 
