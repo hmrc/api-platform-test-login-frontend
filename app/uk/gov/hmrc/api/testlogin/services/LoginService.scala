@@ -22,11 +22,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.mvc.Session
-import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
-import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginRequest}
 import uk.gov.hmrc.apiplatform.modules.common.services.ClockNow
 import uk.gov.hmrc.http.SessionKeys._
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
+
+import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
+import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginRequest}
 
 @Singleton
 class LoginService @Inject() (apiPlatformTestUserConnector: ApiPlatformTestUserConnector, val clock: Clock) extends ClockNow {

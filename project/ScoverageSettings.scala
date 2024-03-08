@@ -7,7 +7,6 @@ object ScoverageSettings {
     ScoverageKeys.coverageHighlighting := true,
     ScoverageKeys.coverageExcludedPackages := 
       "<empty>;"+
-      "com.kenshoo.play.metrics.*;" +
       ".*definition.*;" +
       "prod.*;" +
       "testOnlyDoNotUseInAppConf.*;" +

@@ -25,9 +25,10 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 
 import play.api.mvc._
 import play.api.test.FakeRequest
+import uk.gov.hmrc.play.bootstrap.frontend.filters.SessionTimeoutFilterConfig
+
 import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
 import uk.gov.hmrc.api.testlogin.config.SessionTimeoutFilterWithWhitelist
-import uk.gov.hmrc.play.bootstrap.frontend.filters.SessionTimeoutFilterConfig
 
 class SessionTimeoutFilterWithWhitelistSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
 

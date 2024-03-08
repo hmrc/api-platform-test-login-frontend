@@ -22,14 +22,15 @@ import scala.concurrent.Future.{failed, successful}
 import org.scalatest.BeforeAndAfterAll
 
 import play.api.mvc.Session
-import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
-import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
-import uk.gov.hmrc.api.testlogin.models._
-import uk.gov.hmrc.api.testlogin.services.LoginService
 import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
 import uk.gov.hmrc.domain.{Nino, SaUtr}
 import uk.gov.hmrc.http.SessionKeys.sessionId
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
+
+import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
+import uk.gov.hmrc.api.testlogin.connectors.ApiPlatformTestUserConnector
+import uk.gov.hmrc.api.testlogin.models._
+import uk.gov.hmrc.api.testlogin.services.LoginService
 
 class LoginServiceSpec extends AsyncHmrcSpec with BeforeAndAfterAll with FixedClock {
 
@@ -62,7 +63,7 @@ class LoginServiceSpec extends AsyncHmrcSpec with BeforeAndAfterAll with FixedCl
 
       val loginRequest = LoginRequest("user", "password")
 
-      when(apiPlatformTestUserConnector.authenticate(loginRequest)).thenReturn(failed(new LoginFailed("user")))
+      when(apiPlatformTestUserConnector.authenticate(loginRequest)).thenReturn(failed(LoginFailed("user")))
 
       intercept[LoginFailed] {
         await(underTest.authenticate(loginRequest))

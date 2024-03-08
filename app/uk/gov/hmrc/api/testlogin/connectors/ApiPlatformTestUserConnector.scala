@@ -21,11 +21,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.Environment
 import play.api.http.{HeaderNames, Status}
+import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
+
 import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
 import uk.gov.hmrc.api.testlogin.models._
-import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
 
 @Singleton
 class ApiPlatformTestUserConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig, environment: Environment)(implicit ec: ExecutionContext) {

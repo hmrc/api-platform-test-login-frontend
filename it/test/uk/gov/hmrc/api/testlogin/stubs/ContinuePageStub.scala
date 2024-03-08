@@ -19,6 +19,7 @@ package uk.gov.hmrc.api.testlogin.stubs
 import com.github.tomakehurst.wiremock.client.WireMock._
 
 import play.api.test.Helpers._
+
 import uk.gov.hmrc.api.testlogin.pages.ContinuePage
 
 object ContinuePageStub {

@@ -20,6 +20,7 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 
 import play.api.http.HeaderNames
 import play.api.http.Status.{CREATED, UNAUTHORIZED}
+
 import uk.gov.hmrc.api.testlogin.helpers.WireMockJsonSugar
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
 import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, AuthenticationResponse, LoginRequest}

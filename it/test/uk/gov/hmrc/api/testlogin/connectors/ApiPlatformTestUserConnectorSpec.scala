@@ -27,12 +27,13 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.libs.json.Json._
 import play.api.{Application, Environment}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
+
 import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
 import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.helpers.WireMockSugar
 import uk.gov.hmrc.api.testlogin.models.JsonFormatters._
 import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginFailed, LoginRequest}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
 
 class ApiPlatformTestUserConnectorSpec extends AsyncHmrcSpec with WireMockSugar with GuiceOneAppPerSuite {
 

@@ -25,12 +25,13 @@ import org.apache.pekko.stream.Materializer
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
+import uk.gov.hmrc.play.bootstrap.controller.WithUnsafeDefaultFormBinding
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+
 import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.models.{LoginFailed, LoginRequest}
 import uk.gov.hmrc.api.testlogin.services.{ContinueUrlService, LoginService}
 import uk.gov.hmrc.api.testlogin.views.html._
-import uk.gov.hmrc.play.bootstrap.controller.WithUnsafeDefaultFormBinding
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 @Singleton
 class LoginController @Inject() (
