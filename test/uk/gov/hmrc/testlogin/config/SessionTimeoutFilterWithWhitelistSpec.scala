@@ -16,9 +16,10 @@
 
 package uk.gov.hmrc.testlogin.config
 
-import java.time.{Duration, Instant}
+import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.concurrent.duration._
 
 import org.apache.pekko.stream.Materializer
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -37,7 +38,7 @@ class SessionTimeoutFilterWithWhitelistSpec extends AsyncHmrcSpec with GuiceOneA
     implicit val mat: Materializer = app.injector.instanceOf[Materializer]
 
     val config = new SessionTimeoutFilterConfig(
-      timeoutDuration = Duration.ofSeconds(1),
+      timeoutDuration = 1.second,
       onlyWipeAuthToken = false
     )
 
