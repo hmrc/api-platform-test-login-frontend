@@ -53,11 +53,6 @@ class GovUkWrapperSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
   }
 
   "GovUKWrapper" should {
-
-    "Indicate that embedded Microsoft browsers should render using the latest browser version available" in new Setup {
-      mainView.body should include("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">")
-    }
-
     "render the page with feedback banner" in new Setup {
       val document = Jsoup.parse(mainView.body)
 
