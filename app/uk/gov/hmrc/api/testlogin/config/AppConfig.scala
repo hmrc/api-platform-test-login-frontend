@@ -36,6 +36,7 @@ class AppConfig @Inject() (configuration: Configuration)
   lazy val reportAProblemNonJSUrl   = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
   lazy val continueUrl              = loadConfig("continue-url")
   lazy val devHubBaseUrl            = loadConfig("dev-hub-base-url")
+  lazy val continueUrlCtc           = loadConfig("continue-url-ctc")    
 
   lazy val serviceUrl = baseUrl("api-platform-test-user")
 
