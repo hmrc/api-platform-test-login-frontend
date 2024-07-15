@@ -21,15 +21,16 @@ import javax.inject.Inject
 import play.api.Configuration
 import play.api.i18n.MessagesApi
 import play.api.mvc.Request
-import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
+import play.twirl.api.Html
+import uk.gov.hmrc.play.bootstrap.frontend.http.LegacyFrontendErrorHandler
 
 import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.views.html._
 
 class ErrorHandler @Inject() (val messagesApi: MessagesApi, val configuration: Configuration, errorView: ErrorView)(implicit val appConfig: AppConfig)
-    extends FrontendErrorHandler {
+    extends LegacyFrontendErrorHandler {
 
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]) = {
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html = {
     errorView(pageTitle, heading, message)
   }
 }

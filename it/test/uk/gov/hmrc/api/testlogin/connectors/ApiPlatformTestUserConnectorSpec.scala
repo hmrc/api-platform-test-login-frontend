@@ -27,7 +27,8 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.libs.json.Json._
 import play.api.{Application, Environment}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 
 import uk.gov.hmrc.api.testlogin.AsyncHmrcSpec
 import uk.gov.hmrc.api.testlogin.config.AppConfig
@@ -53,7 +54,7 @@ class ApiPlatformTestUserConnectorSpec extends AsyncHmrcSpec with WireMockSugar 
     val appConfig = mock[AppConfig]
 
     val underTest = new ApiPlatformTestUserConnector(
-      fakeApplication().injector.instanceOf[HttpClient],
+      fakeApplication().injector.instanceOf[HttpClientV2],
       appConfig,
       fakeApplication().injector.instanceOf[Environment]
     )

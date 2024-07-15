@@ -1,5 +1,4 @@
 import sbt.Tests.{Group, SubProcess}
-import uk.gov.hmrc.DefaultBuildSettings._
 import uk.gov.hmrc.DefaultBuildSettings
 
 import scala.util.Properties
@@ -69,8 +68,7 @@ lazy val it = (project in file("it"))
     name := "integration-tests",
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT"),
     Test / testGrouping := oneForkedJvmPerTest((Test / definedTests).value),
-    DefaultBuildSettings.itSettings(),
-    addTestReportOption(Test, "int-test-reports")
+    DefaultBuildSettings.itSettings()
   )
 
 commands ++= Seq(
