@@ -20,7 +20,7 @@
 
 @this(govUkWrapper: GovUkWrapper)
 
-@(continue: String, errorMessage: Option[String] = None)(implicit request: Request[_], appConfig: AppConfig, messages: Messages)
+@(continue: String, errorMessage: Option[String] = None)(implicit requestHeader: RequestHeader, appConfig: AppConfig, messages: Messages)
 
 @govUkWrapper(pageTitle = Some("Sign in")) {
   <fieldset class="govuk-fieldset">

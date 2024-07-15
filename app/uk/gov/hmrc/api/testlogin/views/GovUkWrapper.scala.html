@@ -43,7 +43,7 @@
         bodyEndBlock: Option[Html] = None,
         scriptsBlock: Option[Html] = None,
         feedbackBanner: Option[FeedbackBanner] = Some(GenericFeedbackBanner)
-)(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+)(contentBlock: Html)(implicit requestHeader: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @head = {
     <link href='@controllers.routes.Assets.versioned("stylesheets/main.css")' media="screen" rel="stylesheet" type="text/css" />
