@@ -19,7 +19,7 @@
 
 @this(govUkWrapper: GovUkWrapper)
 
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(pageTitle: String, heading: String, message: String)(implicit requestHeader: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @govUkWrapper(Some(pageTitle)) {
   <h1 class="govuk-heading-xl">@heading</h1>

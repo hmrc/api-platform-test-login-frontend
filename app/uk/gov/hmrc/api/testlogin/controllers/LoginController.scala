@@ -75,5 +75,5 @@ class LoginController @Inject() (
     )
   }
 
-  private def badRequest()(implicit request: Request[AnyContent]) = successful(BadRequest(errorHandler.standardErrorTemplate("", "", "Invalid Parameters")))
+  private def badRequest()(implicit request: Request[AnyContent]) = errorHandler.standardErrorTemplate("", "", "Invalid Parameters").map(BadRequest(_))
 }

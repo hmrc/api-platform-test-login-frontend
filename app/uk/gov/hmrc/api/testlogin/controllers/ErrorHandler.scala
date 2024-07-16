@@ -17,19 +17,21 @@
 package uk.gov.hmrc.api.testlogin.controllers
 
 import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.Configuration
 import play.api.i18n.MessagesApi
-import play.api.mvc.Request
+import play.api.mvc.RequestHeader
+import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 
 import uk.gov.hmrc.api.testlogin.config.AppConfig
 import uk.gov.hmrc.api.testlogin.views.html._
 
-class ErrorHandler @Inject() (val messagesApi: MessagesApi, val configuration: Configuration, errorView: ErrorView)(implicit val appConfig: AppConfig)
+class ErrorHandler @Inject() (val messagesApi: MessagesApi, val configuration: Configuration, errorView: ErrorView)(implicit val appConfig: AppConfig, val ec: ExecutionContext)
     extends FrontendErrorHandler {
 
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]) = {
-    errorView(pageTitle, heading, message)
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit requestHeader: RequestHeader): Future[Html] = {
+    Future.successful(errorView(pageTitle, heading, message))
   }
 }
