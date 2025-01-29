@@ -22,7 +22,7 @@ class ContinuePage(port: Int) extends WebPage {
   import ContinuePage._
   override val url: String = s"http://localhost:$port$path"
 
-  override def isCurrentPage: Boolean = find(cssSelector("h1")).fold(false)(_.text == "Continue Page")
+  val pageTitle = "Continue Page"
 }
 
 object ContinuePage {
