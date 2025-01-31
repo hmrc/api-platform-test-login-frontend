@@ -19,6 +19,7 @@ package uk.gov.hmrc.api.testlogin
 import scala.jdk.CollectionConverters._
 
 import uk.gov.hmrc.domain._
+import uk.gov.hmrc.selenium.webdriver.Driver
 
 import uk.gov.hmrc.api.testlogin.models.{AuthenticatedSession, LoginRequest, TestIndividual}
 import uk.gov.hmrc.api.testlogin.pages.{ContinuePage, LoginPage}
@@ -41,31 +42,27 @@ class LoginSpec extends BaseSpec {
       givenAuthenticationWillSucceedWith(LoginRequest(testUser.userId, password), authenticatedSession)
 
       When("I login with the user's credentials")
-      goOn(loginPage)
-      textField("userId").value = testUser.userId
-      pwdField("password").value = password
-      clickOnSubmit()
+      loginPage.goTo()
+      loginPage.loginWith(testUser.userId, password)
 
       Then("I am redirected to the continue URL")
-      on(continuePage)
+      isCurrentPage(continuePage)
 
       And("The cookie is set in the session")
-      val encryptedMdtpCookie = webDriver.manage().getCookies.asScala.toSet.find(_.getName == "mdtp")
+      val encryptedMdtpCookie = Driver.instance.manage().getCookies.asScala.toSet.find(_.getName == "mdtp")
       encryptedMdtpCookie should be(Symbol("defined"))
     }
 
     Scenario("Failed login") {
       When("I try to login with the wrong userId or password")
-      goOn(loginPage)
-      textField("userId").value = testUser.userId
-      pwdField("password").value = "wrongPassword"
-      clickOnSubmit()
+      loginPage.goTo()
+      loginPage.loginWith(testUser.userId, "wrongPassword")
 
       Then("I am on the login page")
-      on(loginPage)
+      isCurrentPage(loginPage)
 
       And("An error message is displayed")
-      verifyText("govuk-error-message", "Error:Invalid user ID or password. Try again.")
+      loginPage.errorText() shouldBe "Error:Invalid user ID or password. Try again."
     }
   }
 

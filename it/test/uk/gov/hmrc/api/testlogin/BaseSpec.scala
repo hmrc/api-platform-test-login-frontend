@@ -19,7 +19,6 @@ package uk.gov.hmrc.api.testlogin
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration._
-import org.openqa.selenium.WebDriver
 import org.scalatest._
 import org.scalatest.featurespec.AnyFeatureSpec
 import org.scalatest.matchers.should.Matchers
@@ -28,8 +27,9 @@ import org.scalatestplus.play.guice.GuiceOneServerPerTest
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.RunningServer
 import play.api.{Application, Mode}
+import uk.gov.hmrc.selenium.webdriver.{Browser, Driver, ScreenshotOnFailure}
 
-import uk.gov.hmrc.api.testlogin.helpers.{Env, NavigationSugar}
+import uk.gov.hmrc.api.testlogin.helpers.WebPage
 
 trait BaseSpec
     extends AnyFeatureSpec
@@ -38,14 +38,13 @@ trait BaseSpec
     with Matchers
     with GuiceOneServerPerTest
     with GivenWhenThen
-    with NavigationSugar {
+    with Browser
+    with ScreenshotOnFailure {
 
   val stubHost = "localhost"
   val stubPort = 6005
 
   override protected def newServerForTest(app: Application, testData: TestData): RunningServer = MyTestServerFactory.start(app)
-
-  implicit val webDriver: WebDriver = Env.driver
 
   val wireMockServer = new WireMockServer(
     wireMockConfig().port(stubPort)
@@ -71,12 +70,21 @@ trait BaseSpec
     WireMock.configureFor(stubHost, stubPort)
   }
 
+  override protected def afterAll() = {
+    wireMockServer.stop()
+  }
+
   override protected def beforeEach() = {
-    webDriver.manage().deleteAllCookies()
+    startBrowser()
+    Driver.instance.manage().deleteAllCookies()
     WireMock.reset()
   }
 
-  override protected def afterAll() = {
-    wireMockServer.stop()
+  override def afterEach(): Unit = {
+    quitBrowser()
+  }
+
+  def isCurrentPage(page: WebPage): Unit = {
+    page.heading shouldBe page.pageTitle
   }
 }
