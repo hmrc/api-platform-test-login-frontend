@@ -42,4 +42,12 @@ class AppConfig @Inject() (configuration: Configuration)
   lazy val platformFrontendHost = loadConfig("platform.frontend.host")
 
   lazy val feedbackSurveyUrl = loadConfig("feedbackBanner.generic.surveyUrl")
+
+  private lazy val urlFooterConfig = configuration.underlying.getConfig("urls.footer")
+
+  lazy val cookies: String         = urlFooterConfig.getString("cookies")
+  lazy val privacy: String         = urlFooterConfig.getString("privacy")
+  lazy val termsConditions: String = urlFooterConfig.getString("termsConditions")
+  lazy val govukHelp: String       = urlFooterConfig.getString("govukHelp")
+  lazy val accessibility: String   = urlFooterConfig.getString("accessibility")
 }
