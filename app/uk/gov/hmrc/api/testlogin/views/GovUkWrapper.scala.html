@@ -15,10 +15,12 @@
  *@
 
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language.En
-@import uk.gov.hmrc.hmrcfrontend.views.html.components.{HmrcFooter, HmrcHeader}
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcFooter
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardHeader
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.footer.{Footer, FooterItem, Meta}
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.header.{Header, NavigationItem}
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcScripts
+@import uk.gov.hmrc.api.testlogin.models.StaticNavLinks
 
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcTrackingConsentSnippet
 @import uk.gov.hmrc.api.testlogin.views.html.components.SiteHelper
@@ -28,7 +30,7 @@
 @this(
         govukLayout: GovukLayout,
         hmrcFooter: HmrcFooter,
-        hmrcHeader: HmrcHeader,
+        hmrcStandardHeader: HmrcStandardHeader,
         siteHelper: SiteHelper,
         hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet
 )
@@ -61,28 +63,14 @@
 }
 
 @siteHeader = {
-  @hmrcHeader(Header(
-    homepageUrl = "https://www.gov.uk/",
+  @hmrcStandardHeader(
     serviceName = Some("HMRC Developer Hub"),
-    serviceUrl = "/api-documentation",
+    serviceUrl = Some("/api-documentation"),
     containerClasses = "govuk-width-container",
-    navigation = Some(Seq(
-        NavigationItem(
-            href = Some("/api-documentation/docs/using-the-hub"),
-            content = Text("Documentation")
-        ),
-        NavigationItem(
-            href = Some("/developer/application"),
-            content = Text("Applications")
-        ),
-        NavigationItem(
-            href = Some("/developer/support"),
-            content = Text("Support")
-        ),
-        NavigationItem(
-            href = Some("https://api-platform-status.production.tax.service.gov.uk/"),
-            content = Text("Availability")
-        )
+    serviceNavigation = Some(ServiceNavigation(
+        serviceName = Some("HMRC Developer Hub"),
+        serviceUrl = Some("/api-documentation"),
+      navigation= StaticNavLinks()
     ))
   ))
 }
