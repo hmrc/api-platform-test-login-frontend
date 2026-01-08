@@ -6,13 +6,12 @@ import play.sbt.PlayImport._
 object AppDependencies {
   def apply() = compile ++ test
 
-  lazy val bootstrapVersion    = "9.13.0"
-  lazy val commonDomainVersion = "0.17.0"
+  lazy val bootstrapVersion    = "10.5.0"
+  lazy val commonDomainVersion = "0.19.0"
 
   private lazy val compile = Seq(
     "uk.gov.hmrc"             %% "bootstrap-frontend-play-30"      % bootstrapVersion,
-    "uk.gov.hmrc"             %% "play-frontend-hmrc-play-30"      % "12.6.0",
-    "uk.gov.hmrc"             %% "play-partials-play-30"           % "10.1.0",
+    "uk.gov.hmrc"             %% "play-frontend-hmrc-play-30"      % "12.25.0",
     "uk.gov.hmrc"             %% "domain-play-30"                  % "11.0.0",
     "uk.gov.hmrc"             %% "api-platform-common-domain"      % commonDomainVersion
   )
